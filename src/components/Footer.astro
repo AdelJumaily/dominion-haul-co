@@ -1,0 +1,209 @@
+---
+import { site, phoneHref, smsHref, addressOneLine } from '../config/site';
+import Icon from './Icon.astro';
+import BrandMark from './BrandMark.astro';
+import { getCollection } from 'astro:content';
+
+const services = (await getCollection('services')).sort((a, b) => a.data.order - b.data.order);
+const locations = await getCollection('locations');
+const counties = locations
+  .filter((l) => l.data.kind === 'county')
+  .sort((a, b) => a.data.order - b.data.order);
+const cities = locations
+  .filter((l) => l.data.kind === 'city')
+  .sort((a, b) => a.data.title.localeCompare(b.data.title));
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer" data-band="dark">
+  <div class="container">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <BrandMark inverted />
+        <p class="foot-blurb">
+          Junk removal out of Chantilly — published load-size pricing, same-day slots across
+          Fairfax, Loudoun, Prince William and Arlington. We know the Fairfax County Parkway
+          well enough to hit Reston by 2pm when you call before noon.
+        </p>
+        <div class="foot-contact">
+          <a href={phoneHref} class="foot-phone"><Icon name="phone" size={18} />{site.phone.display}</a>
+          <a href={smsHref} class="foot-link"><Icon name="message" size={16} />Text us a photo</a>
+          <a href={`mailto:${site.email}`} class="foot-link"><Icon name="mail" size={16} />{site.email}</a>
+        </div>
+        <p class="foot-hours"><Icon name="clock" size={15} />{site.hoursLabel}</p>
+      </div>
+
+      <nav class="foot-cols" aria-label="Footer">
+        <div class="foot-col">
+          <h2>Services</h2>
+          <ul>
+            {services.map((s) => <li><a href={`/services/${s.id}`}>{s.data.title}</a></li>)}
+          </ul>
+        </div>
+
+        <div class="foot-col">
+          <h2>Counties</h2>
+          <ul>
+            {counties.map((c) => <li><a href={`/locations/${c.id}`}>{c.data.title}</a></li>)}
+          </ul>
+          <h2 class="mt">Company</h2>
+          <ul>
+            <li><a href="/about">About us</a></li>
+            <li><a href="/pricing">Pricing</a></li>
+            <li><a href="/reviews">Reviews</a></li>
+            <li><a href="/blog">Blog</a></li>
+            <li><a href="/contact">Get a quote</a></li>
+          </ul>
+        </div>
+
+        <div class="foot-col foot-col-wide">
+          <h2>Cities &amp; towns</h2>
+          <ul class="foot-cities">
+            {cities.map((c) => <li><a href={`/locations/${c.id}`}>{c.data.title}</a></li>)}
+          </ul>
+        </div>
+      </nav>
+    </div>
+
+    <div class="foot-bottom">
+      <p class="foot-legal">
+        &copy; {year} {site.legalName}. Licensed &amp; insured. Serving Fairfax, Loudoun,
+        Prince William &amp; Arlington counties, Virginia.
+      </p>
+      <address class="foot-address">{addressOneLine}</address>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--ink);
+    color: var(--surface);
+    padding-block: var(--sp-8) var(--sp-6);
+    border-top: 4px solid var(--accent);
+  }
+
+  .foot-top {
+    display: grid;
+    gap: var(--sp-8);
+  }
+
+  .foot-blurb {
+    margin-top: var(--sp-5);
+    color: #9aada2;
+    max-width: 44ch;
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .foot-contact {
+    margin-top: var(--sp-5);
+    display: grid;
+    gap: var(--sp-3);
+    justify-items: start;
+  }
+  .foot-phone {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    color: #a8d5b5;
+    text-decoration: none;
+    transition: color var(--dur) var(--ease);
+  }
+  .foot-phone:hover {
+    color: var(--surface);
+  }
+  .foot-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    color: #9aada2;
+    text-decoration: none;
+    font-size: 0.92rem;
+    font-weight: 600;
+    transition: color var(--dur) var(--ease);
+  }
+  .foot-link:hover {
+    color: var(--surface);
+  }
+  .foot-hours {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+    margin-top: var(--sp-5);
+    font-size: 0.85rem;
+    color: var(--muted-light);
+  }
+
+  .foot-cols {
+    display: grid;
+    gap: var(--sp-7);
+  }
+  .foot-col h2 {
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--muted-light);
+    margin-bottom: var(--sp-4);
+  }
+  .foot-col h2.mt {
+    margin-top: var(--sp-6);
+  }
+  .foot-col ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--sp-2);
+  }
+  .foot-col a {
+    color: #c8c8c0;
+    text-decoration: none;
+    font-size: 0.92rem;
+    transition: color var(--dur) var(--ease);
+  }
+  .foot-col a:hover {
+    color: var(--accent);
+  }
+  .foot-cities {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .foot-bottom {
+    margin-top: var(--sp-8);
+    padding-top: var(--sp-5);
+    border-top: 1px solid var(--ink-line);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-3) var(--sp-6);
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .foot-legal,
+  .foot-address {
+    font-size: 0.82rem;
+    color: var(--muted-light);
+    font-style: normal;
+    max-width: 62ch;
+  }
+
+  @media (min-width: 640px) {
+    .foot-cols {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1024px) {
+    .foot-top {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
+      gap: var(--sp-9);
+    }
+    .foot-cols {
+      grid-template-columns: 1fr 1fr 1.2fr;
+    }
+  }
+</style>

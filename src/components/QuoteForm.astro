@@ -1,0 +1,318 @@
+---
+/**
+ * Quote form.
+ *
+ * ⚠️ WIRING REQUIRED BEFORE LAUNCH — a static site cannot process submissions
+ * on its own. This form ships configured for **Netlify Forms**, which handles
+ * the file upload natively and needs zero backend code: deploy to Netlify and
+ * it works, submissions appear in the site dashboard.
+ *
+ * To use something else instead, set FORM_ACTION below:
+ *   • Formspree   → 'https://formspree.io/f/YOUR_ID'   (paid tier for uploads)
+ *   • Web3Forms   → 'https://api.web3forms.com/submit' (+ an access_key input)
+ *   • Your own    → any endpoint accepting multipart/form-data
+ * and delete the two data-netlify attributes on the <form>.
+ *
+ * Until it is wired, submissions go nowhere. The success/failure states below
+ * are real (they reflect the actual HTTP response) — they do not fake a
+ * "thanks, we got it" for a request that failed.
+ */
+import Icon from './Icon.astro';
+import { site, phoneHref } from '../config/site';
+import { getCollection } from 'astro:content';
+
+const FORM_ACTION = ''; // '' = same-origin POST, which is what Netlify Forms expects
+
+interface Props {
+  /** Pre-selects the service dropdown on service pages. */
+  preselect?: string;
+  /** Pre-fills the city field on location pages. */
+  city?: string;
+  compact?: boolean;
+  id?: string;
+}
+const { preselect, city, compact = false, id = 'quote-form' } = Astro.props;
+
+const services = (await getCollection('services')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<div class={`qf ${compact ? 'qf-compact' : ''}`}>
+  <form
+    class="qf-form"
+    id={id}
+    name="quote"
+    method="POST"
+    action={FORM_ACTION}
+    enctype="multipart/form-data"
+    data-netlify="true"
+    data-netlify-honeypot="company-website"
+    data-phone={site.phone.display}
+    data-phone-href={phoneHref}
+    novalidate
+  >
+    <input type="hidden" name="form-name" value="quote" />
+    <input type="hidden" name="source-page" value={Astro.url.pathname} />
+
+    <!-- Honeypot: hidden from humans, irresistible to bots. -->
+    <p class="hp">
+      <label>Do not fill this in <input name="company-website" tabindex="-1" autocomplete="off" /></label>
+    </p>
+
+    <div class="qf-grid">
+      <div class="field">
+        <label for={`${id}-name`}>Your name</label>
+        <input id={`${id}-name`} name="name" type="text" autocomplete="name" required placeholder="Jordan Ellis" />
+      </div>
+
+      <div class="field">
+        <label for={`${id}-phone`}>Phone</label>
+        <input
+          id={`${id}-phone`}
+          name="phone"
+          type="tel"
+          inputmode="tel"
+          autocomplete="tel"
+          required
+          placeholder="(571) 477-7222"
+        />
+      </div>
+
+      <div class="field qf-span">
+        <label for={`${id}-address`}>Pickup address <span class="hint">— street and city is enough</span></label>
+        <input
+          id={`${id}-address`}
+          name="address"
+          type="text"
+          autocomplete="street-address"
+          required
+          value={city ? `, ${city}, VA` : ''}
+          placeholder="1420 Maple Ave, Vienna VA"
+        />
+      </div>
+
+      <div class="field qf-span">
+        <label for={`${id}-service`}>What do you need hauled?</label>
+        <select id={`${id}-service`} name="service">
+          <option value="">Not sure yet — you tell me</option>
+          {
+            services.map((s) => (
+              <option value={s.data.title} selected={preselect === s.id}>
+                {s.data.title}
+              </option>
+            ))
+          }
+        </select>
+      </div>
+
+      <div class="field qf-span">
+        <label for={`${id}-details`}>Describe the job</label>
+        <textarea
+          id={`${id}-details`}
+          name="details"
+          required
+          placeholder="Sectional sofa, two dressers and about ten boxes in the basement. Walk-out door, no stairs."
+        ></textarea>
+      </div>
+
+      <div class="field qf-span">
+        <label for={`${id}-photos`}>
+          Add photos <span class="hint">— fastest way to a firm price</span>
+        </label>
+        <div class="qf-file">
+          <input id={`${id}-photos`} name="photos" type="file" accept="image/*" multiple capture="environment" />
+          <div class="qf-file-face" aria-hidden="true">
+            <Icon name="camera" size={20} />
+            <span data-file-label>Tap to add photos</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-lg btn-block qf-submit">
+      <span data-submit-label>Get my free quote</span>
+      <Icon name="arrow" size={19} class="arrow" />
+    </button>
+
+    <p class="qf-fine">
+      No obligation, no upfront charge. We reply within business hours — usually inside
+      30 minutes. Or skip the form and <a href={phoneHref}>call {site.phone.display}</a>.
+    </p>
+
+    <p class="qf-status" data-status role="status" aria-live="polite" hidden></p>
+  </form>
+</div>
+
+<style>
+  .qf-form {
+    display: grid;
+    gap: var(--sp-5);
+  }
+  .qf-grid {
+    display: grid;
+    gap: var(--sp-4);
+  }
+  .qf-span {
+    grid-column: 1 / -1;
+  }
+  @media (min-width: 560px) {
+    .qf-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  /* File input styled without hiding it from assistive tech: the real input
+     sits on top at opacity 0 so it keeps its own focus and click behaviour. */
+  .qf-file {
+    position: relative;
+  }
+  .qf-file input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+  }
+  .qf-file-face {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sp-3);
+    min-height: 64px;
+    padding: var(--sp-4);
+    border: 1.5px dashed var(--rule);
+    border-radius: var(--r-md);
+    background: var(--surface-raised);
+    color: var(--fg-muted);
+    font-weight: 600;
+    font-size: 0.93rem;
+    transition: border-color var(--dur) var(--ease), color var(--dur) var(--ease);
+  }
+  .qf-file input:focus-visible + .qf-file-face,
+  .qf-file:hover .qf-file-face {
+    border-color: var(--accent);
+    color: var(--fg);
+  }
+  .qf-file.has-files .qf-file-face {
+    border-style: solid;
+    border-color: var(--accent);
+    color: var(--fg);
+  }
+  [data-band='dark'] .qf-file-face {
+    background: var(--ink-soft);
+  }
+
+  .qf-submit {
+    margin-top: var(--sp-1);
+  }
+  .qf-submit[disabled] {
+    opacity: 0.6;
+    cursor: wait;
+  }
+
+  .qf-fine {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: var(--fg-muted);
+    text-align: center;
+  }
+  .qf-fine a {
+    color: var(--fg);
+    font-weight: 700;
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-underline-offset: 2px;
+  }
+
+  .qf-status {
+    padding: var(--sp-4);
+    border-radius: var(--r-md);
+    font-weight: 650;
+    font-size: 0.92rem;
+    text-align: center;
+  }
+  .qf-status[data-state='ok'] {
+    background: color-mix(in srgb, var(--success) 14%, transparent);
+    color: var(--success);
+    border: 1px solid color-mix(in srgb, var(--success) 40%, transparent);
+  }
+  .qf-status[data-state='err'] {
+    background: color-mix(in srgb, #c0392b 12%, transparent);
+    color: #a5301f;
+    border: 1px solid color-mix(in srgb, #c0392b 40%, transparent);
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLFormElement>('form[name="quote"]').forEach((form) => {
+    const fileInput = form.querySelector<HTMLInputElement>('input[type="file"]');
+    const fileLabel = form.querySelector<HTMLElement>('[data-file-label]');
+    const fileWrap = form.querySelector<HTMLElement>('.qf-file');
+    const status = form.querySelector<HTMLElement>('[data-status]');
+    const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    const submitLabel = form.querySelector<HTMLElement>('[data-submit-label]');
+
+    // Reflect chosen file count back to the user.
+    fileInput?.addEventListener('change', () => {
+      const n = fileInput.files?.length ?? 0;
+      if (fileLabel) {
+        fileLabel.textContent =
+          n === 0 ? 'Tap to add photos' : n === 1 ? '1 photo attached' : `${n} photos attached`;
+      }
+      fileWrap?.classList.toggle('has-files', n > 0);
+    });
+
+    form.addEventListener('submit', async (e) => {
+      // Let the browser surface its own validation UI first.
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        e.preventDefault();
+        return;
+      }
+
+      e.preventDefault();
+      if (!status || !submit) return;
+
+      submit.disabled = true;
+      if (submitLabel) submitLabel.textContent = 'Sending…';
+      status.hidden = true;
+
+      try {
+        const res = await fetch(form.action || window.location.pathname, {
+          method: 'POST',
+          body: new FormData(form),
+        });
+
+        if (!res.ok) throw new Error(`Server responded ${res.status}`);
+
+        status.textContent =
+          "Got it — your request is in. We'll call or text you shortly to confirm a price and a time.";
+        status.dataset.state = 'ok';
+        status.hidden = false;
+        form.reset();
+        fileWrap?.classList.remove('has-files');
+        if (fileLabel) fileLabel.textContent = 'Tap to add photos';
+      } catch {
+        // Never claim success we can't verify — fall back to the phone number,
+        // read from the data attributes so it stays tied to src/config/site.ts.
+        const tel = form.dataset.phoneHref ?? '';
+        const label = form.dataset.phone ?? 'us';
+        status.innerHTML =
+          `That didn’t go through. Please call or text us at <a href="${tel}">${label}</a> and we’ll sort it out right away.`;
+        status.dataset.state = 'err';
+        status.hidden = false;
+      } finally {
+        submit.disabled = false;
+        if (submitLabel) submitLabel.textContent = 'Get my free quote';
+      }
+    });
+  });
+</script>

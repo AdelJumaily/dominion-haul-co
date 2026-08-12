@@ -1,0 +1,263 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import CTABand from '../../components/CTABand.astro';
+import Icon from '../../components/Icon.astro';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf()
+);
+
+const [featured, ...rest] = posts;
+
+const crumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Blog', url: '/blog' },
+];
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+---
+
+<Base
+  title="Guides & Local Advice | Dominion Haul Co Blog"
+  description="Practical guides on junk removal costs, garage cleanouts, estate clearing and seasonal hauling for Northern Virginia homeowners — written by people who actually do the work."
+  schema={{ type: 'CollectionPage', breadcrumbs: crumbs }}
+>
+  <Breadcrumbs crumbs={crumbs} />
+
+  <section class="hd">
+    <div class="container">
+      <p class="eyebrow">Guides</p>
+      <h1>Straight answers about hauling in Northern Virginia.</h1>
+      <p class="lede mt-5">
+        Costs, county rules, what the transfer stations will and will not take, and how to
+        do the parts you would rather handle yourself. Written by the people doing the work,
+        not by a content agency.
+      </p>
+    </div>
+  </section>
+
+  {
+    featured && (
+      <section class="section-sm">
+        <div class="container">
+          <a href={`/blog/${featured.id}`} class="feat">
+            <div class="feat-body">
+              <span class="chip chip-accent">{featured.data.category}</span>
+              <h2>{featured.data.title}</h2>
+              <p>{featured.data.description}</p>
+              <span class="feat-meta">
+                <time datetime={featured.data.publishDate.toISOString()}>
+                  {fmt(featured.data.publishDate)}
+                </time>
+                <span aria-hidden="true">·</span>
+                <span>{featured.data.readingMinutes} min read</span>
+              </span>
+              <span class="link-arrow feat-link">
+                Read it <Icon name="arrow" size={17} class="arrow" />
+              </span>
+            </div>
+          </a>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    rest.length > 0 && (
+      <section class="section-sm">
+        <div class="container">
+          <ul class="post-grid">
+            {rest.map((p) => (
+              <li data-reveal>
+                <a href={`/blog/${p.id}`} class="card card-link post-card">
+                  <span class="chip">{p.data.category}</span>
+                  <h2>{p.data.title}</h2>
+                  <p>{p.data.description}</p>
+                  <span class="post-meta">
+                    <time datetime={p.data.publishDate.toISOString()}>
+                      {fmt(p.data.publishDate)}
+                    </time>
+                    <span aria-hidden="true">·</span>
+                    <span>{p.data.readingMinutes} min</span>
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  <!--
+    Content roadmap. Each of these targets a real Northern Virginia search that
+    competitors are not answering properly. Add a .md file to src/content/blog/
+    and it appears here automatically — no page wiring needed.
+  -->
+  <section class="section-sm roadmap" data-band="dark">
+    <div class="container">
+      <p class="eyebrow">Coming next</p>
+      <h2>What we're writing</h2>
+      <ul class="road-list">
+        {
+          [
+            'What Fairfax County will and will not collect at the kerb',
+            'Spring cleanout guide: the Northern Virginia seasonal calendar',
+            'Do you need a permit for a dumpster in Arlington?',
+            'Asbestos in pre-1980 NoVA homes: what to test before you demo',
+            'Where to donate furniture in Loudoun County (and what they refuse)',
+            'Storm debris cleanup: what to do in the first 48 hours',
+          ].map((t) => (
+            <li>
+              <Icon name="arrow" size={15} />
+              {t}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <CTABand />
+</Base>
+
+<style>
+  .hd {
+    padding-block: var(--sp-8) var(--sp-7);
+    background: linear-gradient(180deg, var(--surface-sunk), var(--surface));
+  }
+  .hd h1 {
+    max-width: 20ch;
+  }
+  .hd .lede {
+    max-width: 60ch;
+  }
+
+  .feat {
+    display: block;
+    padding: var(--sp-7);
+    background: var(--ink);
+    color: var(--surface);
+    border-radius: var(--r-lg);
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+  }
+  .feat::before {
+    content: '';
+    position: absolute;
+    top: -40%;
+    right: -8%;
+    width: 44ch;
+    height: 44ch;
+    background: radial-gradient(circle, color-mix(in srgb, var(--accent) 20%, transparent), transparent 62%);
+    pointer-events: none;
+  }
+  .feat:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+  }
+  .feat-body {
+    position: relative;
+    max-width: 62ch;
+  }
+  .feat h2 {
+    font-size: var(--step-3);
+    margin-top: var(--sp-4);
+    color: var(--surface);
+  }
+  .feat p {
+    margin-top: var(--sp-4);
+    color: #a99e95;
+    font-size: var(--step-0);
+    line-height: 1.6;
+  }
+  .feat-meta,
+  .post-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--sp-2);
+    margin-top: var(--sp-5);
+    font-size: 0.8rem;
+    color: var(--muted-light);
+  }
+  .feat-link {
+    margin-top: var(--sp-5);
+    color: var(--surface);
+  }
+
+  .post-grid {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--sp-4);
+  }
+  .post-card {
+    height: 100%;
+    display: grid;
+    align-content: start;
+    gap: var(--sp-3);
+    padding: var(--sp-5);
+  }
+  .post-card h2 {
+    font-size: var(--step-1);
+    margin-top: var(--sp-1);
+  }
+  .post-card p {
+    font-size: 0.92rem;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+  .post-card .chip {
+    justify-self: start;
+  }
+  .post-card .post-meta {
+    margin-top: auto;
+    padding-top: var(--sp-4);
+    border-top: 1px solid var(--line);
+    width: 100%;
+    color: var(--muted);
+  }
+
+  .road-list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--sp-3);
+    margin-top: var(--sp-5);
+  }
+  .road-list li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--sp-3);
+    align-items: start;
+    padding-bottom: var(--sp-3);
+    border-bottom: 1px solid var(--ink-line);
+    color: var(--fg-muted);
+    font-size: 0.95rem;
+  }
+  .road-list :global(svg) {
+    color: var(--accent);
+    margin-top: 4px;
+  }
+
+  @media (min-width: 700px) {
+    .post-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .road-list {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--sp-3) var(--sp-7);
+    }
+  }
+  @media (min-width: 1000px) {
+    .post-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

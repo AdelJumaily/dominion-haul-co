@@ -1,0 +1,496 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import FAQ from '../../components/FAQ.astro';
+import CTABand from '../../components/CTABand.astro';
+import QuoteForm from '../../components/QuoteForm.astro';
+import ServiceGrid from '../../components/ServiceGrid.astro';
+import Testimonials from '../../components/Testimonials.astro';
+import Icon from '../../components/Icon.astro';
+import { site, phoneHref, smsHref } from '../../config/site';
+import { tiers } from '../../config/pricing';
+
+export async function getStaticPaths() {
+  const locations = await getCollection('locations');
+  return locations.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const d = entry.data;
+const { Content } = await render(entry);
+
+const all = await getCollection('locations');
+// County pages list their cities; city pages list their siblings.
+const children = all
+  .filter((l) => l.data.county === entry.id)
+  .sort((a, b) => a.data.title.localeCompare(b.data.title));
+const siblings = all
+  .filter((l) => l.data.county === d.county && l.id !== entry.id && d.county !== null)
+  .sort((a, b) => a.data.title.localeCompare(b.data.title));
+const parent = d.county ? all.find((l) => l.id === d.county) : null;
+
+const crumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Service area', url: '/locations' },
+  ...(parent ? [{ name: parent.data.title, url: `/locations/${parent.id}` }] : []),
+  { name: d.title, url: `/locations/${entry.id}` },
+];
+---
+
+<Base
+  title={d.metaTitle}
+  description={d.metaDescription}
+  geoPlacename={`${d.title}, VA`}
+  geoPosition={d.geo}
+  keywords={`junk removal ${d.title}, junk hauling ${d.title} VA, ${d.title} furniture removal, estate cleanout ${d.title}, ${d.zips.join(', ')}`}
+  ogImage="/images/logo.png"
+  schema={{
+    type: 'WebPage',
+    faq: d.faq,
+    breadcrumbs: crumbs,
+    service: {
+      name: `Junk Removal in ${d.title}`,
+      description: d.metaDescription,
+      priceFrom: 95,
+      priceTo: 795,
+    },
+    areaServed: {
+      name: `${d.title}, Virginia`,
+      lat: d.geo.lat,
+      lng: d.geo.lng,
+      postalCode: d.zips[0],
+    },
+  }}
+>
+  <Breadcrumbs crumbs={crumbs} />
+
+  <!-- ── Hero ─────────────────────────────────────────────────────────── -->
+  <section class="loc-hero">
+    <div class="container">
+      <p class="eyebrow">
+        {d.kind === 'city' ? `${d.countyLabel} · ${d.zips.join(' · ')}` : 'Northern Virginia'}
+      </p>
+      <h1>Junk Removal in {d.title}, VA</h1>
+      <p class="loc-deck">{d.headline}</p>
+      <p class="lede loc-lede">{d.lede}</p>
+
+      <div class="btn-row mt-6">
+        <a href={phoneHref} class="btn btn-lg" data-track="call-loc-hero">
+          <Icon name="phone" size={19} />
+          {site.phone.display}
+        </a>
+        <a href="#quote" class="btn btn-lg btn-ghost">
+          Get a free quote
+          <Icon name="arrow" size={18} class="arrow" />
+        </a>
+      </div>
+
+      <dl class="loc-stats">
+        <div>
+          <dt><Icon name="clock" size={15} /> Response time</dt>
+          <dd>{d.responseTime}</dd>
+        </div>
+        <div>
+          <dt><Icon name="tag" size={15} /> Starting price</dt>
+          <dd>$95 · single items</dd>
+        </div>
+        <div>
+          <dt><Icon name="pin" size={15} /> ZIP codes covered</dt>
+          <dd>{d.zips.join(' · ')}</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ── Areas covered ────────────────────────────────────────────────── -->
+  <section class="areas">
+    <div class="container">
+      <p class="areas-label">
+        {d.kind === 'county' ? 'Cities, towns and communities we cover' : 'Neighbourhoods we cover'}
+      </p>
+      <ul class="chip-row">
+        {d.areas.map((a) => <li><span class="chip">{a}</span></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ── Body ─────────────────────────────────────────────────────────── -->
+  <section class="section">
+    <div class="container loc-body">
+      <div class="prose">
+        <Content />
+      </div>
+
+      <aside class="loc-rail">
+        <div class="card rail-card">
+          <h2>Prices in {d.title}</h2>
+          <ul class="rail-prices">
+            {
+              tiers.map((t) => (
+                <li>
+                  <span>{t.name}</span>
+                  <strong>{t.price}</strong>
+                </li>
+              ))
+            }
+          </ul>
+          <p class="rail-note">
+            Same rates across our whole service area — no zone pricing, no distance fee.
+          </p>
+          <a href="/pricing" class="link-arrow rail-link">
+            Full pricing <Icon name="arrow" size={15} class="arrow" />
+          </a>
+        </div>
+
+        <div class="card rail-card rail-contact">
+          <h2>Book {d.title}</h2>
+          <a href={phoneHref} class="rail-phone">
+            <Icon name="phone" size={17} />{site.phone.display}
+          </a>
+          <a href={smsHref} class="link-arrow">
+            <Icon name="message" size={16} /> Text a photo
+          </a>
+          <p class="rail-hours"><Icon name="clock" size={14} /> {site.hoursLabel}</p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ── Child / sibling locations ────────────────────────────────────── -->
+  {
+    (children.length > 0 || siblings.length > 0) && (
+      <section class="section-sm nearby">
+        <div class="container">
+          <h2 class="nearby-head">
+            {children.length > 0
+              ? `Cities and towns in ${d.title}`
+              : `Also serving nearby in ${d.countyLabel}`}
+          </h2>
+          <ul class="nearby-grid">
+            {(children.length > 0 ? children : siblings).map((l) => (
+              <li>
+                <a href={`/locations/${l.id}`} class="nearby-card">
+                  <Icon name="pin" size={16} />
+                  <span>
+                    <strong>{l.data.title}</strong>
+                    <em>{l.data.areas.slice(0, 3).join(' · ')}</em>
+                  </span>
+                  <Icon name="arrow" size={15} class="arrow" />
+                </a>
+              </li>
+            ))}
+            {parent && (
+              <li>
+                <a href={`/locations/${parent.id}`} class="nearby-card nearby-parent">
+                  <Icon name="pin" size={16} />
+                  <span>
+                    <strong>All of {parent.data.title}</strong>
+                    <em>County overview</em>
+                  </span>
+                  <Icon name="arrow" size={15} class="arrow" />
+                </a>
+              </li>
+            )}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- ── Services — deep links to city×service pages ─────────────────── -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">What we haul in {d.title}</p>
+        <h2>Every service, same crew, same pricing</h2>
+      </div>
+      {
+        d.kind === 'city' ? (
+          <ServiceGrid locationSlug={entry.id} locationTitle={d.title} />
+        ) : (
+          <ServiceGrid />
+        )
+      }
+    </div>
+  </section>
+
+  <!-- ── FAQ (schema-marked, unique per location) ─────────────────────── -->
+  <section class="section" data-band="dark">
+    <div class="container">
+      <FAQ
+        items={d.faq}
+        title={`Junk removal in ${d.title} — your questions`}
+        eyebrow={`${d.title} FAQ`}
+        openFirst
+      />
+    </div>
+  </section>
+
+  <!-- ── Reviews ──────────────────────────────────────────────────────── -->
+  <section class="section-sm">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Local reviews</p>
+        <h2>What your neighbours say</h2>
+      </div>
+      <Testimonials limit={3} />
+    </div>
+  </section>
+
+  <!-- ── Quote ────────────────────────────────────────────────────────── -->
+  <section class="section quote-sec" id="quote">
+    <div class="container quote-inner">
+      <div>
+        <p class="eyebrow">Free quote</p>
+        <h2>Get a price for your {d.title} job</h2>
+        <p class="lede mt-4">
+          Send a couple of photos and we will come back with a firm number. No obligation,
+          no charge for looking, and nobody chasing you afterwards.
+        </p>
+      </div>
+      <div class="card quote-card">
+        <QuoteForm city={d.title} id={`quote-${entry.id}`} />
+      </div>
+    </div>
+  </section>
+
+  <CTABand context={d.title} heading={`Serving ${d.title} today`} />
+</Base>
+
+<style>
+  .loc-hero {
+    padding-block: var(--sp-8) var(--sp-7);
+    background:
+      radial-gradient(90ch 45ch at 90% 0%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 70%),
+      linear-gradient(180deg, var(--surface-sunk), var(--surface));
+  }
+  .loc-hero h1 {
+    font-size: var(--step-5);
+    max-width: 18ch;
+  }
+  .loc-deck {
+    margin-top: var(--sp-4);
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 400;
+    letter-spacing: -0.025em;
+    line-height: 1.25;
+    max-width: 28ch;
+    color: var(--ink);
+  }
+  .loc-lede {
+    margin-top: var(--sp-4);
+    max-width: 56ch;
+  }
+
+  .loc-stats {
+    display: grid;
+    gap: var(--sp-4);
+    margin-top: var(--sp-7);
+    padding-top: var(--sp-6);
+    border-top: 1px solid var(--line);
+  }
+  .loc-stats dt {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .loc-stats :global(svg) {
+    color: var(--accent-deep);
+  }
+  .loc-stats dd {
+    margin: var(--sp-2) 0 0;
+    font-size: 0.95rem;
+    font-weight: 650;
+    line-height: 1.4;
+  }
+
+  .areas {
+    padding-block: var(--sp-5);
+    background: var(--surface-raised);
+    border-block: 1px solid var(--line);
+  }
+  .areas-label {
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: var(--sp-3);
+  }
+  .chip-row {
+    list-style: none;
+    padding: 0;
+  }
+
+  .loc-body {
+    display: grid;
+    gap: var(--sp-7);
+    align-items: start;
+  }
+
+  .rail-card {
+    padding: var(--sp-5);
+  }
+  .rail-card h2 {
+    font-size: var(--step-0);
+    font-weight: 800;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    margin-bottom: var(--sp-4);
+  }
+  .rail-prices {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--sp-3);
+  }
+  .rail-prices li {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--sp-4);
+    align-items: baseline;
+    font-size: 0.88rem;
+    padding-bottom: var(--sp-3);
+    border-bottom: 1px solid var(--line);
+  }
+  .rail-prices li:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+  .rail-prices strong {
+    white-space: nowrap;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+  .rail-note {
+    margin-top: var(--sp-4);
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .rail-link {
+    margin-top: var(--sp-4);
+    font-size: 0.88rem;
+  }
+
+  .rail-contact {
+    display: grid;
+    gap: var(--sp-3);
+    justify-items: start;
+  }
+  .rail-phone {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    font-size: var(--step-1);
+    font-weight: 850;
+    letter-spacing: -0.035em;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .rail-phone:hover {
+    color: var(--accent-deep);
+  }
+  .rail-hours {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: var(--sp-2);
+  }
+
+  .nearby {
+    background: var(--surface-sunk);
+  }
+  .nearby-head {
+    font-size: var(--step-2);
+    margin-bottom: var(--sp-5);
+  }
+  .nearby-grid {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--sp-3);
+  }
+  .nearby-card {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: var(--sp-3);
+    align-items: center;
+    padding: var(--sp-4);
+    background: var(--surface-raised);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    text-decoration: none;
+    color: var(--ink);
+    transition: border-color var(--dur) var(--ease), transform var(--dur) var(--ease);
+  }
+  .nearby-card:hover {
+    border-color: var(--accent);
+    transform: translateX(3px);
+  }
+  .nearby-card :global(svg) {
+    color: var(--accent-deep);
+  }
+  .nearby-card strong {
+    display: block;
+    font-size: 0.95rem;
+    letter-spacing: -0.02em;
+  }
+  .nearby-card em {
+    display: block;
+    font-style: normal;
+    font-size: 0.76rem;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .nearby-parent {
+    border-style: dashed;
+  }
+
+  .quote-inner {
+    display: grid;
+    gap: var(--sp-7);
+    align-items: start;
+  }
+  .quote-card {
+    padding: var(--sp-6);
+  }
+
+  @media (min-width: 640px) {
+    .loc-stats {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--sp-5);
+    }
+    .nearby-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 900px) {
+    .loc-body {
+      grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+      gap: var(--sp-8);
+    }
+    .loc-rail {
+      position: sticky;
+      top: calc(var(--header-h) + var(--sp-5));
+      display: grid;
+      gap: var(--sp-4);
+    }
+    .nearby-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .quote-inner {
+      grid-template-columns: 1fr 1.15fr;
+      gap: var(--sp-8);
+    }
+  }
+</style>

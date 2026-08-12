@@ -1,0 +1,307 @@
+---
+/**
+ * Schema.org JSON-LD — connected @graph for local SEO.
+ * AggregateRating emits ONLY when site.rating.verified is true.
+ */
+import { site, addressOneLine, images } from '../config/site';
+
+interface FaqItem {
+  q: string;
+  a: string;
+}
+interface Crumb {
+  name: string;
+  url: string;
+}
+
+interface Props {
+  type?: 'WebPage' | 'Service' | 'AboutPage' | 'ContactPage' | 'BlogPosting' | 'CollectionPage';
+  title: string;
+  description: string;
+  url: string;
+  faq?: FaqItem[];
+  breadcrumbs?: Crumb[];
+  service?: { name: string; description: string; priceFrom?: number; priceTo?: number };
+  areaServed?: { name: string; lat: number; lng: number; postalCode?: string };
+  article?: { published: string; modified?: string; author: string };
+  /** Absolute or site-relative image for page / OG alignment */
+  image?: string;
+}
+
+const {
+  type = 'WebPage',
+  title,
+  description,
+  url,
+  faq = [],
+  breadcrumbs = [],
+  service,
+  areaServed,
+  article,
+  image,
+} = Astro.props;
+
+const origin = Astro.site?.origin ?? 'https://dominionhaulco.com';
+const abs = (p: string) => new URL(p, origin).href;
+const BIZ = `${origin}/#business`;
+const logoUrl = abs('/images/logo.png');
+const primaryImage = image ? abs(image) : logoUrl;
+
+const dayMap: Record<string, string> = {
+  Monday: 'Mo',
+  Tuesday: 'Tu',
+  Wednesday: 'We',
+  Thursday: 'Th',
+  Friday: 'Fr',
+  Saturday: 'Sa',
+  Sunday: 'Su',
+};
+
+const countyAreas = [
+  { '@type': 'AdministrativeArea', name: 'Fairfax County, Virginia' },
+  { '@type': 'AdministrativeArea', name: 'Loudoun County, Virginia' },
+  { '@type': 'AdministrativeArea', name: 'Prince William County, Virginia' },
+  { '@type': 'AdministrativeArea', name: 'Arlington County, Virginia' },
+  {
+    '@type': 'GeoCircle',
+    geoMidpoint: {
+      '@type': 'GeoCoordinates',
+      latitude: site.geo.lat,
+      longitude: site.geo.lng,
+    },
+    geoRadius: `${site.serviceRadiusMiles * 1609.34}`,
+  },
+  { '@type': 'City', name: 'Chantilly, Virginia' },
+  { '@type': 'City', name: 'Reston, Virginia' },
+  { '@type': 'City', name: 'Vienna, Virginia' },
+  { '@type': 'City', name: 'Fairfax, Virginia' },
+  { '@type': 'City', name: 'Ashburn, Virginia' },
+  { '@type': 'City', name: 'Leesburg, Virginia' },
+  { '@type': 'City', name: 'Manassas, Virginia' },
+  { '@type': 'City', name: 'Arlington, Virginia' },
+];
+
+const sameAs = Object.values(site.social).filter((u) => {
+  if (!u) return false;
+  // Drop generic network roots — they dilute the entity graph.
+  if (/^https?:\/\/(www\.)?(google\.com\/maps|facebook\.com|instagram\.com)\/?$/i.test(u)) {
+    return false;
+  }
+  return true;
+});
+
+const business: Record<string, unknown> = {
+  '@type': ['LocalBusiness', 'HomeAndConstructionBusiness'],
+  '@id': BIZ,
+  name: site.name,
+  legalName: site.legalName,
+  alternateName: [site.shortName, 'Dominion Haul'],
+  description: site.description,
+  url: origin,
+  telephone: site.phone.e164,
+  email: site.email,
+  image: [logoUrl, abs(images.heroTruck.src ?? '/images/logo.png')],
+  logo: {
+    '@type': 'ImageObject',
+    url: logoUrl,
+    width: 480,
+    height: 360,
+  },
+  priceRange: '$$',
+  currenciesAccepted: 'USD',
+  paymentAccepted: 'Cash, Credit Card, Debit Card, Apple Pay, Google Pay',
+  foundingDate: site.founded,
+  slogan: site.tagline,
+  knowsAbout: [
+    'Junk removal',
+    'Furniture removal',
+    'Appliance removal',
+    'Estate cleanouts',
+    'Construction debris removal',
+    'Yard waste removal',
+    'Shed removal',
+    'Commercial cleanouts',
+    'Northern Virginia junk hauling',
+  ],
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: site.address.street,
+    addressLocality: site.address.city,
+    addressRegion: site.address.state,
+    postalCode: site.address.zip,
+    addressCountry: site.address.country,
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: site.geo.lat,
+    longitude: site.geo.lng,
+  },
+  hasMap: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(addressOneLine)}`,
+  areaServed: countyAreas,
+  openingHoursSpecification: site.hours.map((h) => ({
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: h.days.map((d) => dayMap[d]),
+    opens: h.open,
+    closes: h.close,
+  })),
+  contactPoint: [
+    {
+      '@type': 'ContactPoint',
+      telephone: site.phone.e164,
+      contactType: 'customer service',
+      areaServed: 'US-VA',
+      availableLanguage: ['English'],
+    },
+  ],
+};
+
+if (sameAs.length) {
+  business.sameAs = sameAs;
+}
+
+if (site.rating.verified) {
+  business.aggregateRating = {
+    '@type': 'AggregateRating',
+    ratingValue: site.rating.value,
+    reviewCount: site.rating.count,
+    bestRating: 5,
+    worstRating: 1,
+  };
+}
+
+const pageId = `${abs(url)}#page`;
+
+const graph: Record<string, unknown>[] = [
+  business,
+  {
+    '@type': type === 'BlogPosting' ? 'WebPage' : type,
+    '@id': pageId,
+    url: abs(url),
+    name: title,
+    description,
+    isPartOf: { '@id': `${origin}/#website` },
+    about: { '@id': BIZ },
+    primaryImageOfPage: { '@type': 'ImageObject', url: primaryImage },
+    inLanguage: 'en-US',
+    ...(breadcrumbs.length
+      ? { breadcrumb: { '@id': `${abs(url)}#breadcrumbs` } }
+      : {}),
+  },
+  {
+    '@type': 'WebSite',
+    '@id': `${origin}/#website`,
+    url: origin,
+    name: site.name,
+    description: site.description,
+    publisher: { '@id': BIZ },
+    inLanguage: 'en-US',
+  },
+];
+
+if (breadcrumbs.length) {
+  graph.push({
+    '@type': 'BreadcrumbList',
+    '@id': `${abs(url)}#breadcrumbs`,
+    itemListElement: breadcrumbs.map((c, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: c.name,
+      item: abs(c.url),
+    })),
+  });
+}
+
+if (service) {
+  const place = areaServed
+    ? {
+        '@type': 'Place',
+        name: areaServed.name,
+        geo: {
+          '@type': 'GeoCoordinates',
+          latitude: areaServed.lat,
+          longitude: areaServed.lng,
+        },
+        ...(areaServed.postalCode
+          ? {
+              address: {
+                '@type': 'PostalAddress',
+                addressLocality: areaServed.name.replace(/, Virginia$/, ''),
+                addressRegion: 'VA',
+                postalCode: areaServed.postalCode,
+                addressCountry: 'US',
+              },
+            }
+          : {}),
+      }
+    : null;
+
+  const node: Record<string, unknown> = {
+    '@type': 'Service',
+    '@id': `${abs(url)}#service`,
+    name: service.name,
+    description: service.description,
+    serviceType: service.name,
+    category: 'Junk Removal',
+    provider: { '@id': BIZ },
+    brand: { '@id': BIZ },
+    areaServed: place ? [place] : countyAreas,
+    termsOfService: abs('/pricing'),
+  };
+  if (service.priceFrom != null) {
+    node.offers = {
+      '@type': 'Offer',
+      url: abs(url),
+      priceCurrency: 'USD',
+      price: String(service.priceFrom),
+      priceSpecification: {
+        '@type': 'PriceSpecification',
+        minPrice: service.priceFrom,
+        maxPrice: service.priceTo ?? service.priceFrom,
+        priceCurrency: 'USD',
+      },
+      availability: 'https://schema.org/InStock',
+      eligibleRegion: {
+        '@type': 'Place',
+        name: 'Northern Virginia, US-VA',
+      },
+    };
+  }
+  graph.push(node);
+
+  // Surface offers on the LocalBusiness for richer local panels
+  if (!graph[0].makesOffer) {
+    graph[0].makesOffer = { '@id': `${abs(url)}#service` };
+  }
+}
+
+if (faq.length) {
+  graph.push({
+    '@type': 'FAQPage',
+    '@id': `${abs(url)}#faq`,
+    mainEntity: faq.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  });
+}
+
+if (article) {
+  graph.push({
+    '@type': 'BlogPosting',
+    '@id': `${abs(url)}#article`,
+    headline: title,
+    description,
+    image: primaryImage,
+    datePublished: article.published,
+    dateModified: article.modified ?? article.published,
+    author: { '@type': 'Organization', name: article.author, '@id': BIZ },
+    publisher: { '@id': BIZ },
+    mainEntityOfPage: { '@id': pageId },
+  });
+}
+
+const jsonLd = { '@context': 'https://schema.org', '@graph': graph };
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />

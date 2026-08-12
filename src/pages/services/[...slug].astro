@@ -1,0 +1,389 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import Figure from '../../components/Figure.astro';
+import FAQ from '../../components/FAQ.astro';
+import CTABand from '../../components/CTABand.astro';
+import QuoteForm from '../../components/QuoteForm.astro';
+import Icon from '../../components/Icon.astro';
+import { site, phoneHref } from '../../config/site';
+
+export async function getStaticPaths() {
+  const services = await getCollection('services');
+  return services.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const d = entry.data;
+const { Content } = await render(entry);
+
+const all = await getCollection('services');
+const related = d.related
+  .map((id) => all.find((s) => s.id === id))
+  .filter((s): s is NonNullable<typeof s> => Boolean(s));
+
+const cities = (await getCollection('locations'))
+  .filter((l) => l.data.kind === 'city')
+  .sort((a, b) => a.data.title.localeCompare(b.data.title));
+
+const crumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Services', url: '/services' },
+  { name: d.title, url: `/services/${entry.id}` },
+];
+---
+
+<Base
+  title={d.metaTitle}
+  description={d.metaDescription}
+  keywords={`${d.title} Northern Virginia, ${d.title} Fairfax, ${d.title} Loudoun, ${d.title} Prince William, ${d.title} Arlington, junk removal VA`}
+  geoPlacename="Northern Virginia"
+  schema={{
+    type: 'Service',
+    faq: d.faq,
+    breadcrumbs: crumbs,
+    service: {
+      name: d.title,
+      description: d.metaDescription,
+      priceFrom: d.priceFrom,
+      priceTo: d.priceTo,
+    },
+  }}
+>
+  <Breadcrumbs crumbs={crumbs} />
+
+  <!-- ── Hero ─────────────────────────────────────────────────────────── -->
+  <section class="svc-hero">
+    <div class="container svc-hero-inner">
+      <div class="svc-hero-copy">
+        <p class="eyebrow">{d.title}</p>
+        <h1>{d.headline}</h1>
+        <p class="lede">{d.lede}</p>
+
+        <div class="btn-row mt-6">
+          <a href={phoneHref} class="btn btn-lg" data-track="call-service-hero">
+            <Icon name="phone" size={18} />
+            {site.phone.display}
+          </a>
+          <a href="#quote" class="btn btn-lg btn-ghost">
+            Get a free quote
+            <Icon name="arrow" size={18} class="arrow" />
+          </a>
+        </div>
+
+        <ul class="svc-facts">
+          <li>
+            <Icon name="tag" size={16} />
+            <span>From <strong>${d.priceFrom}</strong> · priced by volume</span>
+          </li>
+          <li>
+            <Icon name="bolt" size={16} />
+            <span>Same-day slots most weekdays</span>
+          </li>
+          <li>
+            <Icon name="shield" size={16} />
+            <span>Licensed, insured, locally owned</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="svc-hero-media">
+        <Figure imageKey={d.imageKey} priority ratio="4/3" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Body + sticky rail ───────────────────────────────────────────── -->
+  <section class="section">
+    <div class="container svc-body">
+      <div class="prose">
+        <Content />
+      </div>
+
+      <aside class="svc-rail">
+        <div class="card rail-card">
+          <h2>What's included</h2>
+          <ul class="rail-list">
+            {d.includes.map((i) => <li><Icon name="check" size={16} class="ok" />{i}</li>)}
+          </ul>
+        </div>
+
+        <div class="card rail-card">
+          <h2>We take</h2>
+          <ul class="rail-list rail-tight">
+            {d.accepts.map((i) => <li><Icon name="check" size={16} class="ok" />{i}</li>)}
+          </ul>
+          <h2 class="mt">We can't take</h2>
+          <ul class="rail-list rail-tight">
+            {d.excludes.map((i) => <li><Icon name="x" size={16} class="no" />{i}</li>)}
+          </ul>
+          <p class="rail-note">
+            Not sure about something? Text a photo to {site.phone.display} and we'll tell you
+            straight away.
+          </p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ── FAQ ──────────────────────────────────────────────────────────── -->
+  <section class="section" data-band="dark">
+    <div class="container">
+      <FAQ items={d.faq} title={`${d.title} questions, answered`} />
+    </div>
+  </section>
+
+  <!-- ── Quote form ───────────────────────────────────────────────────── -->
+  <section class="section" id="quote">
+    <div class="container svc-quote">
+      <div class="section-head">
+        <p class="eyebrow">Free quote</p>
+        <h2>Tell us what you've got</h2>
+        <p class="lede">
+          A couple of photos is usually enough for a firm price. No obligation, and no
+          upfront charge for coming to look.
+        </p>
+      </div>
+      <div class="card svc-quote-card">
+        <QuoteForm preselect={entry.id} id={`quote-${entry.id}`} />
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Related ──────────────────────────────────────────────────────── -->
+  {
+    related.length > 0 && (
+      <section class="section-sm rel">
+        <div class="container">
+          <h2 class="rel-head">Often booked alongside</h2>
+          <ul class="rel-grid">
+            {related.map((r) => (
+              <li>
+                <a href={`/services/${r.id}`} class="card card-link rel-card">
+                  <h3>{r.data.title}</h3>
+                  <p>{r.data.cardBlurb}</p>
+                  <span class="link-arrow">
+                    See details <Icon name="arrow" size={16} class="arrow" />
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- ── Local SEO — city deep links ──────────────────────────────────── -->
+  <section class="section" data-band="muted">
+    <div class="container">
+      <div class="section-head wide">
+        <h2>{d.title} across Northern Virginia</h2>
+        <p class="lede">
+          Same published pricing in every city we serve. Pick your town for local details,
+          HOA notes, and drive-time.
+        </p>
+      </div>
+      <ul class="svc-cities">
+        {
+          cities.map((c) => (
+            <li>
+              <a href={`/locations/${c.id}/${entry.id}`}>
+                {d.title} in {c.data.title}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="mt-5">
+        <a href="/locations" class="link-arrow">
+          All service areas <Icon name="arrow" size={16} class="arrow" />
+        </a>
+      </p>
+    </div>
+  </section>
+
+  <CTABand
+    heading={`Need ${d.title.toLowerCase()} this week?`}
+    sub="Call, text a photo, or fill in the form. You get a real price before we lift anything."
+  />
+</Base>
+
+<style>
+  .svc-hero {
+    padding-block: var(--sp-8) var(--sp-7);
+    background: linear-gradient(180deg, var(--surface-sunk), var(--surface));
+    border-bottom: 1px solid var(--line);
+  }
+  .svc-hero-inner {
+    display: grid;
+    gap: var(--sp-7);
+    align-items: center;
+  }
+  .svc-hero h1 {
+    font-size: var(--step-5);
+  }
+  .svc-hero .lede {
+    margin-top: var(--sp-5);
+  }
+
+  .svc-facts {
+    list-style: none;
+    padding: 0;
+    margin-top: var(--sp-6);
+    display: grid;
+    gap: var(--sp-3);
+  }
+  .svc-facts li {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+    font-size: 0.92rem;
+    color: var(--muted);
+  }
+  .svc-facts :global(svg) {
+    color: var(--accent-deep);
+    flex: none;
+  }
+  .svc-facts strong {
+    color: var(--ink);
+  }
+
+  .svc-body {
+    display: grid;
+    gap: var(--sp-7);
+    align-items: start;
+  }
+
+  .rail-card {
+    padding: var(--sp-5);
+  }
+  .rail-card h2 {
+    font-size: var(--step-0);
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: var(--sp-4);
+  }
+  .rail-card h2.mt {
+    margin-top: var(--sp-6);
+  }
+  .rail-list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--sp-3);
+  }
+  .rail-list li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--sp-3);
+    align-items: start;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+  .rail-tight li {
+    gap: var(--sp-2);
+  }
+  .rail-list :global(.ok) {
+    color: var(--success);
+    margin-top: 3px;
+  }
+  .rail-list :global(.no) {
+    color: #b03a28;
+    margin-top: 3px;
+  }
+  .rail-note {
+    margin-top: var(--sp-5);
+    padding-top: var(--sp-4);
+    border-top: 1px solid var(--line);
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .svc-quote {
+    display: grid;
+    gap: var(--sp-6);
+  }
+  .svc-quote-card {
+    padding: var(--sp-6);
+  }
+
+  .rel-head {
+    font-size: var(--step-2);
+    margin-bottom: var(--sp-5);
+  }
+  .rel-grid {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--sp-4);
+  }
+  .rel-card {
+    height: 100%;
+    display: grid;
+    align-content: start;
+    gap: var(--sp-3);
+    padding: var(--sp-5);
+  }
+  .rel-card h3 {
+    font-size: var(--step-1);
+  }
+  .rel-card p {
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+
+  .svc-cities {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--sp-3) var(--sp-5);
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+  .svc-cities a {
+    color: var(--ink);
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 2px;
+    transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+  }
+  .svc-cities a:hover {
+    color: var(--accent-deep);
+    border-color: var(--accent);
+  }
+
+  @media (min-width: 700px) {
+    .rel-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  @media (min-width: 900px) {
+    .svc-hero-inner {
+      grid-template-columns: 1.15fr 1fr;
+      gap: var(--sp-8);
+    }
+    .svc-body {
+      grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+      gap: var(--sp-8);
+    }
+    .svc-rail {
+      position: sticky;
+      top: calc(var(--header-h) + var(--sp-5));
+      display: grid;
+      gap: var(--sp-4);
+    }
+    .svc-quote {
+      grid-template-columns: 1fr 1.2fr;
+      gap: var(--sp-8);
+      align-items: start;
+    }
+    .svc-quote .section-head {
+      margin-bottom: 0;
+    }
+  }
+</style>

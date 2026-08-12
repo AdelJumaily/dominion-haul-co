@@ -1,0 +1,286 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import Figure from '../../components/Figure.astro';
+import CTABand from '../../components/CTABand.astro';
+import Icon from '../../components/Icon.astro';
+import { site } from '../../config/site';
+
+const all = await getCollection('locations');
+const counties = all
+  .filter((l) => l.data.kind === 'county')
+  .sort((a, b) => a.data.order - b.data.order);
+
+const crumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Service area', url: '/locations' },
+];
+---
+
+<Base
+  title="Service Area | Junk Removal Across Northern Virginia"
+  description="Dominion Haul Co serves Fairfax, Loudoun, Prince William and Arlington counties — plus Reston, Ashburn, Vienna, Manassas, Woodbridge and more. Same pricing everywhere, no distance fees."
+  schema={{ type: 'CollectionPage', breadcrumbs: crumbs }}
+>
+  <Breadcrumbs crumbs={crumbs} />
+
+  <section class="hd">
+    <div class="container">
+      <p class="eyebrow">Service area</p>
+      <h1>Four counties. One price list. No distance fees.</h1>
+      <p class="lede mt-5">
+        We cover everything within about {site.serviceRadiusMiles} miles of Chantilly, which
+        takes in essentially all of Northern Virginia. A half load costs the same in
+        Haymarket as it does in Vienna — the drive is our routing problem, not a line on
+        your invoice.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      {
+        counties.map((county) => {
+          const cities = all
+            .filter((l) => l.data.county === county.id)
+            .sort((a, b) => a.data.title.localeCompare(b.data.title));
+          return (
+            <div class="county-block">
+              <div class="county-head">
+                <div>
+                  <h2>
+                    <a href={`/locations/${county.id}`}>{county.data.title}</a>
+                  </h2>
+                  <p class="county-lede">{county.data.lede}</p>
+                </div>
+                <a href={`/locations/${county.id}`} class="btn btn-ghost county-btn">
+                  County page
+                  <Icon name="arrow" size={16} class="arrow" />
+                </a>
+              </div>
+
+              {cities.length > 0 && (
+                <ul class="city-grid">
+                  {cities.map((c) => (
+                    <li>
+                      <a href={`/locations/${c.id}`} class="city-card">
+                        <span class="city-name">
+                          {c.data.title}
+                          <Icon name="arrow" size={15} class="arrow" />
+                        </span>
+                        <span class="city-areas">{c.data.areas.slice(0, 4).join(' · ')}</span>
+                        <span class="city-zips">{c.data.zips.join(' · ')}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              )}
+
+              <details class="county-more">
+                <summary>
+                  Everywhere else we cover in {county.data.title}
+                  <Icon name="chevron" size={16} />
+                </summary>
+                <ul class="chip-row more-chips">
+                  {county.data.areas.map((a) => (
+                    <li>
+                      <span class="chip">{a}</span>
+                    </li>
+                  ))}
+                </ul>
+                <p class="more-note">
+                  These do not all have their own page yet, and we absolutely serve them.
+                  Call and ask — the answer is nearly always yes.
+                </p>
+              </details>
+            </div>
+          );
+        })
+      }
+    </div>
+  </section>
+
+  <section class="section-sm map-sec">
+    <div class="container map-inner">
+      <div>
+        <p class="eyebrow">Not sure if you're in it?</p>
+        <h2>Just ask. It's usually yes.</h2>
+        <p class="lede mt-4">
+          Our radius reaches Purcellville in the west, Woodbridge in the south, the Potomac
+          in the north and the DC line in the east. If you're near an edge, call — we would
+          rather tell you honestly than have you guess.
+        </p>
+        <a href="/contact" class="btn mt-5">
+          Check your address
+          <Icon name="arrow" size={17} class="arrow" />
+        </a>
+      </div>
+      <Figure imageKey="serviceAreaMap" ratio="4/3" />
+    </div>
+  </section>
+
+  <CTABand />
+</Base>
+
+<style>
+  .hd {
+    padding-block: var(--sp-8) var(--sp-7);
+    background: linear-gradient(180deg, var(--surface-sunk), var(--surface));
+  }
+  .hd h1 {
+    max-width: 18ch;
+  }
+  .hd .lede {
+    max-width: 60ch;
+  }
+
+  .county-block {
+    padding-block: var(--sp-7);
+    border-top: 3px solid var(--ink);
+  }
+  .county-block:first-child {
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .county-head {
+    display: grid;
+    gap: var(--sp-4);
+    margin-bottom: var(--sp-6);
+  }
+  .county-head h2 {
+    font-size: var(--step-3);
+  }
+  .county-head h2 a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .county-head h2 a:hover {
+    color: var(--accent-deep);
+  }
+  .county-lede {
+    margin-top: var(--sp-3);
+    color: var(--muted);
+    max-width: 62ch;
+    line-height: 1.6;
+  }
+  .county-btn {
+    justify-self: start;
+    min-height: 44px;
+    padding: 0.5rem 1rem;
+    font-size: 0.88rem;
+  }
+
+  .city-grid {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--sp-3);
+  }
+  .city-card {
+    display: grid;
+    gap: var(--sp-2);
+    height: 100%;
+    padding: var(--sp-5);
+    background: var(--surface-raised);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    text-decoration: none;
+    color: var(--ink);
+    transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease),
+      border-color var(--dur) var(--ease);
+  }
+  .city-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--accent);
+  }
+  .city-name {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-3);
+    font-size: var(--step-1);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+  }
+  .city-name :global(svg) {
+    color: var(--accent-deep);
+  }
+  .city-areas {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .city-zips {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--muted-light);
+    padding-top: var(--sp-3);
+    border-top: 1px solid var(--line);
+    margin-top: auto;
+  }
+
+  .county-more {
+    margin-top: var(--sp-5);
+  }
+  .county-more summary {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    cursor: pointer;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--muted);
+    list-style: none;
+  }
+  .county-more summary::-webkit-details-marker {
+    display: none;
+  }
+  .county-more summary:hover {
+    color: var(--ink);
+  }
+  .county-more[open] summary :global(svg) {
+    transform: rotate(180deg);
+  }
+  .more-chips {
+    list-style: none;
+    padding: 0;
+    margin-top: var(--sp-4);
+  }
+  .more-note {
+    margin-top: var(--sp-4);
+    font-size: 0.85rem;
+    color: var(--muted);
+    max-width: 60ch;
+  }
+
+  .map-sec {
+    background: var(--surface-sunk);
+  }
+  .map-inner {
+    display: grid;
+    gap: var(--sp-7);
+    align-items: center;
+  }
+
+  @media (min-width: 600px) {
+    .city-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 900px) {
+    .county-head {
+      grid-template-columns: 1fr auto;
+      align-items: start;
+    }
+    .city-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .map-inner {
+      grid-template-columns: 1.2fr 1fr;
+      gap: var(--sp-8);
+    }
+  }
+</style>

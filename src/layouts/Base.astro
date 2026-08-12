@@ -1,0 +1,184 @@
+---
+import '../styles/global.css';
+import { site } from '../config/site';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import CallBar from '../components/CallBar.astro';
+import Schema from '../components/Schema.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Set false on thin/duplicate pages you don't want indexed. */
+  index?: boolean;
+  schema?: Record<string, unknown>;
+  ogType?: string;
+  /** Override default OG/Twitter image (site-relative or absolute). */
+  ogImage?: string;
+  /** Optional geo placename for local pages (e.g. "Reston, VA"). */
+  geoPlacename?: string;
+  /** Optional lat,lng override for location pages. */
+  geoPosition?: { lat: number; lng: number };
+  /** Comma-separated keywords — used sparingly; Google mostly ignores but others don't. */
+  keywords?: string;
+}
+
+const {
+  title,
+  description,
+  index = true,
+  schema = {},
+  ogType = 'website',
+  ogImage = '/images/logo.png',
+  geoPlacename = 'Northern Virginia',
+  geoPosition = site.geo,
+  keywords,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname.replace(/\/$/, '') || '/', Astro.site).href;
+const fullTitle = title.includes(site.name) ? title : `${title} | ${site.name}`;
+const ogImageAbs = new URL(ogImage, Astro.site).href;
+const geoPos = `${geoPosition.lat};${geoPosition.lng}`;
+---
+
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    {keywords && <meta name="keywords" content={keywords} />}
+    <link rel="canonical" href={canonical} />
+    {!index && <meta name="robots" content="noindex, follow" />}
+    {index && (
+      <meta
+        name="robots"
+        content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+      />
+    )}
+    <meta name="author" content={site.name} />
+    <meta name="publisher" content={site.legalName} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:image" content={ogImageAbs} />
+    <meta property="og:image:alt" content={`${site.name} junk removal — Northern Virginia`} />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageAbs} />
+
+    <!-- Local / geo -->
+    <meta name="geo.region" content="US-VA" />
+    <meta name="geo.placename" content={geoPlacename} />
+    <meta name="geo.position" content={geoPos} />
+    <meta name="ICBM" content={`${geoPosition.lat}, ${geoPosition.lng}`} />
+    <meta name="theme-color" content="#142019" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=boska@400,500,700&f[]=satoshi@400,500,700,900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://images.pexels.com" />
+
+    <link rel="icon" href="/images/logo.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/images/logo.png" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <Schema
+      title={fullTitle}
+      description={description}
+      url={Astro.url.pathname}
+      image={ogImage}
+      {...schema}
+    />
+  </head>
+
+  <body>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <CallBar />
+
+    <script>
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const targets = document.querySelectorAll('[data-reveal]');
+      const counters = document.querySelectorAll<HTMLElement>('[data-count]');
+
+      if (!reduced && targets.length && 'IntersectionObserver' in window) {
+        document.documentElement.classList.add('reveal-ready');
+
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-in');
+                io.unobserve(entry.target);
+              }
+            }
+          },
+          { rootMargin: '0px 0px -8% 0px', threshold: 0.05 }
+        );
+
+        targets.forEach((el, i) => {
+          (el as HTMLElement).style.transitionDelay = `${Math.min(i % 4, 3) * 55}ms`;
+          io.observe(el);
+        });
+      }
+
+      const animateCount = (el: HTMLElement) => {
+        const end = Number(el.dataset.count || 0);
+        const prefix = el.dataset.prefix || '';
+        const suffix = el.dataset.suffix || '';
+        const duration = 1100;
+        const start = performance.now();
+
+        const tick = (now: number) => {
+          const t = Math.min(1, (now - start) / duration);
+          const eased = 1 - Math.pow(1 - t, 3);
+          el.textContent = `${prefix}${Math.round(end * eased)}${suffix}`;
+          if (t < 1) requestAnimationFrame(tick);
+        };
+
+        if (reduced) {
+          el.textContent = `${prefix}${end}${suffix}`;
+          return;
+        }
+        requestAnimationFrame(tick);
+      };
+
+      if (counters.length && 'IntersectionObserver' in window) {
+        const cio = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (entry.isIntersecting) {
+                animateCount(entry.target as HTMLElement);
+                cio.unobserve(entry.target);
+              }
+            }
+          },
+          { threshold: 0.4 }
+        );
+        counters.forEach((el) => cio.observe(el));
+      } else {
+        counters.forEach((el) => {
+          const end = el.dataset.count || '0';
+          el.textContent = `${el.dataset.prefix || ''}${end}${el.dataset.suffix || ''}`;
+        });
+      }
+    </script>
+  </body>
+</html>

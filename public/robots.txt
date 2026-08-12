@@ -1,0 +1,11 @@
+# Dominion Haul Co — robots.txt
+# Update the Sitemap host if the domain changes (must match astro.config.mjs).
+
+User-agent: *
+Allow: /
+
+# Keep crawl budget on indexable marketing pages
+Disallow: /404
+Disallow: /cdn-cgi/
+
+Sitemap: https://dominionhaulco.com/sitemap-index.xml

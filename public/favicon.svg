@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Dominion Haul Co — leaf mark on Virginia leaf green #2B6148 -->
+  <rect width="32" height="32" rx="3" fill="#142019"/>
+  <path fill="#2B6148" d="M10 22c0-6 4.5-11 8.5-13.5-1.5 4-1 8.5 1.5 12C16.5 22.5 12.5 23.5 10 22z"/>
+  <path fill="#a8d5b5" d="M18.5 8.5c2.5 1.5 5 5 5.5 9.5-3 .5-5.5-.5-7-2.5 1-2.5 1-5 .5-7z" opacity=".85"/>
+</svg>

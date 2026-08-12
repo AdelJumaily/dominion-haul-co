@@ -1,0 +1,272 @@
+---
+/**
+ * Load-size pricing.
+ *
+ * This is the single biggest competitive lever on the site. Every established
+ * NoVA competitor hides price behind "call for a free estimate". Publishing a
+ * real table intercepts the "how much does junk removal cost in Fairfax"
+ * searches they cannot rank for honestly — and it pre-qualifies leads, so the
+ * calls that do come in are already comfortable with the range.
+ *
+ * ⚠️ These are realistic NoVA market figures, but they are ESTIMATES seeded for
+ * layout. Confirm every number against your own dump fees, fuel and labour
+ * before launch — publishing a price you can't honour is worse than no price.
+ */
+import Icon from './Icon.astro';
+import { tiers, included, surcharges } from '../config/pricing';
+
+interface Props {
+  compact?: boolean;
+}
+const { compact = false } = Astro.props;
+---
+
+<div class="pricing">
+  <div class="tiers">
+    {
+      tiers.map((t) => (
+        <article class={`tier ${t.popular ? 'tier-popular' : ''}`}>
+          {t.popular && <span class="tier-flag">Most common</span>}
+
+          <header class="tier-head">
+            <h3>{t.name}</h3>
+            <p class="tier-vol">{t.volume}</p>
+          </header>
+
+          {/* Truck-fill meter — makes an abstract "half load" instantly legible */}
+          <div class="meter" role="img" aria-label={`${t.name}: about ${t.fill}% of the truck`}>
+            <div class="meter-fill" style={`width:${t.fill}%`} />
+            <span class="meter-pct">{t.fill}%</span>
+          </div>
+
+          <p class="tier-price">{t.price}</p>
+
+          {!compact && (
+            <>
+              <p class="tier-ex">{t.examples}</p>
+              <p class="tier-truck">
+                <Icon name="truck" size={14} />
+                {t.truck}
+              </p>
+            </>
+          )}
+        </article>
+      ))
+    }
+  </div>
+
+  <aside class="included">
+    <h3>Every price above already includes</h3>
+    <ul class="incl-list">
+      {
+        included.map((i) => (
+          <li>
+            <Icon name="check" size={17} class="ok" />
+            {i}
+          </li>
+        ))
+      }
+    </ul>
+
+    <h3 class="mt">What would ever change the price</h3>
+    <ul class="incl-list">
+      {
+        surcharges.map((i) => (
+          <li>
+            <Icon name="x" size={17} class="warn" />
+            {i}
+          </li>
+        ))
+      }
+    </ul>
+    <p class="incl-note">
+      Any of these gets quoted out loud, on site, before a single thing goes in the
+      truck. Nothing is ever added to the bill after the fact.
+    </p>
+  </aside>
+</div>
+
+<style>
+  .pricing {
+    display: grid;
+    gap: var(--sp-7);
+  }
+
+  .tiers {
+    display: grid;
+    gap: var(--sp-4);
+  }
+  @media (min-width: 640px) {
+    .tiers {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1100px) {
+    .tiers {
+      grid-template-columns: repeat(5, 1fr);
+      gap: var(--sp-3);
+    }
+  }
+
+  .tier {
+    position: relative;
+    /* Flex column rather than grid: `margin-top:auto` on the footer only
+       pushes to the bottom in a flex context, which is what keeps the
+       truck-size note baseline-aligned across cards of differing text length. */
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--sp-3);
+    padding: var(--sp-5);
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: var(--r-lg);
+    transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+  }
+  .tier:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+  }
+  .tier-popular {
+    border-color: var(--accent);
+    border-width: 2px;
+    box-shadow: var(--shadow-md);
+  }
+  .tier-flag {
+    position: absolute;
+    top: -11px;
+    left: var(--sp-5);
+    background: var(--accent);
+    color: #f4f7f4;
+    font-size: 0.66rem;
+    font-weight: 800;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.55rem;
+    border-radius: var(--r-sm);
+  }
+
+  .tier-head h3 {
+    font-size: var(--step-1);
+  }
+  .tier-vol {
+    font-size: 0.8rem;
+    color: var(--fg-muted);
+    font-weight: 600;
+    margin-top: 2px;
+  }
+
+  .meter {
+    position: relative;
+    height: 30px;
+    background: var(--surface-sunk);
+    border-radius: var(--r-sm);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+  }
+  [data-band='dark'] .meter {
+    background: var(--ink);
+  }
+  .meter-fill {
+    position: absolute;
+    inset: 0 auto 0 0;
+    background: repeating-linear-gradient(
+      -45deg,
+      var(--accent),
+      var(--accent) 7px,
+      var(--accent-hot) 7px,
+      var(--accent-hot) 14px
+    );
+  }
+  .meter-pct {
+    position: relative;
+    margin-left: auto;
+    padding-right: var(--sp-3);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--fg-muted);
+  }
+
+  .tier-price {
+    font-size: var(--step-2);
+    font-weight: 850;
+    letter-spacing: -0.04em;
+    line-height: 1.1;
+  }
+  .tier-ex {
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: var(--fg-muted);
+  }
+  .tier-truck {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+    font-size: 0.78rem;
+    color: var(--muted-light);
+    padding-top: var(--sp-3);
+    border-top: 1px solid var(--rule);
+    margin-top: auto;
+  }
+
+  .included {
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: var(--r-lg);
+    padding: var(--sp-6);
+  }
+  .included h3 {
+    font-size: var(--step-1);
+    margin-bottom: var(--sp-4);
+  }
+  .included h3.mt {
+    margin-top: var(--sp-7);
+  }
+  .incl-list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--sp-3);
+  }
+  .incl-list li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--sp-3);
+    align-items: start;
+    font-size: 0.94rem;
+    line-height: 1.5;
+  }
+  .incl-list :global(.ok) {
+    color: var(--success);
+    margin-top: 2px;
+  }
+  .incl-list :global(.warn) {
+    color: var(--accent-deep);
+    margin-top: 2px;
+  }
+  .incl-note {
+    margin-top: var(--sp-5);
+    padding-top: var(--sp-5);
+    border-top: 1px solid var(--rule);
+    font-size: 0.92rem;
+    font-weight: 650;
+    color: var(--fg);
+  }
+
+  @media (min-width: 900px) {
+    .included {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--sp-7);
+      align-items: start;
+    }
+    .included h3.mt {
+      margin-top: 0;
+    }
+    .incl-note {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

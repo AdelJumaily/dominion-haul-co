@@ -1,0 +1,318 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import QuoteForm from '../components/QuoteForm.astro';
+import Icon from '../components/Icon.astro';
+import CTABand from '../components/CTABand.astro';
+import { site, phoneHref, smsHref, addressOneLine } from '../config/site';
+
+const crumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Get a quote', url: '/contact' },
+];
+
+const faq = [
+  {
+    q: 'How fast will you get back to me?',
+    a: 'Within business hours, usually inside 30 minutes. Outside them, first thing the next morning. If you need an answer immediately, call — the phone is faster than the form and it rings to a person.',
+  },
+  {
+    q: 'Do I have to be home for the quote?',
+    a: 'No. A couple of photos is usually enough for a firm price, and plenty of jobs are booked and completed without the owner present. For anything inside the house we would rather someone was there or that access is arranged.',
+  },
+  {
+    q: 'Is the quote binding?',
+    a: 'The driveway quote is. We confirm the price out loud after looking at the actual job and before anything is loaded, and that number is what you pay. A quote given from photos is our best estimate from what we can see — if the reality is different, we tell you before starting, not after.',
+  },
+];
+---
+
+<Base
+  title="Get a Free Quote | Call, Text or Send Photos"
+  description="Get a free junk removal quote in Northern Virginia. Call, text a photo, or send details through the form. Firm pricing, no obligation, usually a reply within 30 minutes."
+  schema={{ type: 'ContactPage', faq, breadcrumbs: crumbs }}
+>
+  <Breadcrumbs crumbs={crumbs} />
+
+  <section class="hd">
+    <div class="container">
+      <p class="eyebrow">Get a quote</p>
+      <h1>Three ways to reach us. All of them reach a person.</h1>
+      <p class="lede mt-5">
+        Fastest route to a firm price is a photo of the pile. No obligation, no charge for
+        looking, and nobody chasing you for the next fortnight.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── Contact methods ──────────────────────────────────────────────── -->
+  <section class="section-sm">
+    <div class="container">
+      <ul class="methods">
+        <li>
+          <a href={phoneHref} class="method method-primary" data-track="call-contact">
+            <span class="m-icon"><Icon name="phone" size={22} /></span>
+            <span class="m-label">Call us</span>
+            <strong class="m-value">{site.phone.display}</strong>
+            <span class="m-note">Straight to the owner. Fastest option.</span>
+          </a>
+        </li>
+        <li>
+          <a href={smsHref} class="method" data-track="text-contact">
+            <span class="m-icon"><Icon name="message" size={22} /></span>
+            <span class="m-label">Text a photo</span>
+            <strong class="m-value">{site.phone.display}</strong>
+            <span class="m-note">Send a picture, get a price back.</span>
+          </a>
+        </li>
+        <li>
+          <a href={`mailto:${site.email}`} class="method">
+            <span class="m-icon"><Icon name="mail" size={22} /></span>
+            <span class="m-label">Email</span>
+            <strong class="m-value m-email">{site.email}</strong>
+            <span class="m-note">Best for commercial and estate work.</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ── Form ─────────────────────────────────────────────────────────── -->
+  <section class="section form-sec">
+    <div class="container form-inner">
+      <div class="form-copy">
+        <p class="eyebrow">The form</p>
+        <h2>Tell us what you've got</h2>
+        <p class="lede mt-4">
+          The more detail the better, but do not overthink it. Name, phone, roughly what and
+          roughly where is enough to start.
+        </p>
+
+        <ul class="form-tips">
+          <li>
+            <Icon name="camera" size={17} />
+            <span><strong>Photos help most.</strong> One wide shot of the whole pile beats five close-ups.</span>
+          </li>
+          <li>
+            <Icon name="home" size={17} />
+            <span><strong>Mention the access.</strong> Basement, third floor, back yard, tight stairs — it changes our crew, not your price.</span>
+          </li>
+          <li>
+            <Icon name="clock" size={17} />
+            <span><strong>Say if it's urgent.</strong> We hold afternoon slots for same-day work and there is no rush fee.</span>
+          </li>
+        </ul>
+
+        <dl class="form-meta">
+          <div>
+            <dt>Hours</dt>
+            <dd>{site.hoursLabel}</dd>
+          </div>
+          <div>
+            <dt>Service area</dt>
+            <dd>Fairfax, Loudoun, Prince William &amp; Arlington counties</dd>
+          </div>
+          <div>
+            <dt>Based in</dt>
+            <dd>{addressOneLine}</dd>
+          </div>
+        </dl>
+      </div>
+
+      <div class="card form-card">
+        <QuoteForm id="quote-contact" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Mini FAQ ─────────────────────────────────────────────────────── -->
+  <section class="section-sm">
+    <div class="container container-tight">
+      <h2 class="mini-head">Before you send it</h2>
+      <div class="mini-faq">
+        {
+          faq.map((f) => (
+            <details class="faq-item">
+              <summary>
+                <span>{f.q}</span>
+                <span class="sign" aria-hidden="true" />
+              </summary>
+              <div class="faq-answer">
+                <p>{f.a}</p>
+              </div>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <CTABand />
+</Base>
+
+<style>
+  .hd {
+    padding-block: var(--sp-8) var(--sp-7);
+    background:
+      radial-gradient(70ch 35ch at 88% 0%, color-mix(in srgb, var(--accent) 11%, transparent), transparent 70%),
+      linear-gradient(180deg, var(--surface-sunk), var(--surface));
+  }
+  .hd h1 {
+    max-width: 20ch;
+  }
+  .hd .lede {
+    max-width: 56ch;
+  }
+
+  .methods {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--sp-4);
+  }
+  .method {
+    display: grid;
+    gap: var(--sp-2);
+    height: 100%;
+    padding: var(--sp-6);
+    background: var(--surface-raised);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    text-decoration: none;
+    color: var(--ink);
+    transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease),
+      border-color var(--dur) var(--ease);
+  }
+  .method:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--accent);
+  }
+  .method-primary {
+    background: var(--ink);
+    color: var(--surface);
+    border-color: var(--ink);
+  }
+  .m-icon {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--r-md);
+    background: color-mix(in srgb, var(--accent) 14%, transparent);
+    color: var(--accent-deep);
+    margin-bottom: var(--sp-2);
+  }
+  .method-primary .m-icon {
+    background: var(--accent);
+    color: #f4f7f4;
+  }
+  .m-label {
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .method-primary .m-label {
+    color: var(--muted-light);
+  }
+  .m-value {
+    font-size: var(--step-2);
+    font-weight: 850;
+    letter-spacing: -0.04em;
+    line-height: 1.1;
+  }
+  .method-primary .m-value {
+    color: var(--accent);
+  }
+  .m-email {
+    font-size: var(--step-0);
+    letter-spacing: -0.01em;
+    word-break: break-all;
+  }
+  .m-note {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-top: var(--sp-1);
+  }
+  .method-primary .m-note {
+    color: var(--muted-light);
+  }
+
+  .form-sec {
+    background: var(--surface-sunk);
+  }
+  .form-inner {
+    display: grid;
+    gap: var(--sp-7);
+    align-items: start;
+  }
+  .form-card {
+    padding: var(--sp-6);
+  }
+
+  .form-tips {
+    list-style: none;
+    padding: 0;
+    margin-top: var(--sp-6);
+    display: grid;
+    gap: var(--sp-4);
+  }
+  .form-tips li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--sp-3);
+    align-items: start;
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: var(--muted);
+  }
+  .form-tips :global(svg) {
+    color: var(--accent-deep);
+    margin-top: 2px;
+  }
+  .form-tips strong {
+    color: var(--ink);
+  }
+
+  .form-meta {
+    margin-top: var(--sp-7);
+    padding-top: var(--sp-5);
+    border-top: 1px solid var(--line);
+    display: grid;
+    gap: var(--sp-4);
+  }
+  .form-meta dt {
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .form-meta dd {
+    margin: var(--sp-1) 0 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  .mini-head {
+    font-size: var(--step-2);
+    margin-bottom: var(--sp-4);
+  }
+  .mini-faq {
+    border-top: 1px solid var(--line);
+  }
+
+  @media (min-width: 700px) {
+    .methods {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  @media (min-width: 900px) {
+    .form-inner {
+      grid-template-columns: 1fr 1.15fr;
+      gap: var(--sp-8);
+    }
+  }
+</style>

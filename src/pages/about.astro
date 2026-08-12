@@ -1,0 +1,243 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import Figure from '../components/Figure.astro';
+import CTABand from '../components/CTABand.astro';
+import Testimonials from '../components/Testimonials.astro';
+import Icon from '../components/Icon.astro';
+import { site, phoneHref } from '../config/site';
+
+const crumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'About', url: '/about' },
+];
+
+const promises = [
+  {
+    t: 'A real local crew — not a call centre',
+    d: 'No regional scheduling desk in another state. The phone rings to the people who own the truck and will be in your driveway.',
+  },
+  {
+    t: 'Price is locked in your driveway before we load',
+    d: 'Out loud, after we have looked at the actual pile. If it is smaller than the photo suggested, the number goes down.',
+  },
+  {
+    t: 'Licensed and insured for NoVA buildings',
+    d: 'Certificates for Arlington high-rises and Tysons suites on request. We know which buildings need freight elevators booked ahead.',
+  },
+  {
+    t: 'Sorted for donation and recycle when we can',
+    d: 'Usable furniture to local partners, metal to scrap, electronics through e-waste. It does not cost you extra — it is just how we haul.',
+  },
+];
+---
+
+<Base
+  title={`About ${site.name} | Junk Removal in Chantilly, VA`}
+  description="Dominion Haul Co is a local junk removal company based in Chantilly, Virginia. Published prices, same-day pickups across Fairfax, Loudoun, Prince William and Arlington — no franchise call centre."
+  schema={{ type: 'AboutPage', breadcrumbs: crumbs }}
+>
+  <Breadcrumbs crumbs={crumbs} />
+
+  <section class="about-hero">
+    <div class="container about-hero-inner">
+      <div>
+        <h1>Local junk removal. Published prices. Chantilly base.</h1>
+        <p class="lede mt-5">
+          Dominion Haul Co is an independent hauling company based at {site.address.street} in{' '}
+          {site.address.city}. One crew, load-size pricing on this site, and nobody between you
+          and the people who show up.
+        </p>
+        <div class="btn-row mt-6">
+          <a href={phoneHref} class="btn btn-lg">
+            <Icon name="phone" size={19} /> Call {site.phone.display}
+          </a>
+        </div>
+      </div>
+      <div class="frame-offset about-portrait">
+        {/* PLACEHOLDER - replace with real business photo */}
+        <Figure imageKey="founderPortrait" priority ratio="4/5" sizes="(max-width:900px) 80vw, 35vw" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container container-tight">
+      <div class="prose">
+        <h2>Why we built it this way</h2>
+        <p>
+          Junk removal around Northern Virginia is dominated by national franchises. The crews
+          are usually fine. The model is not. You call a centre that has never driven the
+          Fairfax County Parkway, someone reads you a range, a truck shows up, and the price
+          moves.
+        </p>
+        <p>
+          We put the load-size prices on this website — which almost nobody else in NoVA will
+          do — and we answer the phone locally. When you call, you are talking to someone who
+          will actually be carrying your sofa.
+        </p>
+
+        <h2>What “local” means when you live here</h2>
+        <p>
+          We know a Burke Centre unit might have zero curb access, so we send the right crew
+          size. We know Reston cluster parking courts will not take a box truck. We know Old
+          Town Manassas has alley access on some blocks, and that a Rosslyn high-rise needs
+          its freight elevator booked a couple days out. A Sterling Park reno from the ’60s
+          sometimes needs an asbestos check before anyone swings a hammer.
+        </p>
+        <p>
+          None of that is in a franchise ops manual written for a hundred markets. It is why
+          we can say: call before noon and we can usually hit a Reston pickup by 2pm — we
+          know how the Parkway actually moves.
+        </p>
+
+        <h2>What we will not do</h2>
+        <p>
+          We will not quote one number on the phone and change it in your driveway. We will
+          not add a fuel surcharge because you live in Gainesville. We will not charge extra
+          for stairs or a basement — carrying it out is the job.
+        </p>
+        <p>
+          We will also tell you when we are the wrong answer. Whole-house gut? Rent a
+          dumpster; it is cheaper per yard and we will say so. Standing tree? You need an
+          arborist. Gas range still hooked up? Get a licensed fitter first. Sending you
+          elsewhere costs us one job. It is still the right call.
+        </p>
+
+        <h2>Where we work</h2>
+        <p>
+          Fairfax, Loudoun, Prince William and Arlington — about a {site.serviceRadiusMiles}-mile
+          radius from Chantilly. That reaches Purcellville west, Woodbridge south, the Potomac
+          north, and the District line east. Same published price everywhere inside it. The
+          drive is our routing problem, not a line on your invoice.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" data-band="dark">
+    <div class="container">
+      <div class="section-head wide">
+        <h2>Four things we will not compromise on</h2>
+      </div>
+      <ul class="promises">
+        {
+          promises.map((p) => (
+            <li data-reveal>
+              <h3>{p.t}</h3>
+              <p>{p.d}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section-sm">
+    <div class="container crew-inner">
+      {/* PLACEHOLDER - replace with real business photo */}
+      <Figure imageKey="crewTeam" ratio="3/2" />
+      <div>
+        <h2>Same crew. Same standards.</h2>
+        <p class="lede mt-4">
+          Small company on purpose. The people who show up know floor protection, door-frame
+          padding, furniture disassembly, and when a job needs a licensed trade instead of us.
+        </p>
+        <p class="crew-note">
+          On estate and cleanout jobs we run one hard rule: if it looks personal, it does not
+          go in the truck. Photos, papers, jewellery, anything handwritten — we set it aside
+          for you every time.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <h2>What neighbours have said so far</h2>
+      </div>
+      <Testimonials limit={6} />
+    </div>
+  </section>
+
+  <CTABand
+    heading="Ready for a clear driveway?"
+    sub="Text a photo of the pile. We will text back a firm number — usually in under fifteen minutes when we are not mid-carry."
+  />
+</Base>
+
+<style>
+  .about-hero {
+    padding-block: var(--sp-8) var(--sp-7);
+    background: var(--surface-sunk);
+  }
+  .about-hero-inner {
+    display: grid;
+    gap: var(--sp-7);
+    align-items: center;
+  }
+  .about-hero h1 {
+    max-width: 16ch;
+  }
+  .about-portrait {
+    max-width: 420px;
+  }
+
+  .promises {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0;
+  }
+  .promises li {
+    display: grid;
+    gap: var(--sp-3);
+    padding: var(--sp-5) 0;
+    border-top: 1px solid var(--ink-line);
+  }
+  .promises li:last-child {
+    border-bottom: 1px solid var(--ink-line);
+  }
+  .promises h3 {
+    font-size: var(--step-1);
+    max-width: 22ch;
+  }
+  .promises p {
+    color: var(--fg-muted);
+    font-size: 0.94rem;
+    line-height: 1.6;
+    max-width: 48ch;
+  }
+
+  .crew-inner {
+    display: grid;
+    gap: var(--sp-7);
+    align-items: center;
+  }
+  .crew-note {
+    margin-top: var(--sp-5);
+    padding-top: var(--sp-5);
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    line-height: 1.6;
+    font-size: 0.95rem;
+  }
+
+  @media (min-width: 700px) {
+    .promises {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0 var(--sp-8);
+    }
+  }
+  @media (min-width: 900px) {
+    .about-hero-inner {
+      grid-template-columns: 1.2fr 1fr;
+      gap: var(--sp-8);
+    }
+    .crew-inner {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--sp-8);
+    }
+  }
+</style>

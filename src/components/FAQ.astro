@@ -1,0 +1,65 @@
+---
+/**
+ * FAQ accordion. Native <details>/<summary> — works with zero JS, is keyboard
+ * accessible for free, and is exposed correctly to screen readers.
+ * The matching FAQPage JSON-LD is emitted separately by Schema.astro; pass the
+ * SAME array to both so the markup never disagrees with what's on the page
+ * (a mismatch is a structured-data violation).
+ */
+interface Props {
+  items: { q: string; a: string }[];
+  title?: string;
+  eyebrow?: string;
+  /** Opens the first item — good on location pages where the top Q is "do you serve X". */
+  openFirst?: boolean;
+}
+const { items, title = 'Common questions', eyebrow = 'FAQ', openFirst = false } = Astro.props;
+---
+
+{
+  items.length > 0 && (
+    <div class="faq">
+      <div class="faq-head">
+        <p class="eyebrow">{eyebrow}</p>
+        <h2>{title}</h2>
+      </div>
+      <div class="faq-list">
+        {items.map((item, i) => (
+          <details class="faq-item" open={openFirst && i === 0}>
+            <summary>
+              <span>{item.q}</span>
+              <span class="sign" aria-hidden="true" />
+            </summary>
+            <div class="faq-answer">
+              <p>{item.a}</p>
+            </div>
+          </details>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+<style>
+  .faq {
+    display: grid;
+    gap: var(--sp-6);
+  }
+  .faq-head h2 {
+    font-size: var(--step-3);
+  }
+  .faq-list {
+    border-top: 1px solid var(--rule);
+  }
+  @media (min-width: 900px) {
+    .faq {
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.6fr);
+      gap: var(--sp-8);
+      align-items: start;
+    }
+    .faq-head {
+      position: sticky;
+      top: calc(var(--header-h) + var(--sp-6));
+    }
+  }
+</style>

@@ -1,0 +1,260 @@
+---
+import { getCollection } from 'astro:content';
+import Icon from './Icon.astro';
+import Figure from './Figure.astro';
+
+interface Props {
+  /** Omit this service from the grid (used on service detail pages). */
+  exclude?: string;
+  limit?: number;
+  heading?: string;
+  /** Compact list layout (location/related pages) vs home bento. */
+  variant?: 'bento' | 'list';
+  /** When set, cards deep-link to city×service SEO pages. */
+  locationSlug?: string;
+  locationTitle?: string;
+}
+const { exclude, limit, heading, variant = 'list', locationSlug, locationTitle } = Astro.props;
+
+let services = (await getCollection('services'))
+  .filter((s) => s.id !== exclude)
+  .sort((a, b) => a.data.order - b.data.order);
+
+if (limit) services = services.slice(0, limit);
+
+const hrefFor = (id: string) =>
+  locationSlug ? `/locations/${locationSlug}/${id}` : `/services/${id}`;
+
+const titleFor = (title: string) =>
+  locationTitle ? `${title} in ${locationTitle}` : title;
+
+const imageFor: Record<string, string> = {
+  'junk-removal': 'serviceJunkRemoval',
+  'furniture-removal': 'serviceFurniture',
+  'appliance-removal': 'serviceAppliance',
+  'estate-cleanouts': 'serviceEstate',
+  'construction-debris-removal': 'serviceConstruction',
+  'yard-waste-removal': 'serviceYardWaste',
+  'shed-removal': 'serviceShed',
+  'commercial-cleanouts': 'serviceCommercial',
+};
+
+const iconFor: Record<string, string> = {
+  'junk-removal': 'truck',
+  'furniture-removal': 'sofa',
+  'appliance-removal': 'fridge',
+  'estate-cleanouts': 'home',
+  'construction-debris-removal': 'hammer',
+  'yard-waste-removal': 'leaf',
+  'shed-removal': 'shed',
+  'commercial-cleanouts': 'building',
+};
+---
+
+<div class:list={['sg', variant === 'bento' && 'sg-bento']}>
+  {heading && <h2 class="sr-only">{heading}</h2>}
+  <ul class:list={['sg-grid', variant === 'list' && 'sg-list']}>
+    {
+      services.map((s, i) => (
+        <li class:list={[`sg-cell sg-cell-${i + 1}`]} data-reveal>
+          <a href={hrefFor(s.id)} class="sg-card">
+            {variant === 'bento' && i < 3 && (
+              <div class="sg-media">
+                {/* PLACEHOLDER - replace with real business photo */}
+                <Figure
+                  imageKey={imageFor[s.id] ?? 'serviceJunkRemoval'}
+                  ratio={i === 0 ? '4/3' : '1/1'}
+                  sizes="(max-width:900px) 100vw, 40vw"
+                />
+              </div>
+            )}
+            <div class="sg-body">
+              <span class="sg-meta">
+                <Icon name={iconFor[s.id] ?? 'truck'} size={15} />
+                <span class="sg-idx">{String(i + 1).padStart(2, '0')}</span>
+              </span>
+              <h3>{titleFor(s.data.title)}</h3>
+              <p class="sg-blurb">{s.data.cardBlurb}</p>
+              <span class="sg-foot">
+                <span class="sg-price">From ${s.data.priceFrom}</span>
+                <Icon name="arrow" size={16} class="arrow" />
+              </span>
+            </div>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</div>
+
+<style>
+  .sg-grid {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+  }
+
+  .sg-card {
+    height: 100%;
+    display: grid;
+    background: var(--bg);
+    color: inherit;
+    text-decoration: none;
+    transition: background var(--dur) var(--ease);
+  }
+  .sg-card:hover {
+    background: var(--surface-raised);
+  }
+  [data-band='dark'] .sg-card {
+    background: var(--ink);
+  }
+  [data-band='dark'] .sg-card:hover {
+    background: var(--ink-soft);
+  }
+  [data-band='muted'] .sg-card:hover {
+    background: var(--surface-raised);
+  }
+
+  .sg-media {
+    overflow: hidden;
+  }
+  .sg-media :global(.frame) {
+    border-radius: 0;
+    height: 100%;
+  }
+  .sg-media :global(img) {
+    transition: transform 700ms var(--ease);
+  }
+  .sg-card:hover .sg-media :global(img) {
+    transform: scale(1.04);
+  }
+
+  .sg-body {
+    display: grid;
+    align-content: start;
+    gap: var(--sp-3);
+    padding: var(--sp-5);
+  }
+  .sg-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--fg-muted);
+  }
+  .sg-meta :global(svg) {
+    opacity: 0.7;
+  }
+  .sg-idx {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+  }
+  .sg-card h3 {
+    font-size: var(--step-1);
+  }
+  .sg-blurb {
+    font-size: 0.9rem;
+    line-height: 1.55;
+    color: var(--fg-muted);
+  }
+  .sg-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: var(--sp-4);
+    font-size: 0.84rem;
+    font-weight: 700;
+  }
+  .sg-foot :global(svg) {
+    color: var(--accent-deep);
+    transition: transform var(--dur) var(--ease);
+  }
+  .sg-card:hover .sg-foot :global(svg) {
+    transform: translateX(4px);
+  }
+
+  /* Default compact list (non-home) */
+  .sg-list {
+    gap: var(--sp-3);
+    background: transparent;
+    border: 0;
+  }
+  .sg-list .sg-card {
+    border: 1px solid var(--rule);
+  }
+  @media (min-width: 620px) {
+    .sg-list {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1000px) {
+    .sg-list {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  /* Bento — asymmetric spans, photo-led feature cells */
+  .sg-bento .sg-grid {
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 700px) {
+    .sg-bento .sg-grid {
+      grid-template-columns: repeat(6, 1fr);
+      grid-auto-rows: minmax(160px, auto);
+    }
+    .sg-bento .sg-cell-1 {
+      grid-column: span 4;
+      grid-row: span 2;
+    }
+    .sg-bento .sg-cell-1 .sg-card {
+      grid-template-columns: 1.15fr 1fr;
+    }
+    .sg-bento .sg-cell-1 .sg-body {
+      padding: var(--sp-6);
+      align-content: center;
+    }
+    .sg-bento .sg-cell-1 h3 {
+      font-size: var(--step-2);
+    }
+    .sg-bento .sg-cell-2 {
+      grid-column: span 2;
+      grid-row: span 2;
+    }
+    .sg-bento .sg-cell-2 .sg-card {
+      grid-template-rows: 1fr auto;
+    }
+    .sg-bento .sg-cell-3,
+    .sg-bento .sg-cell-4,
+    .sg-bento .sg-cell-5 {
+      grid-column: span 2;
+    }
+    .sg-bento .sg-cell-3 .sg-card {
+      grid-template-rows: auto 1fr;
+    }
+    .sg-bento .sg-cell-6,
+    .sg-bento .sg-cell-7,
+    .sg-bento .sg-cell-8 {
+      grid-column: span 2;
+    }
+  }
+
+  @media (min-width: 1100px) {
+    .sg-bento .sg-cell-1 {
+      grid-column: span 3;
+    }
+    .sg-bento .sg-cell-2 {
+      grid-column: span 3;
+    }
+    .sg-bento .sg-cell-2 .sg-card {
+      grid-template-columns: 1fr 1.1fr;
+      grid-template-rows: none;
+    }
+  }
+</style>

@@ -1,0 +1,94 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import Testimonials from '../components/Testimonials.astro';
+import CTABand from '../components/CTABand.astro';
+import Icon from '../components/Icon.astro';
+import { site, phoneHref } from '../config/site';
+
+const crumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Reviews', url: '/reviews' },
+];
+---
+
+<Base
+  title="Reviews | What Northern Virginia Customers Say"
+  description="Read reviews from Dominion Haul Co customers across Fairfax, Loudoun, Prince William and Arlington counties — estate cleanouts, garage clearing, furniture and appliance removal."
+  schema={{ type: 'CollectionPage', breadcrumbs: crumbs }}
+>
+  <Breadcrumbs crumbs={crumbs} />
+
+  <section class="hd">
+    <div class="container">
+      <p class="eyebrow">Reviews</p>
+      <h1>Every review here is from a real job.</h1>
+      <p class="lede mt-5">
+        We are a new business, so there are not hundreds of them yet. We would rather show
+        you a short honest list than pad it out — and every one links back to a real Google
+        profile you can check yourself.
+      </p>
+      <div class="btn-row mt-6">
+        <a href={site.social.google} class="btn" rel="noopener" target="_blank">
+          <Icon name="star" size={17} /> See us on Google
+        </a>
+        <a href={phoneHref} class="btn btn-ghost">
+          <Icon name="phone" size={17} /> {site.phone.display}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <Testimonials />
+    </div>
+  </section>
+
+  <!-- ── How to leave one ─────────────────────────────────────────────── -->
+  <section class="section-sm" data-band="dark">
+    <div class="container container-tight center-block">
+      <p class="eyebrow">Worked with us?</p>
+      <h2>Reviews are how a new local business survives</h2>
+      <p class="lede mt-4">
+        We are competing against national brands with fifteen years of review history. If
+        we did a good job, thirty seconds of your time genuinely changes our week. If we did
+        not, tell us directly first — we would much rather fix it.
+      </p>
+      <div class="btn-row mt-6 center-btns">
+        <a href={site.social.google} class="btn" rel="noopener" target="_blank">
+          Leave a Google review
+          <Icon name="arrow" size={17} class="arrow" />
+        </a>
+        <a href={`mailto:${site.email}`} class="btn btn-ghost">
+          Tell us what went wrong
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <CTABand />
+</Base>
+
+<style>
+  .hd {
+    padding-block: var(--sp-8) var(--sp-7);
+    background: linear-gradient(180deg, var(--surface-sunk), var(--surface));
+  }
+  .hd h1 {
+    max-width: 18ch;
+  }
+  .hd .lede {
+    max-width: 58ch;
+  }
+  .center-block {
+    text-align: center;
+  }
+  .center-block .lede,
+  .center-block .eyebrow {
+    margin-inline: auto;
+  }
+  .center-btns {
+    justify-content: center;
+  }
+</style>

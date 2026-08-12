@@ -1,0 +1,297 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import PricingTable from '../components/PricingTable.astro';
+import FAQ from '../components/FAQ.astro';
+import CTABand from '../components/CTABand.astro';
+import Figure from '../components/Figure.astro';
+import Icon from '../components/Icon.astro';
+import { site, phoneHref } from '../config/site';
+
+const crumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Pricing', url: '/pricing' },
+];
+
+const faq = [
+  {
+    q: 'Why do you publish prices when nobody else does?',
+    a: 'Because hiding them is a sales tactic, not a necessity. Every competitor in Northern Virginia makes you call for a number, which lets them price you based on your postcode, your urgency and how you sound on the phone. We price by volume, the volume tiers are fixed, and there is nothing to discover on the phone that changes them. If we cannot justify a price in public, it is the wrong price.',
+  },
+  {
+    q: 'Is the price I see the price I pay?',
+    a: 'Yes, with one honest caveat we will always raise before loading rather than after. Very heavy material — concrete, brick, dirt, roofing shingles, ceramic tile — is disposed of by weight rather than volume, so it is quoted separately. Same for items needing special disposal, like paint or freon appliances, and anything needing demolition before it can be loaded. All of that gets quoted out loud on site, before a single thing goes in the truck.',
+  },
+  {
+    q: 'Do you charge by the hour instead?',
+    a: 'No, deliberately. Hourly pricing punishes you for things you cannot control — a long carry from a Burke Centre pathway unit, a narrow 1958 basement staircase in Vienna, a third-floor Arlington walk-up. Those make the job slower for us and should not make it more expensive for you. Volume pricing means the number is set by what you are throwing away, not by how awkward your house is.',
+  },
+  {
+    q: 'What if my load is between two sizes?',
+    a: 'We round to whichever tier it genuinely falls into, and if it is borderline we round down. In practice the crew is looking at the truck bed and calling it honestly. If the load comes in smaller than the driveway quote, the price comes down — that happens regularly and it is the whole point of quoting before loading rather than after.',
+  },
+  {
+    q: 'Is there a minimum charge?',
+    a: 'Effectively yes — $95 is the floor, which covers a single item. That is not a hidden minimum dressed up as something else; it is the actual cost of sending a truck and two people to your address, and no hauler in this region can do it for meaningfully less.',
+  },
+  {
+    q: 'Do you charge more for stairs, long carries or basements?',
+    a: 'No. No stair fee, no long-carry fee, no basement surcharge. Those are all common line items elsewhere and they are all charges for doing the job you are already paying for. Carrying it out is the service.',
+  },
+  {
+    q: 'Do you charge extra for same-day service?',
+    a: 'No rush fee. Urgency is most of why anyone calls a junk hauler in the first place, so charging a premium for it is charging you for needing the service. We hold afternoon capacity for same-day work as a matter of routine.',
+  },
+  {
+    q: 'How do I pay, and when?',
+    a: 'On completion, once you have seen the space empty — never upfront and never a deposit. We take cards, and cash if you prefer. Commercial accounts can be invoiced net-30. You get a written receipt, and if donation receipts matter for your taxes, tell us before we load and we will get them for you.',
+  },
+];
+
+const comparison = [
+  {
+    them: '"Call for a free estimate"',
+    us: 'Every tier published on this page, before you ever speak to us',
+  },
+  { them: 'Hourly rates that punish a difficult carry', us: 'Volume pricing — the house layout is our problem' },
+  { them: 'Fuel surcharges and zone pricing by ZIP', us: 'Same price in Haymarket as in Vienna' },
+  { them: 'Stair, long-carry and basement fees', us: 'Carrying it out is the service, not an add-on' },
+  { them: 'Rush charges for same-day', us: 'No rush fee, ever' },
+  { them: 'Estimate revised upward once loading starts', us: 'Firm price agreed before anything is loaded' },
+];
+---
+
+<Base
+  title="Junk Removal Pricing in Northern Virginia | Published Rates"
+  description="Transparent load-size junk removal pricing for Fairfax, Loudoun, Prince William and Arlington. Single items from $95, half loads $389–$499. No hidden fees, no stair charges, no rush fees."
+  schema={{ type: 'WebPage', faq, breadcrumbs: crumbs }}
+>
+  <Breadcrumbs crumbs={crumbs} />
+
+  <section class="hd">
+    <div class="container">
+      <p class="eyebrow">Pricing</p>
+      <h1>Here are the prices. That's the whole page.</h1>
+      <p class="lede mt-5">
+        Every other junk removal company serving Northern Virginia makes you call to find
+        out what it costs. We think that is a sales tactic rather than a necessity, so here
+        is the entire structure — before you talk to anyone.
+      </p>
+      <div class="btn-row mt-6">
+        <a href={phoneHref} class="btn btn-lg">
+          <Icon name="phone" size={19} /> {site.phone.display}
+        </a>
+        <a href="/contact" class="btn btn-lg btn-ghost">
+          Get an exact quote <Icon name="arrow" size={18} class="arrow" />
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── The table ────────────────────────────────────────────────────── -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Load sizes</p>
+        <h2>You pay for the space you use</h2>
+        <p class="lede">
+          Our truck holds about 16 cubic yards. We charge by how much of it your stuff
+          fills — not by the hour, and not per item.
+        </p>
+      </div>
+      <PricingTable />
+    </div>
+  </section>
+
+  <!-- ── Truck diagram ────────────────────────────────────────────────── -->
+  <section class="section-sm truck-sec">
+    <div class="container truck-inner">
+      <div>
+        <p class="eyebrow">What a load actually looks like</p>
+        <h2>16 cubic yards, marked out</h2>
+        <p class="lede mt-4">
+          "Half a load" is meaningless until you can see it. Our truck bed is roughly the
+          volume of six pickup truck beds, and the fill lines are where the tiers sit.
+        </p>
+        <ul class="truck-facts">
+          <li><Icon name="check" size={16} />A packed single-car garage is usually a half load</li>
+          <li><Icon name="check" size={16} />A furnished one-bedroom apartment is about three quarters</li>
+          <li><Icon name="check" size={16} />A whole-house estate clearing is normally 2–3 full loads</li>
+        </ul>
+      </div>
+      <Figure imageKey="truckLoadDiagram" ratio="16/9" />
+    </div>
+  </section>
+
+  <!-- ── Comparison — dark band ───────────────────────────────────────── -->
+  <section class="section" data-band="dark">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">How this differs</p>
+        <h2>The fees we don't have</h2>
+        <p class="lede">
+          Most of these are standard practice in this industry. Each one is a way of
+          quoting a low number and collecting a higher one.
+        </p>
+      </div>
+
+      <ul class="cmp">
+        {
+          comparison.map((c) => (
+            <li class="cmp-row" data-reveal>
+              <span class="cmp-them">
+                <Icon name="x" size={16} />
+                {c.them}
+              </span>
+              <span class="cmp-us">
+                <Icon name="check" size={16} />
+                {c.us}
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- ── Dumpster comparison ──────────────────────────────────────────── -->
+  <section class="section-sm">
+    <div class="container container-tight">
+      <div class="section-head">
+        <p class="eyebrow">The other option</p>
+        <h2>When a dumpster is genuinely the better call</h2>
+      </div>
+      <div class="prose">
+        <p>
+          We would rather tell you this than sell you the wrong service. If you are doing a
+          whole-house gut renovation, or a project running over several weeks where debris
+          is generated continuously and unpredictably, rent a container. It will cost less
+          per cubic yard and you can fill it on your own schedule.
+        </p>
+        <p>
+          For everything else — which is most jobs — hauling wins on both money and hassle.
+          A twenty-yard container in this region runs roughly $450 to $700 for a week before
+          tonnage overages, needs a permit if it sits on a public street in Fairfax,
+          Arlington or most incorporated towns, damages the driveway it sits on, collects
+          the neighbours' contributions overnight, and is visible from the street the entire
+          time. In most HOA communities across Ashburn, Centreville and Gainesville it needs
+          written approval first.
+        </p>
+        <p>
+          A half load from us is $389 to $499 with disposal included, and it is gone the
+          same afternoon.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FAQ ──────────────────────────────────────────────────────────── -->
+  <section class="section">
+    <div class="container">
+      <FAQ items={faq} title="Pricing questions, answered straight" eyebrow="Pricing FAQ" />
+    </div>
+  </section>
+
+  <CTABand
+    heading="Want an exact number?"
+    sub="Send a photo of the pile. We'll come back with a firm price from the table above — usually within 30 minutes during business hours."
+  />
+</Base>
+
+<style>
+  .hd {
+    padding-block: var(--sp-8) var(--sp-7);
+    background:
+      radial-gradient(80ch 40ch at 85% 0%, color-mix(in srgb, var(--accent) 11%, transparent), transparent 70%),
+      linear-gradient(180deg, var(--surface-sunk), var(--surface));
+  }
+  .hd h1 {
+    max-width: 17ch;
+  }
+  .hd .lede {
+    max-width: 60ch;
+  }
+
+  .truck-sec {
+    background: var(--surface-sunk);
+  }
+  .truck-inner {
+    display: grid;
+    gap: var(--sp-7);
+    align-items: center;
+  }
+  .truck-facts {
+    list-style: none;
+    padding: 0;
+    margin-top: var(--sp-6);
+    display: grid;
+    gap: var(--sp-3);
+  }
+  .truck-facts li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--sp-3);
+    align-items: start;
+    font-size: 0.94rem;
+    color: var(--muted);
+  }
+  .truck-facts :global(svg) {
+    color: var(--success);
+    margin-top: 3px;
+  }
+
+  .cmp {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--sp-1);
+  }
+  .cmp-row {
+    display: grid;
+    gap: var(--sp-2);
+    padding: var(--sp-4) 0;
+    border-bottom: 1px solid var(--ink-line);
+  }
+  .cmp-them,
+  .cmp-us {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--sp-3);
+    align-items: start;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  .cmp-them {
+    color: var(--muted-light);
+    text-decoration: line-through;
+    text-decoration-color: color-mix(in srgb, var(--accent) 60%, transparent);
+    text-decoration-thickness: 2px;
+  }
+  .cmp-them :global(svg) {
+    color: #8a7d74;
+    margin-top: 3px;
+    text-decoration: none;
+  }
+  .cmp-us {
+    color: var(--surface);
+    font-weight: 650;
+  }
+  .cmp-us :global(svg) {
+    color: var(--accent);
+    margin-top: 3px;
+  }
+
+  @media (min-width: 800px) {
+    .cmp-row {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--sp-6);
+      align-items: center;
+    }
+  }
+  @media (min-width: 900px) {
+    .truck-inner {
+      grid-template-columns: 1fr 1.3fr;
+      gap: var(--sp-8);
+    }
+  }
+</style>

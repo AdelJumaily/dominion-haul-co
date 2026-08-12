@@ -1,0 +1,248 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import CTABand from '../../components/CTABand.astro';
+import Icon from '../../components/Icon.astro';
+import Figure from '../../components/Figure.astro';
+import { phoneHref, site } from '../../config/site';
+
+const services = (await getCollection('services')).sort((a, b) => a.data.order - b.data.order);
+
+const crumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Services', url: '/services' },
+];
+---
+
+<Base
+  title="Our Services | Junk Removal, Cleanouts & Debris Hauling"
+  description="Eight junk removal services across Northern Virginia — household junk, furniture, appliances, estate cleanouts, construction debris, yard waste, shed removal and commercial clearing."
+  schema={{ type: 'CollectionPage', breadcrumbs: crumbs }}
+>
+  <Breadcrumbs crumbs={crumbs} />
+
+  <section class="hd">
+    <div class="container">
+      <p class="eyebrow">What we haul</p>
+      <h1>Eight services. One crew. One price list.</h1>
+      <p class="lede mt-5">
+        Nothing here is a franchise add-on with its own fee schedule. Everything is priced
+        the same way — by how much room it takes in the truck — and quoted out loud before
+        anything gets loaded.
+      </p>
+      <div class="btn-row mt-6">
+        <a href={phoneHref} class="btn btn-lg">
+          <Icon name="phone" size={19} /> {site.phone.display}
+        </a>
+        <a href="/pricing" class="btn btn-lg btn-ghost">
+          See pricing <Icon name="arrow" size={18} class="arrow" />
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container svc-list">
+      {
+        services.map((s, i) => (
+          <article class="svc-row" data-reveal>
+            <div class="svc-row-media">
+              <Figure imageKey={s.data.imageKey} ratio="3/2" sizes="(max-width:900px) 100vw, 40vw" />
+            </div>
+            <div class="svc-row-copy">
+              <span class="card-index">{String(i + 1).padStart(2, '0')}</span>
+              <h2>
+                <a href={`/services/${s.id}`}>{s.data.title}</a>
+              </h2>
+              <p class="svc-row-lede">{s.data.lede}</p>
+
+              <ul class="svc-row-list">
+                {s.data.includes.slice(0, 3).map((inc) => (
+                  <li>
+                    <Icon name="check" size={15} />
+                    {inc}
+                  </li>
+                ))}
+              </ul>
+
+              <div class="svc-row-foot">
+                <span class="svc-row-price">From ${s.data.priceFrom}</span>
+                <a href={`/services/${s.id}`} class="link-arrow">
+                  Full details <Icon name="arrow" size={16} class="arrow" />
+                </a>
+              </div>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="section-sm unsure" data-band="dark">
+    <div class="container unsure-inner">
+      <div>
+        <p class="eyebrow">Not on the list?</p>
+        <h2>If it fits in the truck, it probably goes in the truck.</h2>
+        <p class="lede mt-4">
+          These eight cover the overwhelming majority of what we do, but they are not a
+          closed list. Hot tubs, pianos, playground equipment, above-ground pools, storage
+          unit clear-outs — all normal calls. Send a photo and we will tell you straight
+          away, including if the answer is no.
+        </p>
+      </div>
+      <div class="unsure-no">
+        <h3>The genuine no list</h3>
+        <ul>
+          {
+            [
+              'Wet paint, solvents, motor oil and pool chemicals',
+              'Asbestos and lead-painted debris',
+              'Medical, biohazard and chemical waste',
+              'Propane tanks, ammunition and fireworks',
+              'Standing trees — that is an arborist',
+              'Gas line disconnection — that is a licensed fitter',
+            ].map((n) => (
+              <li>
+                <Icon name="x" size={15} />
+                {n}
+              </li>
+            ))
+          }
+        </ul>
+        <p class="unsure-note">
+          Every county here runs free household hazardous waste drop-off for residents,
+          which covers most of the top of that list.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <CTABand />
+</Base>
+
+<style>
+  .hd {
+    padding-block: var(--sp-8) var(--sp-7);
+    background: linear-gradient(180deg, var(--surface-sunk), var(--surface));
+  }
+  .hd h1 {
+    max-width: 16ch;
+  }
+  .hd .lede {
+    max-width: 58ch;
+  }
+
+  .svc-list {
+    display: grid;
+    gap: var(--sp-8);
+  }
+  .svc-row {
+    display: grid;
+    gap: var(--sp-5);
+    padding-bottom: var(--sp-8);
+    border-bottom: 1px solid var(--line);
+  }
+  .svc-row:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+  .svc-row h2 {
+    font-size: var(--step-3);
+    margin-top: var(--sp-2);
+  }
+  .svc-row h2 a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .svc-row h2 a:hover {
+    color: var(--accent-deep);
+  }
+  .svc-row-lede {
+    margin-top: var(--sp-4);
+    color: var(--muted);
+    line-height: 1.6;
+    max-width: 56ch;
+  }
+  .svc-row-list {
+    list-style: none;
+    padding: 0;
+    margin-top: var(--sp-5);
+    display: grid;
+    gap: var(--sp-2);
+  }
+  .svc-row-list li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--sp-3);
+    align-items: start;
+    font-size: 0.88rem;
+    color: var(--muted);
+  }
+  .svc-row-list :global(svg) {
+    color: var(--success);
+    margin-top: 3px;
+  }
+  .svc-row-foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--sp-5);
+    margin-top: var(--sp-5);
+  }
+  .svc-row-price {
+    font-size: var(--step-1);
+    font-weight: 850;
+    letter-spacing: -0.035em;
+  }
+
+  .unsure-inner {
+    display: grid;
+    gap: var(--sp-7);
+  }
+  .unsure-no h3 {
+    font-size: var(--step-1);
+    margin-bottom: var(--sp-4);
+  }
+  .unsure-no ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--sp-3);
+  }
+  .unsure-no li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--sp-3);
+    align-items: start;
+    font-size: 0.92rem;
+    color: var(--fg-muted);
+  }
+  .unsure-no :global(svg) {
+    color: var(--accent);
+    margin-top: 3px;
+  }
+  .unsure-note {
+    margin-top: var(--sp-5);
+    padding-top: var(--sp-4);
+    border-top: 1px solid var(--ink-line);
+    font-size: 0.85rem;
+    color: var(--muted-light);
+  }
+
+  @media (min-width: 900px) {
+    .svc-row {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+      gap: var(--sp-7);
+      align-items: center;
+    }
+    .svc-row:nth-child(even) .svc-row-media {
+      order: 2;
+    }
+    .unsure-inner {
+      grid-template-columns: 1.3fr 1fr;
+      gap: var(--sp-8);
+      align-items: start;
+    }
+  }
+</style>

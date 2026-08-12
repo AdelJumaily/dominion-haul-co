@@ -1,0 +1,144 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { getCollection } from 'astro:content';
+import { site, phoneHref } from '../config/site';
+
+const services = (await getCollection('services')).sort((a, b) => a.data.order - b.data.order);
+const counties = (await getCollection('locations'))
+  .filter((l) => l.data.kind === 'county')
+  .sort((a, b) => a.data.order - b.data.order);
+---
+
+<Base
+  title="Page not found | Dominion Haul Co"
+  description="That page is gone — like junk after a same-day pickup. Here is where to find pricing, services, and our Chantilly service area."
+  index={false}
+>
+  <section class="nf">
+    <div class="container">
+      <p class="nf-code">404</p>
+      <h1>Already hauled that one away.</h1>
+      <p class="lede mt-5">
+        Whatever URL you typed is not on this truck. Call {site.phone.display} if you
+        need a pile gone in Fairfax today — or pick a real page below.
+      </p>
+
+      <div class="btn-row mt-6">
+        <a href={phoneHref} class="btn btn-lg">
+          <Icon name="phone" size={19} /> {site.phone.display}
+        </a>
+        <a href="/" class="btn btn-lg btn-ghost">
+          Back to home <Icon name="arrow" size={18} class="arrow" />
+        </a>
+      </div>
+
+      <p class="nf-aside">
+        Pro tip from the driveway: if you were looking for pricing, it is public —
+        <a href="/pricing">load sizes from $95</a>. No call-centre runaround.
+      </p>
+
+      <div class="nf-cols">
+        <div>
+          <h2>Services</h2>
+          <ul>
+            {services.map((s) => <li><a href={`/services/${s.id}`}>{s.data.title}</a></li>)}
+          </ul>
+        </div>
+        <div>
+          <h2>Service area</h2>
+          <ul>
+            {counties.map((c) => <li><a href={`/locations/${c.id}`}>{c.data.title}</a></li>)}
+            <li><a href="/locations">All cities &amp; towns</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2>Company</h2>
+          <ul>
+            <li><a href="/pricing">Pricing</a></li>
+            <li><a href="/about">About us</a></li>
+            <li><a href="/reviews">Reviews</a></li>
+            <li><a href="/blog">Blog</a></li>
+            <li><a href="/contact">Get a quote</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf {
+    padding-block: var(--sp-9);
+    background: var(--surface-sunk);
+    min-height: 70vh;
+  }
+  .nf-code {
+    font-family: var(--font-mono);
+    font-size: var(--step-2);
+    font-weight: 600;
+    color: var(--accent-deep);
+    letter-spacing: 0.08em;
+    margin-bottom: var(--sp-4);
+  }
+  .nf h1 {
+    max-width: 14ch;
+  }
+  .nf .lede {
+    max-width: 44ch;
+  }
+  .nf-aside {
+    margin-top: var(--sp-7);
+    max-width: 48ch;
+    font-size: 0.95rem;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+  .nf-aside a {
+    color: var(--ink);
+    font-weight: 650;
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-underline-offset: 3px;
+  }
+
+  .nf-cols {
+    display: grid;
+    gap: var(--sp-6);
+    margin-top: var(--sp-8);
+    padding-top: var(--sp-6);
+    border-top: 1px solid var(--line);
+  }
+  .nf-cols h2 {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: var(--sp-4);
+  }
+  .nf-cols ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--sp-2);
+  }
+  .nf-cols a {
+    color: var(--ink);
+    text-decoration: none;
+    font-size: 0.92rem;
+    font-weight: 550;
+    transition: color var(--dur) var(--ease), padding-left var(--dur) var(--ease);
+  }
+  .nf-cols a:hover {
+    color: var(--accent-deep);
+    padding-left: 4px;
+  }
+
+  @media (min-width: 700px) {
+    .nf-cols {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--sp-7);
+    }
+  }
+</style>

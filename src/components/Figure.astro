@@ -1,0 +1,73 @@
+---
+/**
+ * Figure — the swap-a-placeholder-for-a-real-photo component.
+ *
+ * Every image on the site goes through here, referenced by KEY from the
+ * manifest in src/config/site.ts. Stock CDN URLs are temporary; replace with
+ * real /images/... paths when business photography is ready.
+ */
+import { images, type ImageKey } from '../config/site';
+
+interface Props {
+  imageKey: ImageKey | string;
+  /** Overrides the manifest ratio when a layout needs a specific crop. */
+  ratio?: string;
+  /** Above-the-fold images must set priority so they are not lazy-loaded. */
+  priority?: boolean;
+  /** Overrides the manifest alt text for context-specific pages. */
+  alt?: string;
+  sizes?: string;
+  class?: string;
+}
+
+const {
+  imageKey,
+  ratio,
+  priority = false,
+  alt,
+  sizes = '(max-width: 900px) 100vw, 50vw',
+  class: className = '',
+} = Astro.props;
+
+const entry = (images as Record<string, (typeof images)[ImageKey]>)[imageKey];
+
+if (!entry) {
+  throw new Error(
+    `Figure: unknown imageKey "${imageKey}". Add it to the \`images\` manifest in src/config/site.ts.`
+  );
+}
+
+const aspect = ratio ?? entry.ratio;
+const altText = alt ?? entry.alt;
+const isStock = entry.src?.includes('pexels.com') || entry.src?.includes('unsplash.com');
+---
+
+{
+  entry.src ? (
+    <div class={`frame ${className}`} style={`aspect-ratio:${aspect}`}>
+      {/* PLACEHOLDER - replace with real business photo */}
+      <img
+        src={entry.src}
+        alt={altText}
+        loading={priority ? 'eager' : 'lazy'}
+        decoding={priority ? 'sync' : 'async'}
+        fetchpriority={priority ? 'high' : 'auto'}
+        sizes={sizes}
+        data-placeholder={isStock ? 'stock' : undefined}
+      />
+    </div>
+  ) : (
+    <div
+      class={`ph ${className}`}
+      style={`aspect-ratio:${aspect}`}
+      role="img"
+      aria-label={altText}
+    >
+      <span class="ph-tag">Placeholder</span>
+      <div class="ph-body">
+        <span class="ph-key">images.{imageKey}</span>
+        <span class="ph-shot">{entry.shot}</span>
+      </div>
+    </div>
+  )
+}
