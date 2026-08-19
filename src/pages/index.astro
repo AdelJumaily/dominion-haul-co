@@ -5,6 +5,7 @@ import ServiceGrid from '../components/ServiceGrid.astro';
 import Testimonials from '../components/Testimonials.astro';
 import QuoteForm from '../components/QuoteForm.astro';
 import CTABand from '../components/CTABand.astro';
+import JobGallery from '../components/JobGallery.astro';
 import FAQ from '../components/FAQ.astro';
 import Icon from '../components/Icon.astro';
 import { site, phoneHref, smsHref } from '../config/site';
@@ -251,30 +252,17 @@ const priceTiers = tiers.map((t) => ({
     </div>
   </section>
 
-  <!-- ══ BEFORE / AFTER ════════════════════════════════════════════════ -->
-  <section class="section-sm" data-band="muted">
+  <!-- ══ RECENT JOBS ═══════════════════════════════════════════════════ -->
+  <section class="section-sm jobs-sec" data-band="muted">
     <div class="container">
-      <BlurFade client:visible>
-        <div class="ba-head">
-          <h2>Reston two-car garage. Four hours apart.</h2>
-        </div>
+      <SectionIntro
+        client:visible
+        title="Recent jobs. Ours — not a stock library."
+        lede="Garages, sheds, construction piles, estate rooms. This is what the truck actually looks like when we leave a Northern Virginia driveway."
+      />
+      <BlurFade client:visible delay={0.1}>
+        <JobGallery />
       </BlurFade>
-      <div class="ba">
-        <BlurFade client:visible direction="left" className="ba-item ba-before">
-          <figure>
-            {/* PLACEHOLDER - replace with real business photo */}
-            <Figure imageKey="beforeGarage" ratio="3/2" />
-            <figcaption>Before — packed to the door tracks</figcaption>
-          </figure>
-        </BlurFade>
-        <BlurFade client:visible direction="right" delay={0.1} className="ba-item ba-after">
-          <figure>
-            {/* PLACEHOLDER - replace with real business photo */}
-            <Figure imageKey="afterGarage" ratio="3/2" />
-            <figcaption>After — half load, $445, same afternoon</figcaption>
-          </figure>
-        </BlurFade>
-      </div>
     </div>
   </section>
 
@@ -337,10 +325,8 @@ const priceTiers = tiers.map((t) => ({
       </BlurFade>
 
       <BlurFade client:visible direction="right" delay={0.1} className="area-media">
-        {/* PLACEHOLDER - replace with real business photo */}
         <Figure imageKey="serviceAreaMap" ratio="4/3" />
         <div class="area-crew">
-          {/* PLACEHOLDER - replace with real business photo */}
           <Figure imageKey="heroCrewLoading" ratio="1/1" sizes="280px" />
         </div>
       </BlurFade>
@@ -595,32 +581,6 @@ const priceTiers = tiers.map((t) => ({
     color: var(--ink);
   }
 
-  .ba-head {
-    margin-bottom: var(--sp-7);
-    max-width: 14ch;
-  }
-  .ba {
-    display: grid;
-    gap: var(--sp-5);
-  }
-  .ba-item figure {
-    margin: 0;
-  }
-  .ba-item figcaption {
-    margin-top: var(--sp-3);
-    font-size: 0.86rem;
-    color: var(--muted);
-  }
-  @media (min-width: 800px) {
-    .ba {
-      grid-template-columns: 1.15fr 1fr;
-      align-items: end;
-      gap: var(--sp-6);
-    }
-    .ba-after {
-      margin-bottom: var(--sp-8);
-    }
-  }
 
   .platform-strip {
     margin-top: var(--sp-8);
@@ -734,5 +694,12 @@ const priceTiers = tiers.map((t) => ({
       grid-template-columns: 0.9fr 1.2fr;
       gap: var(--sp-9);
     }
+  }
+
+  .jobs-sec {
+    padding-block: var(--sp-8) var(--sp-7);
+  }
+  .jobs-sec :global(.section-head-row) {
+    margin-bottom: var(--sp-5);
   }
 </style>

@@ -1,0 +1,87 @@
+---
+import { jobPhotos } from '../config/site';
+---
+
+<ul class="jobs">
+  {
+    jobPhotos.map((photo) => (
+      <li class={`jobs-cell jobs-${photo.span}`}>
+        <figure>
+          <div class="jobs-frame">
+            <img src={photo.src} alt={photo.alt} loading="lazy" decoding="async" />
+          </div>
+          <figcaption>{photo.caption}</figcaption>
+        </figure>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .jobs {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.7rem;
+    grid-template-columns: 1fr 1fr;
+  }
+  .jobs figure {
+    position: relative;
+    margin: 0;
+    height: 100%;
+    overflow: hidden;
+    border-radius: var(--r-lg);
+    background: var(--surface-sunk);
+  }
+  .jobs-frame {
+    height: 100%;
+    aspect-ratio: 4 / 3;
+  }
+  .jobs-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .jobs-cell figcaption {
+    position: absolute;
+    inset: auto 0 0;
+    margin: 0;
+    padding: 2.4rem 0.7rem 0.55rem;
+    background: linear-gradient(transparent, rgb(20 32 25 / 0.78));
+    color: #f3f6f3;
+    font-size: 0.72rem;
+    font-weight: 650;
+    letter-spacing: 0.01em;
+    line-height: 1.3;
+  }
+  .jobs-feature {
+    grid-column: span 2;
+  }
+  .jobs-feature .jobs-frame {
+    aspect-ratio: 16 / 10;
+  }
+
+  @media (min-width: 720px) {
+    .jobs {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.75rem;
+    }
+    .jobs-feature {
+      grid-column: span 2;
+      grid-row: span 2;
+    }
+    .jobs-feature .jobs-frame,
+    .jobs-cell .jobs-frame {
+      aspect-ratio: auto;
+      min-height: 100%;
+    }
+    .jobs-cell {
+      min-height: 190px;
+    }
+    .jobs-feature {
+      min-height: 400px;
+    }
+  }
+</style>

@@ -100,7 +100,13 @@ const business: Record<string, unknown> = {
   url: origin,
   telephone: site.phone.e164,
   email: site.email,
-  image: [logoUrl, abs(images.heroTruck.src ?? '/images/logo.png')],
+  image: [
+    logoUrl,
+    abs(images.heroTruck.src),
+    abs(images.serviceJunkRemoval.src),
+    abs(images.serviceConstruction.src),
+    abs(images.serviceShed.src),
+  ],
   logo: {
     '@type': 'ImageObject',
     url: logoUrl,

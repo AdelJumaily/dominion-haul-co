@@ -26,7 +26,7 @@ export const site = {
     isPlaceholder: false,
   },
 
-  email: 'hello@dominionhaulco.com',
+  email: 'adel@dominionhaul.com',
 
   address: {
     street: '14600 Flint Lee Rd',
@@ -106,111 +106,177 @@ export const nav = [
  *  marked PRIORITY below.
  * ─────────────────────────────────────────────────────────────────────────────
  */
-export type ImageKey = keyof typeof images;
-
 /**
  * Stock placeholders via Pexels CDN (source.unsplash.com is unreliable).
- * Every Astro consumer marks images with a PLACEHOLDER comment so real
- * business photos are easy to swap in later (src → /images/...).
+ * Hero background stays on Pexels until a dedicated truck exterior exists.
+ * Everything else points at real job photos in /public/images/jobs/.
  */
 const pexels = (id: number, w = 1600) =>
   `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=${w}`;
+
+const job = (file: string) => `/images/jobs/${file}`;
 
 export const images = {
   heroTruck: {
     src: pexels(11802122),
     alt: 'Dominion Haul Co box truck parked in a Northern Virginia driveway with the loading ramp down',
-    shot: 'PRIORITY — Your truck, 3/4 angle, ramp down, in a real NoVA driveway. Shoot in morning light.',
+    shot: 'Hero background — keep until a dedicated truck exterior shot is ready.',
     ratio: '16/9',
   },
   heroCrewLoading: {
-    src: pexels(4246120),
-    alt: 'Two Dominion Haul Co crew members carrying an old sofa down the front steps of a Fairfax home',
-    shot: 'PRIORITY — Crew mid-carry with a real item. Faces visible, uniforms on. Motion is good here.',
+    src: job('truck-load.png'),
+    alt: 'Loaded Dominion Haul Co truck bed packed with household junk, looking out at a Northern Virginia street',
+    shot: 'Real job — truck load, residential neighborhood.',
     ratio: '1/1',
   },
   beforeGarage: {
-    src: pexels(5691608),
-    alt: 'Cluttered two-car garage in Reston packed with boxes, old furniture and paint cans before cleanout',
-    shot: 'PRIORITY — Before shot of a packed garage. Wide, from the open door. Pair with afterGarage.',
+    src: job('garage-flooring.png'),
+    alt: 'Northern Virginia garage piled with torn-out wood flooring, wallpaper and cardboard from a renovation',
+    shot: 'Real job — garage flooring tear-out.',
     ratio: '3/2',
   },
   afterGarage: {
-    src: pexels(271816),
-    alt: 'The same Reston garage completely emptied and swept clean after a Dominion Haul Co cleanout',
-    shot: 'PRIORITY — Exact same camera position as beforeGarage. Same lens, same time of day.',
+    src: job('garage-renovation.png'),
+    alt: 'Cluttered garage in Northern Virginia stacked with renovation boxes, trim and trash bags ready for haul-away',
+    shot: 'Real job — garage renovation debris.',
     ratio: '3/2',
   },
   founderPortrait: {
-    src: pexels(8961065),
-    alt: 'Dominion Haul Co crew standing in front of the company truck in Northern Virginia',
-    shot: 'PRIORITY — Crew / company portrait, natural light, truck behind. Trust anchor on /about.',
+    src: job('dumpster-load.png'),
+    alt: 'Dominion Haul Co dumpster loaded with carpet, lumber and household debris on a Northern Virginia job',
+    shot: 'Real job — dumpster load.',
     ratio: '4/5',
   },
   crewTeam: {
-    src: pexels(4246200),
-    alt: 'The Dominion Haul Co crew standing together beside the truck in Northern Virginia',
-    shot: 'Full team, relaxed, beside the truck. Used on /about and the reviews page.',
+    src: job('construction-yard.png'),
+    alt: 'Construction debris pile in a Northern Virginia backyard including drywall, insulation and fixture boxes',
+    shot: 'Real job — backyard construction cleanout.',
     ratio: '3/2',
   },
   serviceJunkRemoval: {
-    src: pexels(7464230),
-    alt: 'Crew loading household junk including a broken dresser and bagged debris into the truck',
-    shot: 'General household load going up the ramp.',
+    src: job('truck-load.png'),
+    alt: 'Household junk packed into the Dominion Haul Co truck after a residential pickup in Northern Virginia',
+    shot: 'Real job — full household load in the truck.',
     ratio: '3/2',
   },
   serviceFurniture: {
-    src: pexels(4246266),
-    alt: 'Two crew members wrapping and carrying a sectional sofa out through a townhouse door',
-    shot: 'Furniture navigating a tight doorway or stairwell — shows the hard part you handle.',
+    src: job('bedroom-cleanout.png'),
+    alt: 'Bedroom packed with suitcases, boxes and household items during a Northern Virginia furniture cleanout',
+    shot: 'Real job — bedroom / furniture cleanout.',
     ratio: '3/2',
   },
   serviceAppliance: {
-    src: pexels(5025639),
-    alt: 'Crew member moving an old refrigerator onto a dolly in a kitchen for appliance removal',
-    shot: 'Appliance on a dolly, mid-removal, indoors.',
+    src: job('garage-renovation.png'),
+    alt: 'Garage stacked with fixture boxes, trim and renovation debris during an appliance and remodel haul-out',
+    shot: 'Real job — remodel / fixture haul-out.',
     ratio: '3/2',
   },
   serviceEstate: {
-    src: pexels(6195125),
-    alt: 'Crew sorting boxes and furniture during a full estate cleanout of a Vienna home',
-    shot: 'Whole-home cleanout in progress. Show scale — multiple rooms or a full truck.',
+    src: job('room-cleanout.png'),
+    alt: 'Wood-paneled room filled with boxes, bedding and household goods during an estate cleanout in Northern Virginia',
+    shot: 'Real job — estate / whole-room cleanout.',
     ratio: '3/2',
   },
   serviceConstruction: {
-    src: pexels(14076978),
-    alt: 'Stacked drywall scrap, lumber and torn-out cabinets loaded from a kitchen renovation',
-    shot: 'Renovation debris pile, ideally on a jobsite with the truck visible.',
+    src: job('construction-debris.png'),
+    alt: 'Drywall, insulation and fixture packaging piled in a Northern Virginia backyard after a renovation',
+    shot: 'Real job — construction debris.',
     ratio: '3/2',
   },
   serviceYardWaste: {
-    src: pexels(2219024),
-    alt: 'Storm-downed tree limbs and bagged yard waste stacked at a curb in Loudoun County',
-    shot: 'Brush and limbs at the curb. Post-storm shots are ideal.',
+    src: job('yard-demo.png'),
+    alt: 'Backyard debris pile with demo bags, old cabinets and scrap lumber ready for haul-away in Northern Virginia',
+    shot: 'Real job — yard / demo debris.',
     ratio: '3/2',
   },
   serviceShed: {
-    src: pexels(8293778),
-    alt: 'Crew dismantling a weathered backyard storage shed panel by panel',
-    shot: 'Shed mid-demolition — half standing, half down. Very compelling.',
+    src: job('shed-cleanout.png'),
+    alt: 'Overstuffed outdoor storage shed packed with bins, bags and household junk before a Dominion Haul Co cleanout',
+    shot: 'Real job — shed cleanout.',
     ratio: '3/2',
   },
   serviceCommercial: {
-    src: pexels(4483610),
-    alt: 'Stacked office chairs, cubicle panels and filing cabinets ready for removal from a Tysons office suite',
-    shot: 'Office furniture staged for removal. Empty suite reads as commercial.',
+    src: job('dumpster-load.png'),
+    alt: 'Open dumpster filled with carpet remnants, wood frames and household debris from a Northern Virginia job',
+    shot: 'Real job — dumpster / bulk load.',
     ratio: '3/2',
   },
   truckLoadDiagram: {
-    src: pexels(11802122, 1800),
-    alt: 'Side view of the Dominion Haul Co truck bed marked with quarter, half, three-quarter and full load fill lines',
-    shot: 'Shoot the empty truck bed square-on from the side. Fill lines get drawn on in edit.',
+    src: job('truck-load.png'),
+    alt: 'Inside the Dominion Haul Co truck bed showing a real mixed household load of bags, furniture and debris',
+    shot: 'Real job — truck bed from the tailgate.',
     ratio: '16/9',
   },
   serviceAreaMap: {
-    src: pexels(1396122),
-    alt: 'Map of Northern Virginia highlighting the Fairfax, Loudoun, Prince William and Arlington county service area',
-    shot: 'Export a styled static map. Keep it under 120KB — see README for the recommended approach.',
+    src: job('construction-yard.png'),
+    alt: 'Residential backyard in Northern Virginia with a construction debris pile staged for same-day haul-away',
+    shot: 'Real job — typical NoVA residential site.',
     ratio: '4/3',
   },
 } as const;
+
+export type ImageKey = keyof typeof images;
+
+/** Recent-job gallery — all real photos, used on the home page. */
+export const jobPhotos = [
+  {
+    src: job('truck-load.png'),
+    alt: 'Loaded Dominion Haul Co truck looking out at a Northern Virginia neighborhood',
+    caption: 'Truck load — residential pickup',
+    span: 'feature',
+  },
+  {
+    src: job('garage-flooring.png'),
+    alt: 'Garage piled with torn-out flooring and wallpaper after a remodel',
+    caption: 'Garage flooring tear-out',
+    span: 'feature',
+  },
+  {
+    src: job('shed-cleanout.png'),
+    alt: 'Cluttered backyard shed packed with bins and household junk',
+    caption: 'Shed cleanout',
+    span: 'cell',
+  },
+  {
+    src: job('dumpster-load.png'),
+    alt: 'Dumpster packed with carpet, lumber and household debris',
+    caption: 'Dumpster load',
+    span: 'cell',
+  },
+  {
+    src: job('bedroom-cleanout.png'),
+    alt: 'Bedroom stacked with suitcases and boxes during a cleanout',
+    caption: 'Bedroom cleanout',
+    span: 'cell',
+  },
+  {
+    src: job('construction-debris.png'),
+    alt: 'Drywall and insulation piled in a backyard after a renovation',
+    caption: 'Construction debris',
+    span: 'cell',
+  },
+  {
+    src: job('room-cleanout.png'),
+    alt: 'Packed room with boxes and household goods during an estate cleanout',
+    caption: 'Estate room clear-out',
+    span: 'cell',
+  },
+  {
+    src: job('garage-renovation.png'),
+    alt: 'Garage filled with renovation boxes, trim and trash bags',
+    caption: 'Garage remodel haul',
+    span: 'cell',
+  },
+  {
+    src: job('yard-demo.png'),
+    alt: 'Backyard pile of demo bags, cabinets and scrap lumber',
+    caption: 'Yard demo pile',
+    span: 'cell',
+  },
+  {
+    src: job('construction-yard.png'),
+    alt: 'Northern Virginia backyard with insulation, drywall and fixture boxes staged for removal',
+    caption: 'Backyard renovation cleanout',
+    span: 'cell',
+  },
+] as const;
