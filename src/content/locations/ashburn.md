@@ -1,6 +1,6 @@
 ---
 title: Ashburn
-metaTitle: Junk Removal in Ashburn VA 20147 | Same-Day | Dominion Haul Co
+metaTitle: Junk Removal in Ashburn VA 20147 | Same-Day | Dominion Haul
 metaDescription: Junk removal in Ashburn VA — Brambleton, Broadlands, Ashburn Village, Belmont and One Loudoun. HOA-aware, basement build-out debris, garage clearing. From $95.
 headline: Twenty years in, and the garages have caught up.
 lede: Ashburn's housing is young, its HOAs are strict, and its basements are being finished at a rate that keeps our truck busy all year.

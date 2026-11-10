@@ -4,7 +4,7 @@ metaTitle: Estate Cleanout Checklist for Virginia Executors (2026 Guide)
 metaDescription: A practical order of operations for clearing an estate property in Northern Virginia — what to secure first, what never to throw out, donation receipts for estate accounting, and realistic timelines.
 description: What to secure before anything moves, what should never reach a truck, and how to keep the paperwork clean for probate.
 publishDate: 2026-05-11
-author: Dominion Haul Co
+author: Dominion Haul
 category: Guides
 readingMinutes: 8
 faq:

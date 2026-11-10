@@ -71,7 +71,7 @@ const blog = defineCollection({
     description: z.string(),
     publishDate: z.coerce.date(),
     updatedDate: z.coerce.date().optional(),
-    author: z.string().default('Dominion Haul Co'),
+    author: z.string().default('Dominion Haul'),
     category: z.enum(['Pricing', 'Guides', 'Seasonal', 'Local']),
     readingMinutes: z.number(),
     draft: z.boolean().default(false),

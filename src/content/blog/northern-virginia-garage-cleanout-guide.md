@@ -4,7 +4,7 @@ metaTitle: Garage Cleanout Guide for Northern Virginia Homeowners (2026)
 metaDescription: A practical weekend plan for clearing a Northern Virginia garage — what to sort, what the county will and will not take, where hazardous waste goes, and what hauling costs.
 description: A realistic plan, the four-pile method, and exactly where the paint tins are legally allowed to go.
 publishDate: 2026-06-02
-author: Dominion Haul Co
+author: Dominion Haul
 category: Guides
 readingMinutes: 7
 faq:

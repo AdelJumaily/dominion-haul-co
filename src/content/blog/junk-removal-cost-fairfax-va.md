@@ -4,7 +4,7 @@ metaTitle: How Much Does Junk Removal Cost in Fairfax VA? (2026 Prices)
 metaDescription: Real junk removal prices in Fairfax County VA — single items from $95, half loads $389–$499. What drives the price, what the hidden fees usually are, and when a dumpster is cheaper.
 description: Actual numbers, what moves them, and the fees other companies do not mention until the truck is already loaded.
 publishDate: 2026-07-14
-author: Dominion Haul Co
+author: Dominion Haul
 category: Pricing
 readingMinutes: 6
 faq:

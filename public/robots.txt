@@ -1,4 +1,4 @@
-# Dominion Haul Co — robots.txt
+# Dominion Haul — robots.txt
 # Update the Sitemap host if the domain changes (must match astro.config.mjs).
 
 User-agent: *

@@ -1,6 +1,6 @@
 ---
 title: Reston
-metaTitle: Junk Removal in Reston VA 20190 | Same-Day | Dominion Haul Co
+metaTitle: Junk Removal in Reston VA 20190 | Same-Day | Dominion Haul
 metaDescription: Junk removal in Reston VA — cluster townhomes, Lake Anne, Reston Town Center and South Lakes. HOA-aware crews, published pricing from $95, same-day slots most weekdays.
 headline: Sixty years of a planned community, quietly filling up.
 lede: Reston's cluster homes were designed beautifully and not, it must be said, with a sofa's exit route in mind. We know the layouts.

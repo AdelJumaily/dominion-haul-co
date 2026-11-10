@@ -28,7 +28,7 @@ const { loc, svc } = Astro.props;
 const L = loc.data;
 const S = svc.data;
 
-const title = `${S.title} in ${L.title}, VA | Dominion Haul Co`;
+const title = `${S.title} in ${L.title}, VA | Dominion Haul`;
 const description = `${S.title} in ${L.title}, Virginia (${L.zips.slice(0, 3).join(', ')}). Same-day slots, published pricing from $${S.priceFrom}, local crew on the phone — not a franchise call centre.`;
 
 const crumbs = [
@@ -109,7 +109,7 @@ const siblingCities = (await getCollection('locations'))
       <div class="prose">
         <h2>{S.title} for {L.title} addresses</h2>
         <p>
-          Dominion Haul Co handles {S.title.toLowerCase()} across {L.title} and the rest of{' '}
+          Dominion Haul handles {S.title.toLowerCase()} across {L.title} and the rest of{' '}
           {L.countyLabel}. You get a local crew on the phone, a firm price before we load,
           and the same published rates we post for every Northern Virginia city we serve.
         </p>

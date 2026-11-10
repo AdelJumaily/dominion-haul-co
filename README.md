@@ -1,4 +1,4 @@
-# Dominion Haul Co — marketing site
+# Dominion Haul — marketing site
 
 Static site built with [Astro](https://astro.build). 36 pages, ~24 KB total first load,
 zero external requests, zero web fonts, 1.6 KB of JavaScript.

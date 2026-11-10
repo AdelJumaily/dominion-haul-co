@@ -1,6 +1,6 @@
 ---
 title: Fairfax County
-metaTitle: Junk Removal in Fairfax County VA | Same-Day | Dominion Haul Co
+metaTitle: Junk Removal in Fairfax County VA | Same-Day | Dominion Haul
 metaDescription: Junk removal across Fairfax County — Vienna, Reston, Burke, Centreville, Annandale, McLean and Springfield. Upfront load-size pricing from $95. Same-day slots most weekdays.
 headline: Fairfax County's basements have been filling up since 1978.
 lede: From the inside-the-Beltway colonials to the newest Fair Lakes townhouses, we haul across every corner of the county — with the price agreed before we touch anything.

@@ -1,8 +1,8 @@
 {
-  "name": "dominion-haul-co",
+  "name": "dominion-haul",
   "version": "1.0.0",
   "private": true,
-  "description": "Marketing site for Dominion Haul Co — junk removal in Northern Virginia",
+  "description": "Marketing site for Dominion Haul — junk removal in Northern Virginia",
   "type": "module",
   "scripts": {
     "dev": "astro dev",

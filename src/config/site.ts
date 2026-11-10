@@ -1,6 +1,6 @@
 /**
  * ─────────────────────────────────────────────────────────────────────────────
- *  DOMINION HAUL CO — SINGLE SOURCE OF TRUTH
+ *  DOMINION HAUL — SINGLE SOURCE OF TRUTH
  * ─────────────────────────────────────────────────────────────────────────────
  *  Everything business-specific lives here. Change it once and it updates the
  *  sticky header, every hero, every tel:/sms: link, the footer, and all of the
@@ -11,8 +11,8 @@
  */
 
 export const site = {
-  name: 'Dominion Haul Co',
-  legalName: 'Dominion Haul Co LLC',
+  name: 'Dominion Haul',
+  legalName: 'Dominion Haul',
   shortName: 'Dominion Haul',
   tagline: 'Call before noon. Reston by 2. Price before we lift.',
   description:
@@ -119,13 +119,13 @@ const job = (file: string) => `/images/jobs/${file}`;
 export const images = {
   heroTruck: {
     src: pexels(11802122),
-    alt: 'Dominion Haul Co box truck parked in a Northern Virginia driveway with the loading ramp down',
+    alt: 'Dominion Haul box truck parked in a Northern Virginia driveway with the loading ramp down',
     shot: 'Hero background — keep until a dedicated truck exterior shot is ready.',
     ratio: '16/9',
   },
   heroCrewLoading: {
     src: job('truck-load.png'),
-    alt: 'Loaded Dominion Haul Co truck bed packed with household junk, looking out at a Northern Virginia street',
+    alt: 'Loaded Dominion Haul truck bed packed with household junk, looking out at a Northern Virginia street',
     shot: 'Real job — truck load, residential neighborhood.',
     ratio: '1/1',
   },
@@ -143,7 +143,7 @@ export const images = {
   },
   founderPortrait: {
     src: job('dumpster-load.png'),
-    alt: 'Dominion Haul Co dumpster loaded with carpet, lumber and household debris on a Northern Virginia job',
+    alt: 'Dominion Haul dumpster loaded with carpet, lumber and household debris on a Northern Virginia job',
     shot: 'Real job — dumpster load.',
     ratio: '4/5',
   },
@@ -155,7 +155,7 @@ export const images = {
   },
   serviceJunkRemoval: {
     src: job('truck-load.png'),
-    alt: 'Household junk packed into the Dominion Haul Co truck after a residential pickup in Northern Virginia',
+    alt: 'Household junk packed into the Dominion Haul truck after a residential pickup in Northern Virginia',
     shot: 'Real job — full household load in the truck.',
     ratio: '3/2',
   },
@@ -191,7 +191,7 @@ export const images = {
   },
   serviceShed: {
     src: job('shed-cleanout.png'),
-    alt: 'Overstuffed outdoor storage shed packed with bins, bags and household junk before a Dominion Haul Co cleanout',
+    alt: 'Overstuffed outdoor storage shed packed with bins, bags and household junk before a Dominion Haul cleanout',
     shot: 'Real job — shed cleanout.',
     ratio: '3/2',
   },
@@ -203,7 +203,7 @@ export const images = {
   },
   truckLoadDiagram: {
     src: job('truck-load.png'),
-    alt: 'Inside the Dominion Haul Co truck bed showing a real mixed household load of bags, furniture and debris',
+    alt: 'Inside the Dominion Haul truck bed showing a real mixed household load of bags, furniture and debris',
     shot: 'Real job — truck bed from the tailgate.',
     ratio: '16/9',
   },
@@ -221,7 +221,7 @@ export type ImageKey = keyof typeof images;
 export const jobPhotos = [
   {
     src: job('truck-load.png'),
-    alt: 'Loaded Dominion Haul Co truck looking out at a Northern Virginia neighborhood',
+    alt: 'Loaded Dominion Haul truck looking out at a Northern Virginia neighborhood',
     caption: 'Truck load — residential pickup',
     span: 'feature',
   },
