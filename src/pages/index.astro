@@ -1,708 +1,544 @@
 ---
 import Base from '../layouts/Base.astro';
-import Figure from '../components/Figure.astro';
 import ServiceGrid from '../components/ServiceGrid.astro';
 import Testimonials from '../components/Testimonials.astro';
 import QuoteForm from '../components/QuoteForm.astro';
-import CTABand from '../components/CTABand.astro';
 import JobGallery from '../components/JobGallery.astro';
 import FAQ from '../components/FAQ.astro';
 import Icon from '../components/Icon.astro';
 import { site, phoneHref, smsHref } from '../config/site';
-import { tiers } from '../config/pricing';
 import { getCollection } from 'astro:content';
-import {
-  HeroCopy,
-  MarqueeRow,
-  StatsRow,
-  WhyList,
-  PriceRail,
-  SectionIntro,
-  StickyScrollSteps,
-  BlurFade,
-  ParallaxHeroMedia,
-} from '../components/motion/HomeMotion';
 
 const locations = await getCollection('locations');
 const hasReviews = (await getCollection('testimonials')).some((r) => r.data.verified);
-const counties = locations
-  .filter((l) => l.data.kind === 'county')
-  .sort((a, b) => a.data.order - b.data.order);
-const cities = locations
-  .filter((l) => l.data.kind === 'city')
-  .sort((a, b) => a.data.title.localeCompare(b.data.title));
 
-const marqueePlaces = [
-  ...counties.map((c) => ({ name: c.data.title, href: `/locations/${c.id}` })),
-  ...cities.map((c) => ({ name: c.data.title, href: `/locations/${c.id}` })),
-];
+const countyOrder = ['fairfax-county', 'loudoun-county', 'prince-william-county', 'arlington-county'];
+const areaGroups = countyOrder
+  .map((id) => locations.find((l) => l.id === id))
+  .filter((c): c is NonNullable<typeof c> => Boolean(c))
+  .map((county) => ({
+    county,
+    cities: locations
+      .filter((l) => l.data.kind === 'city' && l.data.county === county.id)
+      .sort((a, b) => a.data.title.localeCompare(b.data.title)),
+  }));
 
 const steps = [
   {
-    n: '01',
-    t: 'Text a photo of the pile',
-    d: 'Or call. We usually text a firm number back in under fifteen minutes when we are not mid-carry.',
+    t: 'Send a photo or call',
+    d: `Text a picture of what's going to ${site.phone.display}, or call and describe it. We'll give you a price range.`,
   },
   {
-    n: '02',
-    t: 'We lock the price in your driveway',
-    d: 'Out loud, before anything is loaded. If the Reston garage is lighter than the photo looked, the price goes down — never up as a surprise.',
+    t: 'We confirm the price on site',
+    d: 'When we arrive, we give you the final price before we lift anything. No surprises.',
   },
   {
-    n: '03',
-    t: 'We haul it. You do not lift.',
-    d: 'Basement in Burke, attic in Ashburn, cluster court in Reston — you point, we carry, we sweep. You pay the number we agreed.',
+    t: 'We haul it and sweep up',
+    d: 'We carry everything out from wherever it is, load the truck, and leave the space swept.',
   },
 ];
 
 const whyUs = [
   {
-    t: 'Prices are on this website',
-    d: '1-800-GOT-JUNK and the other franchises make you call for a number. Ours is published by load size — Single item from $95 — before you ever speak to us.',
+    icon: 'phone',
+    t: 'You talk to the person who shows up',
+    d: 'We are a local Chantilly company, not a national call center.',
   },
   {
-    t: 'You get a local crew',
-    d: 'Not a scheduling centre that has never been to Fairfax. The phone rings to the people who own the truck and will be standing in your driveway.',
+    icon: 'tag',
+    t: 'Price agreed before loading',
+    d: 'You know exactly what you are paying before anything goes on the truck.',
   },
   {
-    t: 'Call before noon → Reston by 2',
-    d: 'We know the Fairfax County Parkway patterns. Afternoon slots are held for morning bookings. No rush fee — urgency is why people call a hauler.',
+    icon: 'truck',
+    t: 'We do all the heavy lifting',
+    d: 'Stairs, basements, attics and backyards. You just point.',
   },
   {
-    t: 'Sorted, not just dumped',
-    d: 'Usable furniture to local donation partners, metal to scrap, electronics through e-waste. Costs you nothing extra. It is how we haul out of Chantilly.',
+    icon: 'shield',
+    t: 'Insured',
+    d: 'Certificates of insurance available for buildings and commercial clients.',
   },
 ];
-
-const platforms = ['Google', 'Yelp', 'Nextdoor', 'Angi', 'Thumbtack', 'Facebook'];
 
 const homeFaq = [
   {
-    q: 'How much does junk removal cost in Northern Virginia?',
-    a: 'Single items start at $95. Quarter loads typically run $249–$329, half loads $389–$499. We price by truck volume, not the hour — stairs and long carries do not add a surcharge. Full table on our pricing page.',
+    q: 'How much does junk removal cost?',
+    a: `We price by how much space your items take up in our truck, not by the hour. A single item costs much less than a full truckload. Text a photo to ${site.phone.display} and we'll send you a price range. When we arrive, we confirm the final price before loading anything.`,
   },
   {
-    q: 'Do you offer same-day junk pickup in Reston and Fairfax?',
-    a: 'Yes on most weekdays. We know the Fairfax County Parkway patterns — call before noon and we can usually hit a Reston pickup by 2pm. Same published rates across Fairfax, Loudoun, Prince William and Arlington.',
+    q: 'What items do you take?',
+    a: 'Most things from a home, garage, or yard: furniture, mattresses, appliances, treadmills and exercise equipment, electronics, boxes and clutter, yard waste, and debris from small remodeling projects. If you are unsure about an item, send us a photo and ask.',
   },
   {
-    q: 'Who answers the phone at Dominion Haul?',
-    a: 'A local crew — the people who own the truck. No franchise scheduling centre. Text a photo for a firm quote, usually under fifteen minutes when we are not mid-carry.',
+    q: "What items can't you take?",
+    a: 'We cannot take hazardous materials, including paint, solvents, gasoline, oil, pool chemicals, propane tanks, asbestos, and medical waste. We also cannot take firearms or ammunition. Each Northern Virginia county runs a household hazardous waste drop-off, and we can point you to the right one.',
   },
   {
-    q: 'What cities do you serve?',
-    a: 'Chantilly base with coverage across Fairfax County, Loudoun County, Prince William County and Arlington County — including Reston, Vienna, Ashburn, Leesburg, Manassas, Herndon, Centreville and more within about 30 miles.',
+    q: 'How does scheduling work? Can you come today?',
+    a: 'Call or text to tell us what you need removed and when. Same-day or next-day pickup is often possible when our schedule allows, especially if you reach out early in the day.',
+  },
+  {
+    q: 'Do I have to carry everything outside first?',
+    a: 'No. We carry items out from wherever they are, including basements, attics, upstairs bedrooms, garages, and backyards. Just show us what is going.',
+  },
+  {
+    q: 'What areas do you serve?',
+    a: 'We are based in Chantilly and serve Fairfax, Loudoun, Prince William, and Arlington counties, including Fairfax, Chantilly, Centreville, Herndon, Reston, Vienna, Ashburn, Leesburg, Manassas, Woodbridge, and Arlington.',
   },
 ];
-
-const stats = [
-  { value: 30, suffix: ' mi', label: 'Service radius from Chantilly' },
-  { value: 15, suffix: ' min', label: 'Typical photo-quote reply' },
-  { value: 2, suffix: 'pm', label: 'Reston same-day if you call by noon' },
-  { value: 95, prefix: '$', label: 'Single-item floor price' },
-];
-
-const priceTiers = tiers.map((t) => ({
-  name: t.name,
-  price: t.price,
-  examples: t.examples,
-  fill: t.fill,
-  popular: t.popular,
-}));
 ---
 
 <Base
-  title={`Junk Removal in Northern Virginia | Fairfax, Loudoun, PW & Arlington | ${site.name}`}
-  description="Same-day junk removal out of Chantilly, VA. Published load-size pricing from $95, Reston by 2pm if you call before noon. Fairfax, Loudoun, Prince William & Arlington."
-  keywords="junk removal Northern Virginia, junk removal Fairfax VA, junk removal Reston, junk hauling Loudoun, estate cleanout Arlington, furniture removal Chantilly, Dominion Haul"
-  ogImage="/images/logo.png"
-  geoPlacename="Chantilly, Northern Virginia"
-  schema={{
-    type: 'WebPage',
-    faq: homeFaq,
-  }}
+  title="Junk Removal Northern Virginia | Dominion Haul"
+  description="Dominion Haul removes furniture, appliances, and household junk across Fairfax, Loudoun, Prince William & Arlington. Call or text 571-477-7222."
+  schema={{ type: 'WebPage', faq: homeFaq }}
 >
   <!-- ══ HERO ══════════════════════════════════════════════════════════ -->
-  <section class="hero">
-    <div class="hero-bg" aria-hidden="true">
-      <ParallaxHeroMedia client:load>
-        {/* PLACEHOLDER - replace with real business photo */}
-        <Figure imageKey="heroTruck" priority ratio="16/9" sizes="100vw" class="hero-img" />
-      </ParallaxHeroMedia>
-      <div class="hero-scrim"></div>
-    </div>
-
+  <section class="hero" data-band="dark">
     <div class="container hero-inner">
-      <HeroCopy
-        client:load
-        headline="Same-day junk removal out of Chantilly."
-        sub="Call before noon and we can hit Reston by 2. Published prices. A local crew on the phone — not a franchise call centre."
-        ctaHref={phoneHref}
-        ctaLabel={`Call ${site.phone.display}`}
-        meta="Fairfax · Loudoun · Prince William · Arlington · from $95"
-      />
+      <div class="hero-copy">
+        <p class="eyebrow">Local &middot; Based in Chantilly, VA</p>
+        <h1>Junk Removal and Hauling in Northern Virginia</h1>
+        <p class="hero-sub">
+          Furniture, appliances, treadmills, yard waste and full cleanouts. You point to what's
+          going. We lift it, load it, and haul it away.
+        </p>
+        <div class="btn-row hero-btns">
+          <a href={phoneHref} class="btn btn-gold btn-lg" data-track="call-hero">
+            <Icon name="phone" size={20} /> Call {site.phone.display}
+          </a>
+          <a href="#quote" class="btn btn-ghost btn-lg">Get a Free Quote</a>
+        </div>
+        <ul class="hero-checks">
+          <li><Icon name="check" size={18} /> Price agreed before we load</li>
+          <li><Icon name="check" size={18} /> We do all the lifting</li>
+          <li><Icon name="check" size={18} /> Insured</li>
+        </ul>
+      </div>
+      <div class="hero-photo">
+        <img
+          src="/images/jobs/truck-load.png"
+          alt="Dominion Haul truck loaded with household junk from a Northern Virginia pickup"
+          width="900"
+          height="900"
+          fetchpriority="high"
+        />
+      </div>
     </div>
   </section>
 
-  <!-- ══ AREA MARQUEE ══════════════════════════════════════════════════ -->
-  <section class="areas-marquee" data-band="raised" aria-label="Service areas">
-    <MarqueeRow client:visible items={marqueePlaces} speed={48} />
-  </section>
-
-  <!-- ══ STATS ═════════════════════════════════════════════════════════ -->
-  <section class="section-sm stats-sec" data-band="muted">
+  <!-- ══ AREA STRIP ════════════════════════════════════════════════════ -->
+  <div class="area-strip">
     <div class="container">
-      <StatsRow client:visible items={stats} />
+      Serving <strong>Fairfax</strong> &middot; <strong>Loudoun</strong> &middot;
+      <strong>Prince William</strong> &middot; <strong>Arlington</strong> counties
     </div>
-  </section>
+  </div>
 
-  <!-- ══ SERVICES BENTO ════════════════════════════════════════════════ -->
+  <!-- ══ SERVICES ══════════════════════════════════════════════════════ -->
   <section class="section">
     <div class="container">
-      <SectionIntro
-        client:visible
-        title="Sofas in Vienna. Debris in Sterling. Whole garages in Reston."
-        lede="Eight services, one crew, one price board. Nothing here is a franchise add-on with its own fee schedule."
-      />
-      <BlurFade client:visible delay={0.12}>
-        <ServiceGrid heading="Our services" variant="bento" />
-      </BlurFade>
-      <BlurFade client:visible delay={0.2}>
-        <p class="mt-6">
-          <a href="/services" class="link-arrow">
-            All services <Icon name="arrow" size={17} class="arrow" />
-          </a>
-        </p>
-      </BlurFade>
+      <div class="section-head center-head">
+        <p class="eyebrow">What we haul</p>
+        <h2>Our Services</h2>
+        <p class="lede">From a single couch to a whole house. If it's junk, we can probably take it.</p>
+      </div>
+      <ServiceGrid />
     </div>
   </section>
 
-  <!-- ══ HOW IT WORKS — sticky scroll ══════════════════════════════════ -->
-  <section class="section steps-sec" data-band="muted">
+  <!-- ══ HOW IT WORKS ══════════════════════════════════════════════════ -->
+  <section class="section" data-band="muted">
     <div class="container">
-      <StickyScrollSteps
-        client:visible
-        title="How a same-day pickup actually works"
-        lede="From a photo on your phone to a swept driveway in Reston — short on purpose."
-        steps={steps}
-      />
+      <div class="section-head center-head">
+        <p class="eyebrow">Simple and upfront</p>
+        <h2>How It Works</h2>
+      </div>
+      <ol class="steps">
+        {
+          steps.map((s, i) => (
+            <li>
+              <span class="step-n">{i + 1}</span>
+              <h3>{s.t}</h3>
+              <p>{s.d}</p>
+            </li>
+          ))
+        }
+      </ol>
     </div>
   </section>
 
   <!-- ══ WHY US ════════════════════════════════════════════════════════ -->
-  <section class="section why" data-band="dark">
-    <div class="container why-layout">
-      <BlurFade client:visible direction="left" className="why-lead">
-        <h2>We are not a franchise. That is the whole advantage.</h2>
-        <p class="lede mt-5">
-          Established names here run someone else's playbook out of a regional call centre.
-          We are an independent crew based in Chantilly, with every load-size price
-          published on this site.
-        </p>
-        <a href="/about" class="link-arrow mt-6">
-          About the company <Icon name="arrow" size={17} class="arrow" />
-        </a>
-      </BlurFade>
-      <WhyList client:visible items={whyUs} />
-    </div>
-  </section>
-
-  <!-- ══ COMPANY NOTE — unusual layout moment ══════════════════════════ -->
-  <section class="adel-note" aria-label="How we route same-day jobs">
-    <div class="container adel-note-inner">
-      <BlurFade client:visible className="adel-aside">
-        <p class="adel-kicker">{site.name}</p>
-        <p class="adel-meta">Chantilly · est. {site.founded}</p>
-      </BlurFade>
-      <BlurFade client:visible delay={0.1} className="adel-quote">
-        <blockquote>
-          <p>
-            “We know the Fairfax County Parkway traffic patterns well enough to hit
-            same-day pickups in Reston by 2pm — if you call before noon. That is not a
-            slogan. That is how we route the truck.”
-          </p>
-        </blockquote>
-        <a href="/about" class="link-arrow mt-5">
-          How we work <Icon name="arrow" size={17} class="arrow" />
-        </a>
-      </BlurFade>
-    </div>
-  </section>
-
-  <!-- ══ PRICING ═══════════════════════════════════════════════════════ -->
   <section class="section">
-    <div class="container">
-      <SectionIntro
-        client:visible
-        title="Load size, not hours. The number on the site is the number you pay."
-        lede="A long carry from a Burke basement does not cost extra. Awkward Reston stairs do not cost extra. Fuel to Gainesville does not cost extra."
-      />
-      <PriceRail client:visible tiers={priceTiers} />
-      <BlurFade client:visible delay={0.15}>
-        <div class="price-foot">
-          <p>
-            <strong>No hidden fees.</strong> Labour, fuel, dump fees, donation runs and clean-up
-            are all inside those numbers.
-          </p>
-          <a href="/pricing" class="btn btn-solid-ink">
-            Full pricing breakdown
-            <Icon name="arrow" size={17} class="arrow" />
-          </a>
-        </div>
-      </BlurFade>
+    <div class="container why">
+      <div class="why-lead">
+        <p class="eyebrow">Why Dominion Haul</p>
+        <h2>A Local Crew You Can Actually Reach</h2>
+        <p class="lede mt-4">
+          We're a new, local company building our name one job at a time. That means straight
+          answers, fair prices, and a crew that cares how your place looks when we leave.
+        </p>
+        <a href="/about" class="link-arrow mt-5">About us <Icon name="arrow" size={17} class="arrow" /></a>
+      </div>
+      <ul class="why-list">
+        {
+          whyUs.map((w) => (
+            <li>
+              <span class="why-icon"><Icon name={w.icon} size={22} /></span>
+              <div>
+                <h3>{w.t}</h3>
+                <p>{w.d}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- ══ COMMERCIAL PARTNERS ═══════════════════════════════════════════ -->
+  <section class="section-sm partner" data-band="dark">
+    <div class="container partner-inner">
+      <div>
+        <p class="eyebrow">For businesses</p>
+        <h2>Become a Commercial Partner</h2>
+        <p class="lede mt-4">
+          Property managers, realtors, remodelers and HOAs: add Dominion Haul to your trusted
+          vendor list. One contact, priority scheduling, and photos of every job for your
+          records.
+        </p>
+      </div>
+      <div class="btn-row">
+        <a href="/commercial" class="btn btn-gold btn-lg">
+          Partner With Us <Icon name="arrow" size={18} class="arrow" />
+        </a>
+      </div>
     </div>
   </section>
 
   <!-- ══ RECENT JOBS ═══════════════════════════════════════════════════ -->
-  <section class="section-sm jobs-sec" data-band="muted">
+  <section class="section" data-band="muted">
     <div class="container">
-      <SectionIntro
-        client:visible
-        title="Recent jobs. Ours — not a stock library."
-        lede="Garages, sheds, construction piles, estate rooms. This is what the truck actually looks like when we leave a Northern Virginia driveway."
-      />
-      <BlurFade client:visible delay={0.1}>
-        <JobGallery />
-      </BlurFade>
+      <div class="section-head center-head">
+        <p class="eyebrow">Real jobs, real photos</p>
+        <h2>Recent Work</h2>
+      </div>
+      <JobGallery />
     </div>
   </section>
 
-  <!-- ══ REVIEWS (hidden until real, verified reviews exist) ════════════ -->
   {hasReviews && (
-  <section class="section">
-    <div class="container">
-      <SectionIntro
-        client:visible
-        title="Vienna neighbours. Ashburn cleanouts. Arlington high-rises."
-        lede="Straight talk from people we actually hauled for — not a call-centre script."
-      />
-      <BlurFade client:visible delay={0.1}>
+    <section class="section">
+      <div class="container">
+        <div class="section-head center-head">
+          <p class="eyebrow">Reviews</p>
+          <h2>What Customers Say</h2>
+        </div>
         <Testimonials limit={3} featuredOnly />
-      </BlurFade>
-      <BlurFade client:visible delay={0.15}>
-        <p class="mt-6">
-          <a href="/reviews" class="link-arrow">
-            Read all reviews <Icon name="arrow" size={17} class="arrow" />
-          </a>
-        </p>
-      </BlurFade>
-    </div>
-
-    <div class="platform-strip" aria-label="Review platforms">
-      <MarqueeRow client:visible items={platforms} variant="platforms" speed={36} reverse />
-    </div>
-  </section>
+      </div>
+    </section>
   )}
 
   <!-- ══ SERVICE AREA ══════════════════════════════════════════════════ -->
-  <section class="section area-sec" data-band="muted">
-    <div class="container area-inner">
-      <BlurFade client:visible direction="left">
-        <h2>Chantilly base.<br />Four counties.</h2>
-        <p class="lede mt-4">
-          Roughly a {site.serviceRadiusMiles}-mile radius from Flint Lee Road — Purcellville
-          west, Woodbridge south, the Potomac north, the District line east. Same published
-          price everywhere inside it. Not sure? Call. The answer is usually yes.
+  <section class="section">
+    <div class="container">
+      <div class="section-head center-head">
+        <p class="eyebrow">Where we work</p>
+        <h2>Service Area</h2>
+        <p class="lede">
+          Our truck is based in Chantilly. Don't see your town? If you're in one of these four
+          counties, call us. The answer is almost always yes.
         </p>
+      </div>
+      <div class="areas">
+        {
+          areaGroups.map(({ county, cities }) => (
+            <div class="area-col">
+              <h3><a href={`/locations/${county.id}`}>{county.data.title}</a></h3>
+              <ul>
+                {cities.map((c) => (
+                  <li><a href={`/locations/${c.id}`}>{c.data.title}</a></li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
 
-        <ul class="area-counties">
-          {
-            counties.map((c) => (
-              <li>
-                <a href={`/locations/${c.id}`}>
-                  <span>
-                    <strong>{c.data.title}</strong>
-                    <em>{c.data.areas.slice(0, 4).join(' · ')}</em>
-                  </span>
-                  <Icon name="arrow" size={16} class="arrow" />
-                </a>
-              </li>
-            ))
-          }
-        </ul>
-
-        <a href="/locations" class="btn btn-ghost mt-5">
-          All cities &amp; towns
-          <Icon name="arrow" size={17} class="arrow" />
-        </a>
-      </BlurFade>
-
-      <BlurFade client:visible direction="right" delay={0.1} className="area-media">
-        <Figure imageKey="serviceAreaMap" ratio="4/3" />
-        <div class="area-crew">
-          <Figure imageKey="heroCrewLoading" ratio="1/1" sizes="280px" />
-        </div>
-      </BlurFade>
+  <!-- ══ FAQ ═══════════════════════════════════════════════════════════ -->
+  <section class="section" data-band="muted">
+    <div class="container">
+      <FAQ items={homeFaq} title="Common Questions" openFirst />
     </div>
   </section>
 
   <!-- ══ QUOTE ═════════════════════════════════════════════════════════ -->
-  <section class="section quote-sec" id="quote" data-band="raised">
-    <div class="container quote-inner">
-      <BlurFade client:visible className="quote-copy">
-        <h2>Text the pile.<br />Get a firm number.</h2>
+  <section class="section" id="quote">
+    <div class="container quote">
+      <div class="quote-copy">
+        <p class="eyebrow">Free, no obligation</p>
+        <h2>Get a Free Quote</h2>
         <p class="lede mt-4">
-          Fastest path to a firm price is a photo. No obligation, no charge for looking, and
-          nobody calling you for a fortnight afterwards.
+          Send us the details and a photo or two. We'll get back to you with a price range.
         </p>
-        <div class="quote-alt">
-          <a href={phoneHref} class="quote-phone">
-            <em>Rather just call?</em>
-            <strong>{site.phone.display}</strong>
-          </a>
-          <a href={smsHref} class="link-arrow">Text us a photo</a>
+        <div class="quote-direct">
+          <a href={phoneHref} class="quote-phone"><Icon name="phone" size={22} /> {site.phone.display}</a>
+          <a href={smsHref} class="link-arrow">Or text us a photo <Icon name="arrow" size={16} class="arrow" /></a>
+          <a href={`mailto:${site.email}`} class="link-arrow">{site.email}</a>
         </div>
-      </BlurFade>
-
-      <BlurFade client:visible delay={0.12} className="quote-card">
+      </div>
+      <div class="quote-card">
         <QuoteForm id="quote-home" />
-      </BlurFade>
+      </div>
     </div>
   </section>
-
-  <!-- ══ HOME FAQ — local SEO ══════════════════════════════════════════ -->
-  <section class="section" data-band="muted">
-    <div class="container">
-      <FAQ
-        items={homeFaq}
-        title="Junk removal in Northern Virginia — quick answers"
-        openFirst
-      />
-    </div>
-  </section>
-
-  <CTABand
-    heading="Got a pile in Fairfax?"
-    sub="Text a photo. We will text back a firm number — usually under fifteen minutes when we are not mid-carry."
-  />
 </Base>
 
 <style>
+  /* Hero */
   .hero {
-    position: relative;
-    min-height: min(100svh, 880px);
-    display: grid;
-    align-items: center;
-    color: var(--surface);
-    overflow: hidden;
-    isolation: isolate;
-  }
-  .hero-bg {
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-  }
-  .hero-bg :global(.frame),
-  .hero-bg :global(.hero-img) {
-    height: 100%;
-    border-radius: 0;
-    aspect-ratio: auto !important;
-  }
-  .hero-bg :global(img) {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: 68% center;
-  }
-  .hero-scrim {
-    position: absolute;
-    inset: 0;
-    background:
-      linear-gradient(
-        100deg,
-        rgb(20 32 25 / 0.92) 0%,
-        rgb(20 32 25 / 0.78) 34%,
-        rgb(20 32 25 / 0.35) 62%,
-        rgb(20 32 25 / 0.18) 100%
-      ),
-      linear-gradient(0deg, rgb(20 32 25 / 0.45) 0%, transparent 38%);
-    pointer-events: none;
+    background: var(--accent);
+    color: #fff;
+    padding-block: clamp(3rem, 2rem + 5vw, 6rem);
   }
   .hero-inner {
-    width: 100%;
-    padding-block: calc(var(--header-h) + clamp(2.5rem, 6vh, 4.5rem)) clamp(3rem, 8vh, 5rem);
-  }
-
-  @media (min-width: 900px) {
-    .hero-bg :global(img) {
-      object-position: 72% center;
-    }
-  }
-
-  .areas-marquee {
-    padding-block: var(--sp-4);
-    border-block: 1px solid var(--line);
-  }
-
-  .stats-sec :global(.stats-grid) {
-    display: grid;
-    gap: var(--sp-5);
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .stats-sec :global(.stat) {
-    display: grid;
-    gap: var(--sp-2);
-    padding-block: var(--sp-2);
-  }
-  .stats-sec :global(.stat-num) {
-    font-family: var(--font-display);
-    font-size: clamp(2.2rem, 1.4rem + 3vw, 3.4rem);
-    font-weight: 500;
-    letter-spacing: -0.04em;
-    line-height: 1;
-    color: var(--ink);
-  }
-  .stats-sec :global(.stat-label) {
-    font-size: 0.86rem;
-    color: var(--muted);
-    font-weight: 500;
-  }
-  @media (min-width: 800px) {
-    .stats-sec :global(.stats-grid) {
-      grid-template-columns: repeat(4, 1fr);
-      gap: var(--sp-6);
-    }
-    .stats-sec :global(.stat + .stat) {
-      border-left: 1px solid var(--line);
-      padding-left: var(--sp-6);
-    }
-  }
-
-  .why-layout {
-    display: grid;
-    gap: var(--sp-8);
-  }
-  .why-lead h2 {
-    max-width: 16ch;
-  }
-
-  /* Company note — deliberate asymmetric pull-quote, not a template card */
-  .adel-note {
-    padding-block: clamp(3.5rem, 2rem + 6vw, 6rem);
-    background: var(--ink);
-    color: var(--surface);
-  }
-  .adel-note-inner {
-    display: grid;
-    gap: var(--sp-6);
-    align-items: end;
-  }
-  .adel-kicker {
-    font-family: var(--font-display);
-    font-size: clamp(1.6rem, 1.2rem + 1.5vw, 2.4rem);
-    font-weight: 500;
-    letter-spacing: -0.035em;
-    color: #a8d5b5;
-  }
-  .adel-meta {
-    margin-top: var(--sp-2);
-    font-size: 0.8rem;
-    color: #9aada2;
-    letter-spacing: 0.02em;
-  }
-  .adel-quote blockquote {
-    margin: 0;
-  }
-  .adel-quote p {
-    font-family: var(--font-display);
-    font-size: clamp(1.35rem, 1.1rem + 1.2vw, 2rem);
-    font-weight: 400;
-    line-height: 1.35;
-    letter-spacing: -0.025em;
-    max-width: 28ch;
-  }
-  .adel-note :global(.link-arrow) {
-    color: #a8d5b5;
-  }
-  @media (min-width: 860px) {
-    .adel-note-inner {
-      grid-template-columns: 0.75fr 1.4fr;
-      gap: var(--sp-9);
-    }
-    .adel-aside {
-      transform: translateY(-12%);
-    }
-  }
-
-  :global(.why-list) {
-    list-style: none;
-    padding: 0;
-    display: grid;
-    gap: 0;
-  }
-  :global(.why-item) {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: var(--sp-5);
-    padding: var(--sp-5) 0;
-    border-top: 1px solid var(--ink-line);
-  }
-  :global(.why-list li:last-child .why-item) {
-    border-bottom: 1px solid var(--ink-line);
-  }
-  :global(.why-n) {
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    font-weight: 600;
-    color: var(--accent);
-    letter-spacing: 0.08em;
-    padding-top: 0.35rem;
-  }
-  :global(.why-item h3) {
-    font-size: var(--step-1);
-    margin-bottom: var(--sp-2);
-  }
-  :global(.why-item p) {
-    color: var(--fg-muted);
-    font-size: 0.95rem;
-    line-height: 1.6;
-    max-width: 48ch;
-  }
-  @media (min-width: 900px) {
-    .why-layout {
-      grid-template-columns: 1fr 1.05fr;
-      gap: var(--sp-9);
-      align-items: start;
-    }
-  }
-
-  .price-foot {
-    margin-top: var(--sp-6);
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--sp-4);
-    padding-top: var(--sp-5);
-    border-top: 1px solid var(--line);
-  }
-  .price-foot p {
-    color: var(--muted);
-    max-width: 48ch;
-  }
-  .price-foot strong {
-    color: var(--ink);
-  }
-
-
-  .platform-strip {
-    margin-top: var(--sp-8);
-    padding-block: var(--sp-5);
-    border-block: 1px solid var(--line);
-    background: var(--surface-sunk);
-  }
-
-  .area-inner {
     display: grid;
     gap: var(--sp-7);
     align-items: center;
   }
-  .area-counties {
+  .hero h1 {
+    color: #fff;
+    font-size: clamp(2.6rem, 1.6rem + 4.2vw, 4.6rem);
+  }
+  .hero-sub {
+    margin-top: var(--sp-5);
+    font-size: var(--step-1);
+    line-height: 1.5;
+    color: #dbe7e1;
+    max-width: 46ch;
+  }
+  .hero-btns {
+    margin-top: var(--sp-6);
+  }
+  .hero-checks {
     list-style: none;
     padding: 0;
     margin-top: var(--sp-6);
-    display: grid;
-    gap: 0;
-  }
-  .area-counties a {
     display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-3) var(--sp-5);
+    font-weight: 600;
+  }
+  .hero-checks li {
+    display: inline-flex;
     align-items: center;
-    justify-content: space-between;
-    gap: var(--sp-4);
-    padding: var(--sp-4) 0;
-    border-bottom: 1px solid var(--line);
-    text-decoration: none;
-    color: var(--ink);
-    transition: padding-left var(--dur) var(--ease);
+    gap: var(--sp-2);
   }
-  .area-counties a:hover {
-    padding-left: 6px;
+  .hero-checks :global(svg) {
+    color: var(--gold);
   }
-  .area-counties strong {
-    display: block;
-    font-family: var(--font-display);
-    font-size: 1.05rem;
-    font-weight: 500;
-    letter-spacing: -0.025em;
+  .hero-photo img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: var(--r-lg);
+    border: 4px solid var(--gold);
+    box-shadow: var(--shadow-lg);
   }
-  .area-counties em {
-    display: block;
-    font-style: normal;
-    font-size: 0.78rem;
-    color: var(--muted);
-    margin-top: 2px;
-  }
-  .area-counties :global(svg) {
-    color: var(--accent-deep);
-    flex: none;
-  }
-  .area-media {
-    position: relative;
-  }
-  .area-crew {
-    display: none;
-  }
-  @media (min-width: 900px) {
-    .area-inner {
-      grid-template-columns: 1fr 1.05fr;
+  @media (min-width: 960px) {
+    .hero-inner {
+      grid-template-columns: 1.15fr 1fr;
       gap: var(--sp-8);
-    }
-    .area-crew {
-      display: block;
-      position: absolute;
-      width: 42%;
-      left: -12%;
-      bottom: -8%;
-      border: 6px solid var(--surface-sunk);
-      box-shadow: var(--shadow-md);
     }
   }
 
-  .quote-inner {
+  .area-strip {
+    background: var(--gold);
+    color: var(--ink);
+    text-align: center;
+    padding-block: 0.8rem;
+    font-size: 1.02rem;
+  }
+
+  .center-head {
+    text-align: center;
+    margin-inline: auto;
+    max-width: 52ch;
+  }
+  .center-head .lede {
+    margin-inline: auto;
+  }
+
+  /* Steps */
+  .steps {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--sp-5);
+  }
+  .steps li {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    padding: var(--sp-6) var(--sp-5);
+    text-align: center;
+  }
+  .step-n {
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    margin: 0 auto var(--sp-4);
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--gold);
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    font-weight: 800;
+  }
+  .steps p {
+    margin-top: var(--sp-3);
+    color: var(--muted);
+  }
+  @media (min-width: 800px) {
+    .steps {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* Why */
+  .why {
     display: grid;
     gap: var(--sp-7);
     align-items: start;
   }
-  .quote-card {
-    padding: var(--sp-6);
-    border: 1px solid var(--line);
-    background: var(--surface);
-  }
-  .quote-alt {
-    margin-top: var(--sp-6);
+  .why-list {
+    list-style: none;
+    padding: 0;
     display: grid;
+    gap: var(--sp-5);
+  }
+  .why-list li {
+    display: flex;
     gap: var(--sp-4);
-    justify-items: start;
   }
-  .quote-phone {
+  .why-icon {
+    flex: none;
     display: grid;
-    gap: 2px;
-    text-decoration: none;
-    color: var(--ink);
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--r-md);
+    background: color-mix(in srgb, var(--gold) 18%, transparent);
+    color: var(--accent);
   }
-  .quote-phone em {
-    font-style: normal;
-    font-size: 0.78rem;
+  .why-list p {
+    margin-top: var(--sp-1);
     color: var(--muted);
   }
-  .quote-phone strong {
-    font-family: var(--font-display);
-    font-size: var(--step-2);
-    font-weight: 500;
-    letter-spacing: -0.035em;
-    line-height: 1.1;
-  }
   @media (min-width: 900px) {
-    .quote-inner {
-      grid-template-columns: 0.9fr 1.2fr;
-      gap: var(--sp-9);
+    .why {
+      grid-template-columns: 1fr 1.1fr;
+      gap: var(--sp-8);
+      align-items: center;
     }
   }
 
-  .jobs-sec {
-    padding-block: var(--sp-8) var(--sp-7);
+  /* Partner band */
+  .partner {
+    background: var(--ink);
   }
-  .jobs-sec :global(.section-head-row) {
-    margin-bottom: var(--sp-5);
+  .partner-inner {
+    display: grid;
+    gap: var(--sp-6);
+    align-items: center;
+  }
+  .partner h2 {
+    color: #fff;
+  }
+  .partner .lede {
+    color: #c5d3cc;
+    max-width: 56ch;
+  }
+  @media (min-width: 900px) {
+    .partner-inner {
+      grid-template-columns: 1fr auto;
+    }
+  }
+
+  /* Areas */
+  .areas {
+    display: grid;
+    gap: var(--sp-5);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  }
+  .area-col {
+    background: var(--surface-raised);
+    border: 1px solid var(--line);
+    border-top: 4px solid var(--accent);
+    border-radius: var(--r-lg);
+    padding: var(--sp-5);
+  }
+  .area-col h3 a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .area-col h3 a:hover {
+    color: var(--gold);
+  }
+  .area-col ul {
+    list-style: none;
+    padding: 0;
+    margin-top: var(--sp-3);
+    display: grid;
+    gap: var(--sp-2);
+  }
+  .area-col li a {
+    color: var(--ink);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .area-col li a:hover {
+    color: var(--gold);
+    text-decoration: underline;
+  }
+
+  /* Quote */
+  .quote {
+    display: grid;
+    gap: var(--sp-7);
+    align-items: start;
+  }
+  .quote-direct {
+    margin-top: var(--sp-6);
+    display: grid;
+    gap: var(--sp-3);
+    justify-items: start;
+  }
+  .quote-phone {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .quote-card {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    padding: var(--sp-5);
+    box-shadow: var(--shadow-md);
+  }
+  @media (min-width: 960px) {
+    .quote {
+      grid-template-columns: 0.85fr 1.15fr;
+      gap: var(--sp-8);
+    }
   }
 </style>

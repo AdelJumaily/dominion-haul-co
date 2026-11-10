@@ -1,24 +1,26 @@
 /* ═══════════════════════════════════════════════════════════════════════════
    DOMINION HAUL — DESIGN SYSTEM
    ───────────────────────────────────────────────────────────────────────────
-   Accent #2B6148 — Virginia leaf green, picked by hand (not Tailwind green-*).
-   Soft sage surfaces + forest ink. Neighborly / eco, not hi-vis template.
+   Colors come straight from the logo: Dominion green #074B39 + Haul gold #B58645.
+   Fonts: Barlow Condensed (headings, matches the logo lettering) + Barlow (body).
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /* ── Tokens ──────────────────────────────────────────────────────────────── */
 :root {
-  --accent: #2b6148;
-  --accent-hot: #387a5a;
-  --accent-deep: #1d4633;
-  --ink: #142019;
-  --ink-soft: #1c2a22;
-  --ink-line: #2c3d33;
-  --surface: #f3f6f3;
-  --surface-sunk: #e4ece6;
+  --accent: #074b39;
+  --accent-hot: #0b5f49;
+  --accent-deep: #05382b;
+  --gold: #b58645;
+  --gold-hot: #c79a5c;
+  --ink: #0b241c;
+  --ink-soft: #113128;
+  --ink-line: #1f4338;
+  --surface: #f8f6f1;
+  --surface-sunk: #efeae0;
   --surface-raised: #ffffff;
-  --muted: #5a6b60;
-  --muted-light: #849489;
-  --line: #cfdad2;
+  --muted: #56645e;
+  --muted-light: #93a59d;
+  --line: #e0dacd;
 
   --bg: var(--surface);
   --fg: var(--ink);
@@ -38,8 +40,8 @@
   --step-5: clamp(2.49rem, 1.87rem + 3.09vw, 4.73rem);
   --step-6: clamp(2.99rem, 2.02rem + 4.83vw, 6.31rem);
 
-  --font-display: 'Boska', 'Times New Roman', Georgia, serif;
-  --font-sans: 'Satoshi', 'Segoe UI', sans-serif;
+  --font-display: 'Barlow Condensed', 'Arial Narrow', 'Helvetica Neue', Arial, sans-serif;
+  --font-sans: 'Barlow', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   --font-mono: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, monospace;
 
   --sp-1: 0.25rem;
@@ -58,9 +60,9 @@
   --container-wide: 1400px;
   --container-tight: 760px;
 
-  --r-sm: 2px;
-  --r-md: 4px;
-  --r-lg: 8px;
+  --r-sm: 4px;
+  --r-md: 6px;
+  --r-lg: 12px;
 
   --shadow-sm: 0 1px 2px rgb(20 32 25 / 0.05);
   --shadow-md: 0 8px 24px rgb(20 32 25 / 0.08), 0 2px 6px rgb(20 32 25 / 0.04);
@@ -175,32 +177,30 @@ h2,
 h3,
 h4 {
   font-family: var(--font-display);
-  font-weight: 500;
-  line-height: 1.05;
-  letter-spacing: -0.03em;
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: 0;
   text-wrap: balance;
   color: var(--fg);
 }
+h1,
+h2 {
+  text-transform: uppercase;
+}
 h1 {
   font-size: var(--step-5);
-  font-weight: 500;
+  font-weight: 800;
 }
 h2 {
   font-size: var(--step-4);
 }
 h3 {
   font-size: var(--step-2);
-  letter-spacing: -0.025em;
-  line-height: 1.15;
-  font-family: var(--font-sans);
-  font-weight: 650;
+  line-height: 1.1;
 }
 h4 {
   font-size: var(--step-1);
-  letter-spacing: -0.02em;
   line-height: 1.2;
-  font-family: var(--font-sans);
-  font-weight: 650;
 }
 p {
   text-wrap: pretty;
@@ -209,20 +209,20 @@ p {
 .display {
   font-family: var(--font-display);
   font-size: var(--step-6);
-  font-weight: 500;
-  letter-spacing: -0.035em;
-  line-height: 0.94;
+  font-weight: 800;
+  text-transform: uppercase;
+  line-height: 0.95;
 }
 
-/* Quiet section label — no accent bar, no pill/tag chrome */
+/* Small gold section label */
 .eyebrow {
   display: block;
   font-family: var(--font-sans);
-  font-size: 0.78rem;
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  text-transform: none;
-  color: var(--fg-muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
   margin-bottom: var(--sp-3);
 }
 .eyebrow::before {
@@ -444,6 +444,20 @@ button,
 [data-band='dark'] .btn-solid-ink {
   --btn-bg: var(--surface);
   --btn-fg: var(--ink);
+}
+
+/* Gold call-to-action — dark text for readable contrast */
+.btn-gold {
+  --btn-bg: var(--gold);
+  --btn-fg: var(--ink);
+  font-weight: 700;
+}
+.btn-gold:hover {
+  background: var(--gold-hot);
+}
+[data-band='dark'] .btn-ghost {
+  --btn-fg: #fff;
+  border-color: rgb(255 255 255 / 0.35);
 }
 
 .btn-block {

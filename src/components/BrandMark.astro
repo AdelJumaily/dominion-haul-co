@@ -1,14 +1,12 @@
 ---
 /**
- * Official Dominion Haul logo lockup.
- * Full mark for header/footer; compact crops height for the sticky nav.
+ * Dominion Haul logo. `inverted` uses the white-lettered version for dark
+ * backgrounds (footer). Source art: public/images/logo.png (3.33:1).
  */
 interface Props {
-  /** Light plate behind the mark on dark bands (logo has a light ground). */
   inverted?: boolean;
   href?: string | false;
-  /** `nav` = compact height for sticky header; `lockup` = fuller brand mark */
-  size?: 'nav' | 'lockup' | 'hero';
+  size?: 'nav' | 'lockup';
 }
 const { inverted = false, href = '/', size = 'nav' } = Astro.props;
 const Tag = href === false ? 'span' : 'a';
@@ -16,15 +14,15 @@ const Tag = href === false ? 'span' : 'a';
 
 <Tag
   href={href === false ? undefined : href}
-  class:list={['wm', inverted && 'wm-inv', `wm-${size}`]}
-  aria-label={href === false ? undefined : 'Dominion Haul — home'}
+  class:list={['wm', `wm-${size}`]}
+  aria-label={href === false ? undefined : 'Dominion Haul home'}
 >
   <img
-    src="/images/logo.png"
-    alt="Dominion Haul — since 2026"
+    src={inverted ? '/images/logo-light.png' : '/images/logo.png'}
+    alt="Dominion Haul"
     class="wm-logo"
-    width="480"
-    height="360"
+    width="1200"
+    height="361"
     decoding="async"
   />
 </Tag>
@@ -33,46 +31,24 @@ const Tag = href === false ? 'span' : 'a';
   .wm {
     display: inline-flex;
     align-items: center;
-    text-decoration: none;
     line-height: 0;
-    transition: opacity var(--dur) var(--ease);
     flex: none;
+    transition: opacity var(--dur) var(--ease);
   }
   a.wm:hover {
     opacity: 0.88;
   }
-
   .wm-logo {
     display: block;
     width: auto;
-    height: 44px;
-    object-fit: contain;
-    object-position: left center;
+    height: 40px;
   }
-
   .wm-lockup .wm-logo {
-    height: 72px;
+    height: 56px;
   }
-
-  .wm-hero .wm-logo {
-    height: clamp(7.5rem, 18vw, 12.5rem);
-    width: auto;
-    max-width: min(100%, 28rem);
-  }
-
-  /* Logo art includes a light ground — seat it on a soft plate over dark bands */
-  .wm-inv {
-    background: #f3f6ef;
-    padding: 0.35rem 0.55rem;
-    border-radius: 4px;
-  }
-  .wm-inv.wm-lockup {
-    padding: 0.55rem 0.75rem;
-  }
-
   @media (min-width: 1024px) {
     .wm-nav .wm-logo {
-      height: 52px;
+      height: 48px;
     }
   }
 </style>

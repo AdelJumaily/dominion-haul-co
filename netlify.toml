@@ -9,6 +9,57 @@
 [build.environment]
   NODE_VERSION = "22"
 
+# ── Redirects for pages removed in the simplified site ───────────────────────
+# Old individual service pages → their section on the single /services page.
+[[redirects]]
+  from = "/services/junk-removal"
+  to = "/services#junk-removal"
+  status = 301
+[[redirects]]
+  from = "/services/furniture-removal"
+  to = "/services#furniture-removal"
+  status = 301
+[[redirects]]
+  from = "/services/appliance-removal"
+  to = "/services#appliance-removal"
+  status = 301
+[[redirects]]
+  from = "/services/yard-waste-removal"
+  to = "/services#yard-waste-removal"
+  status = 301
+[[redirects]]
+  from = "/services/shed-removal"
+  to = "/services#yard-waste-removal"
+  status = 301
+[[redirects]]
+  from = "/services/estate-cleanouts"
+  to = "/services#estate-cleanouts"
+  status = 301
+[[redirects]]
+  from = "/services/construction-debris-removal"
+  to = "/commercial"
+  status = 301
+[[redirects]]
+  from = "/services/commercial-cleanouts"
+  to = "/commercial"
+  status = 301
+
+# Old city × service pages → the city page.
+[[redirects]]
+  from = "/locations/:city/:service"
+  to = "/locations/:city"
+  status = 301
+
+# Blog removed.
+[[redirects]]
+  from = "/blog/*"
+  to = "/"
+  status = 301
+[[redirects]]
+  from = "/blog"
+  to = "/"
+  status = 301
+
 # Long-cache the fingerprinted asset bundle; Astro hashes these filenames.
 [[headers]]
   for = "/_astro/*"

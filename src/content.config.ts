@@ -9,34 +9,6 @@ const faq = z.array(
   })
 );
 
-const services = defineCollection({
-  loader: glob({ pattern: '**/*.md', base: './src/content/services' }),
-  schema: z.object({
-    title: z.string(),
-    /** <title> tag. Keep under ~60 chars. */
-    metaTitle: z.string(),
-    metaDescription: z.string(),
-    /** Short punchy hero line, distinct from title. */
-    headline: z.string(),
-    /** One-sentence value prop under the headline. */
-    lede: z.string(),
-    /** Card blurb on the services grid — must NOT repeat `lede`. */
-    cardBlurb: z.string(),
-    imageKey: z.string(),
-    order: z.number(),
-    /** Typical price band shown on the service page. */
-    priceFrom: z.number(),
-    priceTo: z.number(),
-    /** Bulleted list of what's included. */
-    includes: z.array(z.string()),
-    /** "We take / we can't take" — sets expectations, reduces bad leads. */
-    accepts: z.array(z.string()),
-    excludes: z.array(z.string()),
-    faq,
-    related: z.array(z.string()).default([]),
-  }),
-});
-
 const locations = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/locations' }),
   schema: z.object({
@@ -62,23 +34,6 @@ const locations = defineCollection({
   }),
 });
 
-const blog = defineCollection({
-  loader: glob({ pattern: '**/*.md', base: './src/content/blog' }),
-  schema: z.object({
-    title: z.string(),
-    metaTitle: z.string(),
-    metaDescription: z.string(),
-    description: z.string(),
-    publishDate: z.coerce.date(),
-    updatedDate: z.coerce.date().optional(),
-    author: z.string().default('Dominion Haul'),
-    category: z.enum(['Pricing', 'Guides', 'Seasonal', 'Local']),
-    readingMinutes: z.number(),
-    draft: z.boolean().default(false),
-    faq: faq.optional(),
-  }),
-});
-
 const testimonials = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/testimonials' }),
   schema: z.object({
@@ -93,4 +48,4 @@ const testimonials = defineCollection({
   }),
 });
 
-export const collections = { services, locations, blog, testimonials };
+export const collections = { locations, testimonials };

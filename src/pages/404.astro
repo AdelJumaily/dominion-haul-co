@@ -3,8 +3,8 @@ import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 import { getCollection } from 'astro:content';
 import { site, phoneHref } from '../config/site';
+import { services } from '../config/services';
 
-const services = (await getCollection('services')).sort((a, b) => a.data.order - b.data.order);
 const counties = (await getCollection('locations'))
   .filter((l) => l.data.kind === 'county')
   .sort((a, b) => a.data.order - b.data.order);
@@ -12,7 +12,7 @@ const counties = (await getCollection('locations'))
 
 <Base
   title="Page not found | Dominion Haul"
-  description="That page is gone — like junk after a same-day pickup. Here is where to find pricing, services, and our Chantilly service area."
+  description="That page is gone. Here is where to find our services and our Northern Virginia service area."
   index={false}
 >
   <section class="nf">
@@ -20,8 +20,8 @@ const counties = (await getCollection('locations'))
       <p class="nf-code">404</p>
       <h1>Already hauled that one away.</h1>
       <p class="lede mt-5">
-        Whatever URL you typed is not on this truck. Call {site.phone.display} if you
-        need a pile gone in Fairfax today — or pick a real page below.
+        That page isn't here. Call {site.phone.display} if you need something hauled, or
+        pick a page below.
       </p>
 
       <div class="btn-row mt-6">
@@ -33,16 +33,11 @@ const counties = (await getCollection('locations'))
         </a>
       </div>
 
-      <p class="nf-aside">
-        Pro tip from the driveway: if you were looking for pricing, it is public —
-        <a href="/pricing">load sizes from $95</a>. No call-centre runaround.
-      </p>
-
       <div class="nf-cols">
         <div>
           <h2>Services</h2>
           <ul>
-            {services.map((s) => <li><a href={`/services/${s.id}`}>{s.data.title}</a></li>)}
+            {services.map((s) => <li><a href={`/services#${s.id}`}>{s.title}</a></li>)}
           </ul>
         </div>
         <div>
@@ -55,10 +50,8 @@ const counties = (await getCollection('locations'))
         <div>
           <h2>Company</h2>
           <ul>
-            <li><a href="/pricing">Pricing</a></li>
+            <li><a href="/commercial">Commercial partners</a></li>
             <li><a href="/about">About us</a></li>
-            <li><a href="/reviews">Reviews</a></li>
-            <li><a href="/blog">Blog</a></li>
             <li><a href="/contact">Get a quote</a></li>
           </ul>
         </div>

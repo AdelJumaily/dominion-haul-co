@@ -2,13 +2,6 @@
 import { site, phoneHref, nav } from '../config/site';
 import Icon from './Icon.astro';
 import BrandMark from './BrandMark.astro';
-import { getCollection } from 'astro:content';
-
-const services = (await getCollection('services')).sort((a, b) => a.data.order - b.data.order);
-const locations = await getCollection('locations');
-const counties = locations
-  .filter((l) => l.data.kind === 'county')
-  .sort((a, b) => a.data.order - b.data.order);
 
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 const isActive = (href: string) => path === href || path.startsWith(href + '/');
@@ -24,46 +17,10 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/');
       <ul>
         {
           nav.map((item) => (
-            <li class={item.mega ? 'has-mega' : ''}>
+            <li>
               <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
                 {item.label}
-                {item.mega && <Icon name="chevron" size={14} class="nav-chev" />}
               </a>
-
-              {item.mega === 'services' && (
-                <div class="mega">
-                  <div class="mega-inner">
-                    <p class="mega-title">What we haul</p>
-                    <ul class="mega-list">
-                      {services.map((s) => (
-                        <li>
-                          <a href={`/services/${s.id}`}>{s.data.title}</a>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              )}
-
-              {item.mega === 'locations' && (
-                <div class="mega">
-                  <div class="mega-inner">
-                    <p class="mega-title">Where we work</p>
-                    <ul class="mega-list">
-                      {counties.map((c) => (
-                        <li>
-                          <a href={`/locations/${c.id}`}>{c.data.title}</a>
-                        </li>
-                      ))}
-                      <li>
-                        <a href="/locations" class="mega-all">
-                          All cities &amp; towns
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              )}
             </li>
           ))
         }
@@ -71,19 +28,11 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/');
     </nav>
 
     <div class="header-actions">
-      <a
-        href={phoneHref}
-        class="header-call"
-        data-track="call-header-icon"
-        aria-label={`Call us at ${site.phone.display}`}
-      >
-        <Icon name="phone" size={19} />
-      </a>
       <a href={phoneHref} class="header-phone" data-track="call-header">
-        <Icon name="phone" size={17} />
+        <Icon name="phone" size={18} />
         <span>{site.phone.display}</span>
       </a>
-      <a href="/contact" class="btn header-quote">Get a quote</a>
+      <a href="/contact" class="btn btn-gold header-quote">Free Quote</a>
       <button
         class="menu-btn"
         type="button"
@@ -100,6 +49,7 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/');
   <div class="mobile-menu" id="mobile-menu" hidden>
     <nav class="container" aria-label="Mobile">
       <ul class="mm-list">
+        <li><a href="/">Home</a></li>
         {
           nav.map((item) => (
             <li>
@@ -108,14 +58,10 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/');
           ))
         }
       </ul>
-      <p class="mm-heading">Services</p>
-      <ul class="mm-sub">
-        {services.map((s) => <li><a href={`/services/${s.id}`}>{s.data.title}</a></li>)}
-      </ul>
-      <p class="mm-heading">Service area</p>
-      <ul class="mm-sub">
-        {counties.map((c) => <li><a href={`/locations/${c.id}`}>{c.data.title}</a></li>)}
-      </ul>
+      <div class="mm-cta">
+        <a href={phoneHref} class="btn btn-block"><Icon name="phone" size={18} /> Call {site.phone.display}</a>
+        <a href="/contact" class="btn btn-gold btn-block">Get a Free Quote</a>
+      </div>
     </nav>
   </div>
 </header>
@@ -125,20 +71,16 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/');
     position: sticky;
     top: 0;
     z-index: 100;
-    background: color-mix(in srgb, var(--surface) 86%, transparent);
-    backdrop-filter: saturate(1.4) blur(14px);
-    -webkit-backdrop-filter: saturate(1.4) blur(14px);
+    background: #fff;
     border-bottom: 1px solid var(--line);
     box-shadow: var(--shadow-sm);
   }
-
   .header-inner {
     height: var(--header-h);
     display: flex;
     align-items: center;
     gap: var(--sp-5);
   }
-
   .header-inner :global(.wm) {
     margin-right: auto;
   }
@@ -146,106 +88,28 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/');
   .primary-nav {
     display: none;
   }
-  .primary-nav > ul {
+  .primary-nav ul {
     display: flex;
-    align-items: center;
     gap: var(--sp-1);
     list-style: none;
     padding: 0;
   }
-  .primary-nav li {
-    position: relative;
-  }
-  .primary-nav > ul > li > a {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 0.5rem 0.7rem;
-    font-size: 0.93rem;
-    font-weight: 550;
-    letter-spacing: -0.01em;
-    color: var(--ink);
-    text-decoration: none;
-    border-radius: var(--r-sm);
-    transition: color var(--dur) var(--ease), background var(--dur) var(--ease);
-  }
-  .primary-nav > ul > li > a:hover {
-    color: var(--accent-deep);
-    background: color-mix(in srgb, var(--accent) 8%, transparent);
-  }
-  .primary-nav a[aria-current='page'] {
-    color: var(--accent-deep);
-  }
-  .nav-chev {
-    opacity: 0.5;
-    transition: transform var(--dur) var(--ease);
-  }
-  .has-mega:hover .nav-chev {
-    transform: rotate(180deg);
-  }
-
-  .mega {
-    position: absolute;
-    top: 100%;
-    left: -0.5rem;
-    padding-top: 10px;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-6px);
-    transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease),
-      visibility var(--dur);
-  }
-  .has-mega:hover .mega,
-  .has-mega:focus-within .mega {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-  }
-  .mega-inner {
-    background: var(--surface-raised);
-    border: 1px solid var(--line);
-    border-radius: var(--r-lg);
-    box-shadow: var(--shadow-lg);
-    padding: var(--sp-5);
-    min-width: 300px;
-  }
-  .mega-title {
-    font-size: 0.68rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: var(--sp-3);
-  }
-  .mega-list {
-    list-style: none;
-    padding: 0;
-    display: grid;
-    gap: 1px;
-  }
-  .mega-list a {
+  .primary-nav a {
     display: block;
-    padding: 0.5rem 0.6rem;
-    margin-inline: -0.6rem;
-    font-size: 0.92rem;
-    font-weight: 550;
+    padding: 0.5rem 0.75rem;
+    font-family: var(--font-display);
+    font-size: 1.12rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
     color: var(--ink);
     text-decoration: none;
     border-radius: var(--r-sm);
-    transition: background var(--dur) var(--ease), padding-left var(--dur) var(--ease),
-      color var(--dur) var(--ease);
+    transition: color var(--dur) var(--ease);
   }
-  .mega-list a:hover {
-    background: color-mix(in srgb, var(--accent) 8%, transparent);
-    padding-left: 0.9rem;
-    color: var(--accent-deep);
-  }
-  .mega-all {
-    color: var(--accent-deep) !important;
-    font-weight: 700 !important;
-    border-top: 1px solid var(--line);
-    margin-top: var(--sp-2) !important;
-    padding-top: 0.7rem !important;
+  .primary-nav a:hover,
+  .primary-nav a[aria-current='page'] {
+    color: var(--gold);
   }
 
   .header-actions {
@@ -254,42 +118,25 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/');
     gap: var(--sp-3);
     flex: none;
   }
-  .header-call {
-    display: grid;
-    place-items: center;
-    width: 44px;
-    height: 44px;
-    background: var(--accent);
-    color: #f4f7f4;
-    border-radius: var(--r-md);
-    text-decoration: none;
-    transition: background var(--dur) var(--ease), transform 220ms var(--ease);
-  }
-  .header-call:hover {
-    background: var(--accent-hot);
-    transform: translateY(-1px);
-  }
-
   .header-phone {
     display: none;
     align-items: center;
     gap: var(--sp-2);
-    font-weight: 650;
-    font-size: 0.95rem;
-    letter-spacing: -0.015em;
-    color: var(--ink);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: var(--accent);
     text-decoration: none;
     white-space: nowrap;
-    transition: color var(--dur) var(--ease);
   }
   .header-phone:hover {
-    color: var(--accent-deep);
+    color: var(--gold);
   }
   .header-quote {
     display: none;
-    min-height: 42px;
-    padding: 0.55rem 1.1rem;
-    font-size: 0.92rem;
+    min-height: 44px;
+    padding: 0.55rem 1.2rem;
+    font-size: 0.95rem;
   }
 
   .menu-btn {
@@ -300,79 +147,51 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/');
     background: transparent;
     border: 1px solid var(--line);
     border-radius: var(--r-md);
+    color: var(--accent);
     cursor: pointer;
-    transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease);
-  }
-  .menu-btn:hover {
-    border-color: var(--ink);
   }
   .menu-btn[aria-expanded='true'] {
-    background: var(--ink);
-    color: var(--surface);
-    border-color: var(--ink);
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
   }
 
   .mobile-menu {
     border-top: 1px solid var(--line);
-    background: var(--surface);
-    max-height: calc(100dvh - var(--header-h) - var(--callbar-h));
+    background: #fff;
+    max-height: calc(100dvh - var(--header-h));
     overflow-y: auto;
-    padding-block: var(--sp-5) var(--sp-6);
+    padding-block: var(--sp-4) var(--sp-6);
   }
-  .mobile-menu[hidden] {
-    display: none;
-  }
-  .mm-list,
-  .mm-sub {
+  .mm-list {
     list-style: none;
     padding: 0;
   }
   .mm-list a {
     display: block;
-    padding: 0.8rem 0;
-    font-size: 1.25rem;
-    font-weight: 650;
-    letter-spacing: -0.03em;
+    padding: 0.85rem 0;
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 700;
+    text-transform: uppercase;
     color: var(--ink);
     text-decoration: none;
     border-bottom: 1px solid var(--line);
   }
-  .mm-heading {
-    margin-top: var(--sp-6);
-    margin-bottom: var(--sp-3);
-    font-size: 0.68rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-  .mm-sub {
+  .mm-cta {
     display: grid;
-    gap: var(--sp-1);
-  }
-  .mm-sub a {
-    display: block;
-    padding: 0.4rem 0;
-    font-size: 0.98rem;
-    font-weight: 550;
-    color: var(--muted);
-    text-decoration: none;
-  }
-  .mm-sub a:hover {
-    color: var(--ink);
+    gap: var(--sp-3);
+    margin-top: var(--sp-5);
   }
 
   @media (min-width: 640px) {
     .header-phone {
       display: inline-flex;
     }
-    .header-call {
-      display: none;
-    }
   }
-  @media (min-width: 1024px) {
+  @media (min-width: 1080px) {
     :root {
-      --header-h: 74px;
+      --header-h: 80px;
     }
     .primary-nav {
       display: block;
@@ -392,18 +211,15 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/');
   const menu = document.getElementById('mobile-menu');
 
   if (btn && menu) {
-    btn.addEventListener('click', () => {
-      const open = btn.getAttribute('aria-expanded') === 'true';
-      btn.setAttribute('aria-expanded', String(!open));
-      btn.setAttribute('aria-label', open ? 'Open menu' : 'Close menu');
-      menu.hidden = open;
-    });
-
+    const set = (open: boolean) => {
+      btn.setAttribute('aria-expanded', String(open));
+      btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      menu.hidden = !open;
+    };
+    btn.addEventListener('click', () => set(btn.getAttribute('aria-expanded') !== 'true'));
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && btn.getAttribute('aria-expanded') === 'true') {
-        btn.setAttribute('aria-expanded', 'false');
-        btn.setAttribute('aria-label', 'Open menu');
-        menu.hidden = true;
+        set(false);
         btn.focus();
       }
     });

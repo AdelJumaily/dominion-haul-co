@@ -79,12 +79,11 @@ export const addressOneLine = `${site.address.street}, ${site.address.city}, ${s
 
 /** Primary nav. `mega` marks items that expand into a dropdown panel. */
 export const nav = [
-  { label: 'Services', href: '/services', mega: 'services' as const },
-  { label: 'Locations', href: '/locations', mega: 'locations' as const },
-  { label: 'Pricing', href: '/pricing' },
+  { label: 'Services', href: '/services' },
+  { label: 'Commercial', href: '/commercial' },
+  { label: 'Service Area', href: '/locations' },
   { label: 'About', href: '/about' },
-  { label: 'Reviews', href: '/reviews' },
-  { label: 'Blog', href: '/blog' },
+  { label: 'Contact', href: '/contact' },
 ];
 
 /**

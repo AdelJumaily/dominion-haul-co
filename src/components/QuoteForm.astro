@@ -19,7 +19,7 @@
  */
 import Icon from './Icon.astro';
 import { site, phoneHref } from '../config/site';
-import { getCollection } from 'astro:content';
+import { services } from '../config/services';
 
 const FORM_ACTION = ''; // '' = same-origin POST, which is what Netlify Forms expects
 
@@ -32,8 +32,6 @@ interface Props {
   id?: string;
 }
 const { preselect, city, compact = false, id = 'quote-form' } = Astro.props;
-
-const services = (await getCollection('services')).sort((a, b) => a.data.order - b.data.order);
 ---
 
 <div class={`qf ${compact ? 'qf-compact' : ''}`}>
@@ -96,8 +94,8 @@ const services = (await getCollection('services')).sort((a, b) => a.data.order -
           <option value="">Not sure yet — you tell me</option>
           {
             services.map((s) => (
-              <option value={s.data.title} selected={preselect === s.id}>
-                {s.data.title}
+              <option value={s.title} selected={preselect === s.id}>
+                {s.title}
               </option>
             ))
           }

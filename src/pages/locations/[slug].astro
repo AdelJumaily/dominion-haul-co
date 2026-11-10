@@ -200,20 +200,14 @@ const crumbs = [
     )
   }
 
-  <!-- ── Services — deep links to city×service pages ─────────────────── -->
+  <!-- ── Services ─────────────────────────────────────────────────────── -->
   <section class="section">
     <div class="container">
       <div class="section-head">
         <p class="eyebrow">What we haul in {d.title}</p>
-        <h2>Every service, same crew, same pricing</h2>
+        <h2>Every service, same crew</h2>
       </div>
-      {
-        d.kind === 'city' ? (
-          <ServiceGrid locationSlug={entry.id} locationTitle={d.title} />
-        ) : (
-          <ServiceGrid />
-        )
-      }
+      <ServiceGrid locationTitle={d.title} />
     </div>
   </section>
 

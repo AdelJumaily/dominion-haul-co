@@ -1,15 +1,11 @@
 ---
-import { site, phoneHref, smsHref, addressOneLine } from '../config/site';
+import { site, phoneHref, smsHref } from '../config/site';
+import { services } from '../config/services';
 import Icon from './Icon.astro';
 import BrandMark from './BrandMark.astro';
 import { getCollection } from 'astro:content';
 
-const services = (await getCollection('services')).sort((a, b) => a.data.order - b.data.order);
-const locations = await getCollection('locations');
-const counties = locations
-  .filter((l) => l.data.kind === 'county')
-  .sort((a, b) => a.data.order - b.data.order);
-const cities = locations
+const cities = (await getCollection('locations'))
   .filter((l) => l.data.kind === 'city')
   .sort((a, b) => a.data.title.localeCompare(b.data.title));
 
@@ -20,45 +16,41 @@ const year = new Date().getFullYear();
   <div class="container">
     <div class="foot-top">
       <div class="foot-brand">
-        <BrandMark inverted />
+        <BrandMark inverted size="lockup" />
         <p class="foot-blurb">
-          Junk removal out of Chantilly — published load-size pricing, same-day slots across
-          Fairfax, Loudoun, Prince William and Arlington. We know the Fairfax County Parkway
-          well enough to hit Reston by 2pm when you call before noon.
+          Local junk removal and hauling based in Chantilly, VA. Serving Fairfax, Loudoun,
+          Prince William and Arlington counties.
         </p>
         <div class="foot-contact">
-          <a href={phoneHref} class="foot-phone"><Icon name="phone" size={18} />{site.phone.display}</a>
+          <a href={phoneHref} class="foot-phone"><Icon name="phone" size={20} />{site.phone.display}</a>
           <a href={smsHref} class="foot-link"><Icon name="message" size={16} />Text us a photo</a>
           <a href={`mailto:${site.email}`} class="foot-link"><Icon name="mail" size={16} />{site.email}</a>
+          <span class="foot-link"><Icon name="clock" size={16} />{site.hoursLabel}</span>
         </div>
-        <p class="foot-hours"><Icon name="clock" size={15} />{site.hoursLabel}</p>
       </div>
 
       <nav class="foot-cols" aria-label="Footer">
         <div class="foot-col">
           <h2>Services</h2>
           <ul>
-            {services.map((s) => <li><a href={`/services/${s.id}`}>{s.data.title}</a></li>)}
+            {services.map((s) => <li><a href={`/services#${s.id}`}>{s.title}</a></li>)}
           </ul>
         </div>
 
         <div class="foot-col">
-          <h2>Counties</h2>
+          <h2>Company</h2>
           <ul>
-            {counties.map((c) => <li><a href={`/locations/${c.id}`}>{c.data.title}</a></li>)}
-          </ul>
-          <h2 class="mt">Company</h2>
-          <ul>
-            <li><a href="/about">About us</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/commercial">Commercial Partners</a></li>
+            <li><a href="/locations">Service Area</a></li>
             <li><a href="/pricing">Pricing</a></li>
             <li><a href="/reviews">Reviews</a></li>
-            <li><a href="/blog">Blog</a></li>
-            <li><a href="/contact">Get a quote</a></li>
+            <li><a href="/contact">Free Quote</a></li>
           </ul>
         </div>
 
-        <div class="foot-col foot-col-wide">
-          <h2>Cities &amp; towns</h2>
+        <div class="foot-col">
+          <h2>Areas We Serve</h2>
           <ul class="foot-cities">
             {cities.map((c) => <li><a href={`/locations/${c.id}`}>{c.data.title}</a></li>)}
           </ul>
@@ -67,36 +59,29 @@ const year = new Date().getFullYear();
     </div>
 
     <div class="foot-bottom">
-      <p class="foot-legal">
-        &copy; {year} {site.legalName}. Insured. Serving Fairfax, Loudoun,
-        Prince William &amp; Arlington counties, Virginia.
-      </p>
-      <address class="foot-address">{addressOneLine}</address>
+      <p>&copy; {year} {site.name}. Insured.</p>
+      <p>Based in Chantilly, VA</p>
     </div>
   </div>
 </footer>
 
 <style>
   .site-footer {
-    background: var(--ink);
-    color: var(--surface);
+    background: var(--accent-deep);
+    color: #fff;
     padding-block: var(--sp-8) var(--sp-6);
-    border-top: 4px solid var(--accent);
+    border-top: 5px solid var(--gold);
   }
-
   .foot-top {
     display: grid;
-    gap: var(--sp-8);
+    gap: var(--sp-7);
   }
-
   .foot-blurb {
     margin-top: var(--sp-5);
-    color: #9aada2;
-    max-width: 44ch;
-    font-size: 0.95rem;
-    line-height: 1.6;
+    color: #c5d3cc;
+    max-width: 40ch;
+    font-size: 0.97rem;
   }
-
   .foot-contact {
     margin-top: var(--sp-5);
     display: grid;
@@ -108,52 +93,35 @@ const year = new Date().getFullYear();
     align-items: center;
     gap: var(--sp-2);
     font-family: var(--font-display);
-    font-size: 1.5rem;
-    font-weight: 500;
-    letter-spacing: -0.03em;
-    color: #a8d5b5;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--gold);
     text-decoration: none;
-    transition: color var(--dur) var(--ease);
   }
   .foot-phone:hover {
-    color: var(--surface);
+    color: #fff;
   }
   .foot-link {
     display: inline-flex;
     align-items: center;
     gap: var(--sp-2);
-    color: #9aada2;
+    color: #c5d3cc;
     text-decoration: none;
-    font-size: 0.92rem;
-    font-weight: 600;
-    transition: color var(--dur) var(--ease);
+    font-size: 0.95rem;
   }
-  .foot-link:hover {
-    color: var(--surface);
-  }
-  .foot-hours {
-    display: flex;
-    align-items: center;
-    gap: var(--sp-2);
-    margin-top: var(--sp-5);
-    font-size: 0.85rem;
-    color: var(--muted-light);
+  a.foot-link:hover {
+    color: #fff;
   }
 
   .foot-cols {
     display: grid;
-    gap: var(--sp-7);
+    gap: var(--sp-6);
   }
   .foot-col h2 {
-    font-size: 0.68rem;
-    font-weight: 800;
-    letter-spacing: 0.13em;
-    text-transform: uppercase;
-    color: var(--muted-light);
+    font-size: 1.1rem;
+    letter-spacing: 0.06em;
+    color: var(--gold);
     margin-bottom: var(--sp-4);
-  }
-  .foot-col h2.mt {
-    margin-top: var(--sp-6);
   }
   .foot-col ul {
     list-style: none;
@@ -162,34 +130,27 @@ const year = new Date().getFullYear();
     gap: var(--sp-2);
   }
   .foot-col a {
-    color: #c8c8c0;
+    color: #dce6e1;
     text-decoration: none;
-    font-size: 0.92rem;
-    transition: color var(--dur) var(--ease);
+    font-size: 0.95rem;
   }
   .foot-col a:hover {
-    color: var(--accent);
+    color: var(--gold);
   }
   .foot-cities {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .foot-bottom {
-    margin-top: var(--sp-8);
+    margin-top: var(--sp-7);
     padding-top: var(--sp-5);
-    border-top: 1px solid var(--ink-line);
+    border-top: 1px solid rgb(255 255 255 / 0.15);
     display: flex;
     flex-wrap: wrap;
     gap: var(--sp-3) var(--sp-6);
     justify-content: space-between;
-    align-items: baseline;
-  }
-  .foot-legal,
-  .foot-address {
-    font-size: 0.82rem;
-    color: var(--muted-light);
-    font-style: normal;
-    max-width: 62ch;
+    font-size: 0.87rem;
+    color: #a9bbb3;
   }
 
   @media (min-width: 640px) {
@@ -199,11 +160,11 @@ const year = new Date().getFullYear();
   }
   @media (min-width: 1024px) {
     .foot-top {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
-      gap: var(--sp-9);
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+      gap: var(--sp-8);
     }
     .foot-cols {
-      grid-template-columns: 1fr 1fr 1.2fr;
+      grid-template-columns: 1.3fr 0.9fr 1.1fr;
     }
   }
 </style>

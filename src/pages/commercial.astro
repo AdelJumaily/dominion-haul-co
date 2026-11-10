@@ -1,0 +1,377 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import Icon from '../components/Icon.astro';
+import { site, phoneHref } from '../config/site';
+
+const crumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Commercial Partners', url: '/commercial' },
+];
+
+const partners = [
+  {
+    icon: 'building',
+    t: 'Property Managers',
+    d: 'Tenant move-out cleanouts, abandoned furniture and unit turnovers on your deadline.',
+  },
+  {
+    icon: 'tag',
+    t: 'Realtors & Brokerages',
+    d: 'Pre-listing cleanouts, vacant homes after closing and estate properties, photo-ready on your timeline.',
+  },
+  {
+    icon: 'hammer',
+    t: 'Remodelers & Contractors',
+    d: 'Drywall, cabinets, flooring and packaging hauled off without a dumpster sitting in the driveway.',
+  },
+  {
+    icon: 'home',
+    t: 'HOAs & Community Associations',
+    d: 'Common-area cleanups, storm debris and bulk pickups for your community.',
+  },
+  {
+    icon: 'truck',
+    t: 'Businesses & Offices',
+    d: 'Old office furniture, equipment, storage rooms and small warehouse cleanouts.',
+  },
+  {
+    icon: 'shield',
+    t: 'Estate Attorneys & Move Managers',
+    d: 'Careful estate and downsizing cleanouts with papers and valuables set aside.',
+  },
+];
+
+const perks = [
+  { t: 'One point of contact', d: 'Your calls and texts go straight to us, not a call center.' },
+  { t: 'Priority scheduling', d: 'Partners get first pick of open time slots, including quick turnarounds.' },
+  { t: 'Certificate of insurance', d: 'We are insured and can send a COI naming your company or building.' },
+  { t: 'W-9 for your vendor file', d: 'We send the paperwork you need to set us up as an approved vendor.' },
+  { t: 'Before & after photos', d: 'Photos of every job for your records, owners or clients.' },
+  { t: 'Clear invoices', d: 'A simple invoice for each job, sent by email.' },
+];
+
+const steps = [
+  { t: 'Reach out', d: 'Fill out the form below or call us. Tell us about your company and the kind of work you need.' },
+  { t: 'Get set up', d: 'We send our certificate of insurance and W-9 so you can add us to your vendor list.' },
+  { t: 'Book your first job', d: 'Call or text whenever you need us. Save our number and we will take it from there.' },
+];
+---
+
+<Base
+  title="Commercial Junk Removal Partners | Dominion Haul"
+  description="Add Dominion Haul to your vendor list. Junk removal for property managers, realtors, remodelers, HOAs, and businesses in Northern Virginia."
+  schema={{ type: 'WebPage', breadcrumbs: crumbs }}
+>
+  <Breadcrumbs crumbs={crumbs} />
+
+  <section class="page-hero" data-band="dark">
+    <div class="container hero-grid">
+      <div>
+        <p class="eyebrow">Commercial partnerships</p>
+        <h1>Make Dominion Haul Your Trusted Hauling Vendor</h1>
+        <p class="lede mt-4">
+          For property managers, realtors, remodelers, HOAs and businesses across Northern
+          Virginia. One reliable crew to call every time something needs to go.
+        </p>
+        <div class="btn-row mt-6">
+          <a href="#partner-form" class="btn btn-gold btn-lg">Become a Partner</a>
+          <a href={phoneHref} class="btn btn-ghost btn-lg"><Icon name="phone" size={20} /> {site.phone.display}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head center-head">
+        <p class="eyebrow">Who we work with</p>
+        <h2>Built for Businesses That Need Things Gone</h2>
+      </div>
+      <ul class="cards">
+        {
+          partners.map((p) => (
+            <li>
+              <span class="c-icon"><Icon name={p.icon} size={24} /></span>
+              <h3>{p.t}</h3>
+              <p>{p.d}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" data-band="muted">
+    <div class="container">
+      <div class="section-head center-head">
+        <p class="eyebrow">What partners get</p>
+        <h2>Why Businesses Choose Us</h2>
+      </div>
+      <ul class="perks">
+        {
+          perks.map((p) => (
+            <li>
+              <Icon name="check" size={22} />
+              <div>
+                <h3>{p.t}</h3>
+                <p>{p.d}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head center-head">
+        <p class="eyebrow">Getting started</p>
+        <h2>How to Become a Partner</h2>
+      </div>
+      <ol class="steps">
+        {
+          steps.map((s, i) => (
+            <li>
+              <span class="step-n">{i + 1}</span>
+              <h3>{s.t}</h3>
+              <p>{s.d}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" id="partner-form" data-band="muted">
+    <div class="container form-wrap">
+      <div>
+        <p class="eyebrow">Vendor inquiry</p>
+        <h2>Let's Work Together</h2>
+        <p class="lede mt-4">
+          Tell us a little about your company. We'll follow up with our paperwork and answer
+          any questions.
+        </p>
+        <p class="mt-5">
+          Prefer to talk? Call <a href={phoneHref} class="strong-link">{site.phone.display}</a>
+          or email <a href={`mailto:${site.email}`} class="strong-link">{site.email}</a>.
+        </p>
+      </div>
+
+      <form
+        class="pf"
+        name="partner"
+        method="POST"
+        data-netlify="true"
+        data-netlify-honeypot="website-url"
+      >
+        <input type="hidden" name="form-name" value="partner" />
+        <p class="hp">
+          <label>Do not fill this in <input name="website-url" tabindex="-1" autocomplete="off" /></label>
+        </p>
+
+        <div class="pf-grid">
+          <label class="field">
+            <span>Company name</span>
+            <input name="company" type="text" autocomplete="organization" required />
+          </label>
+          <label class="field">
+            <span>Your name</span>
+            <input name="name" type="text" autocomplete="name" required />
+          </label>
+          <label class="field">
+            <span>Email</span>
+            <input name="email" type="email" autocomplete="email" required />
+          </label>
+          <label class="field">
+            <span>Phone</span>
+            <input name="phone" type="tel" autocomplete="tel" required />
+          </label>
+          <label class="field pf-span">
+            <span>Type of business</span>
+            <select name="business-type" required>
+              <option value="">Choose one</option>
+              {partners.map((p) => <option>{p.t}</option>)}
+              <option>Other</option>
+            </select>
+          </label>
+          <label class="field pf-span">
+            <span>What kind of work do you need?</span>
+            <textarea name="message" rows="4" placeholder="Number of properties, typical jobs, how often you need hauling..."></textarea>
+          </label>
+        </div>
+        <button type="submit" class="btn btn-gold btn-block btn-lg mt-5">Send Partner Inquiry</button>
+      </form>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .page-hero {
+    background: var(--accent);
+    padding-block: var(--sp-8);
+  }
+  .page-hero h1 {
+    color: #fff;
+    max-width: 18ch;
+  }
+  .page-hero .lede {
+    color: #dbe7e1;
+    max-width: 56ch;
+  }
+  .center-head {
+    text-align: center;
+    margin-inline: auto;
+    max-width: 52ch;
+  }
+
+  .cards {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--sp-4);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  }
+  .cards li {
+    padding: var(--sp-5);
+    background: #fff;
+    border: 1px solid var(--line);
+    border-top: 4px solid var(--gold);
+    border-radius: var(--r-lg);
+  }
+  .c-icon {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    margin-bottom: var(--sp-3);
+    border-radius: var(--r-md);
+    background: var(--accent);
+    color: #fff;
+  }
+  .cards p {
+    margin-top: var(--sp-2);
+    color: var(--muted);
+  }
+
+  .perks {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--sp-5);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+  }
+  .perks li {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--sp-3);
+  }
+  .perks li > :global(svg) {
+    flex: none;
+    color: var(--gold);
+    margin-top: 0.15em;
+  }
+  .perks p {
+    margin-top: var(--sp-1);
+    color: var(--muted);
+  }
+
+  .steps {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--sp-5);
+  }
+  .steps li {
+    text-align: center;
+    padding: var(--sp-5);
+  }
+  .step-n {
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    margin: 0 auto var(--sp-4);
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--gold);
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    font-weight: 800;
+  }
+  .steps p {
+    margin-top: var(--sp-2);
+    color: var(--muted);
+  }
+  @media (min-width: 800px) {
+    .steps {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .form-wrap {
+    display: grid;
+    gap: var(--sp-7);
+    align-items: start;
+  }
+  .strong-link {
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .pf {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    padding: var(--sp-5);
+    box-shadow: var(--shadow-md);
+  }
+  .pf-grid {
+    display: grid;
+    gap: var(--sp-4);
+  }
+  .field {
+    display: grid;
+    gap: var(--sp-1);
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  .field input,
+  .field select,
+  .field textarea {
+    width: 100%;
+    padding: 0.75rem 0.85rem;
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    background: var(--surface);
+    font-weight: 400;
+  }
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+    background: #fff;
+  }
+  .hp {
+    position: absolute;
+    left: -9999px;
+  }
+  @media (min-width: 640px) {
+    .pf-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .pf-span {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (min-width: 960px) {
+    .form-wrap {
+      grid-template-columns: 0.8fr 1.2fr;
+      gap: var(--sp-8);
+    }
+    .pf {
+      padding: var(--sp-6);
+    }
+  }
+</style>
