@@ -2,10 +2,10 @@
 /**
  * Testimonial wall.
  *
- * ⚠️ THE SEEDED REVIEWS IN src/content/testimonials/ ARE PLACEHOLDER COPY.
- * They exist so the layout is designed against realistic text. Every one is
- * marked `verified: false`. Replace them with genuine reviews copied from your
- * Google Business Profile before launch, and flip `verified: true` on each.
+ * Add ONLY real reviews copied word-for-word from your Google Business Profile
+ * (with the customer's permission) to src/content/testimonials/, each with
+ * `verified: true`. Unverified entries are never displayed, and pages hide
+ * their review sections entirely while there are no verified reviews.
  */
 import { getCollection, render } from 'astro:content';
 import { site } from '../config/site';
@@ -17,7 +17,8 @@ interface Props {
 }
 const { limit, featuredOnly = false } = Astro.props;
 
-let entries = (await getCollection('testimonials')).sort(
+// Only real reviews (verified: true) are ever shown.
+let entries = (await getCollection('testimonials')).filter((r) => r.data.verified).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
 );
 if (featuredOnly) entries = entries.filter((r) => r.data.featured);

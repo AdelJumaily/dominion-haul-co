@@ -20,6 +20,8 @@ const { entry } = Astro.props;
 const d = entry.data;
 const { Content } = await render(entry);
 
+const hasReviews = (await getCollection('testimonials')).some((r) => r.data.verified);
+
 const all = await getCollection('locations');
 // County pages list their cities; city pages list their siblings.
 const children = all
@@ -227,7 +229,8 @@ const crumbs = [
     </div>
   </section>
 
-  <!-- ── Reviews ──────────────────────────────────────────────────────── -->
+  <!-- ── Reviews (hidden until real, verified reviews exist) ──────────── -->
+  {hasReviews && (
   <section class="section-sm">
     <div class="container">
       <div class="section-head">
@@ -237,6 +240,7 @@ const crumbs = [
       <Testimonials limit={3} />
     </div>
   </section>
+  )}
 
   <!-- ── Quote ────────────────────────────────────────────────────────── -->
   <section class="section quote-sec" id="quote">

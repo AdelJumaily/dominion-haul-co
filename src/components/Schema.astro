@@ -41,7 +41,7 @@ const {
   image,
 } = Astro.props;
 
-const origin = Astro.site?.origin ?? 'https://dominionhaulco.com';
+const origin = Astro.site?.origin ?? 'https://dominionhaul.com';
 const abs = (p: string) => new URL(p, origin).href;
 const BIZ = `${origin}/#business`;
 const logoUrl = abs('/images/logo.png');

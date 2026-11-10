@@ -6,6 +6,9 @@ import CTABand from '../components/CTABand.astro';
 import Testimonials from '../components/Testimonials.astro';
 import Icon from '../components/Icon.astro';
 import { site, phoneHref } from '../config/site';
+import { getCollection } from 'astro:content';
+
+const hasReviews = (await getCollection('testimonials')).some((r) => r.data.verified);
 
 const crumbs = [
   { name: 'Home', url: '/' },
@@ -150,6 +153,7 @@ const promises = [
     </div>
   </section>
 
+  {hasReviews && (
   <section class="section">
     <div class="container">
       <div class="section-head">
@@ -158,6 +162,7 @@ const promises = [
       <Testimonials limit={6} />
     </div>
   </section>
+  )}
 
   <CTABand
     heading="Ready for a clear driveway?"

@@ -8,4 +8,4 @@ Allow: /
 Disallow: /404
 Disallow: /cdn-cgi/
 
-Sitemap: https://dominionhaulco.com/sitemap-index.xml
+Sitemap: https://dominionhaul.com/sitemap-index.xml

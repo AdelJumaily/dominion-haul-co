@@ -5,6 +5,9 @@ import Testimonials from '../components/Testimonials.astro';
 import CTABand from '../components/CTABand.astro';
 import Icon from '../components/Icon.astro';
 import { site, phoneHref } from '../config/site';
+import { getCollection } from 'astro:content';
+
+const hasReviews = (await getCollection('testimonials')).some((r) => r.data.verified);
 
 const crumbs = [
   { name: 'Home', url: '/' },
@@ -13,8 +16,8 @@ const crumbs = [
 ---
 
 <Base
-  title="Reviews | What Northern Virginia Customers Say"
-  description="Read reviews from Dominion Haul Co customers across Fairfax, Loudoun, Prince William and Arlington counties — estate cleanouts, garage clearing, furniture and appliance removal."
+  title="Reviews | Dominion Haul"
+  description="Dominion Haul is a new local junk removal company in Northern Virginia. Worked with us? Leave a review on Google, or tell us directly if anything went wrong."
   schema={{ type: 'CollectionPage', breadcrumbs: crumbs }}
 >
   <Breadcrumbs crumbs={crumbs} />
@@ -22,12 +25,24 @@ const crumbs = [
   <section class="hd">
     <div class="container">
       <p class="eyebrow">Reviews</p>
-      <h1>Every review here is from a real job.</h1>
-      <p class="lede mt-5">
-        We are a new business, so there are not hundreds of them yet. We would rather show
-        you a short honest list than pad it out — and every one links back to a real Google
-        profile you can check yourself.
-      </p>
+      {hasReviews ? (
+        <>
+        <h1>Every review here is from a real job.</h1>
+        <p class="lede mt-5">
+          We are a new business, so there are not hundreds of them yet. Every review below
+          was left by a real customer on our Google profile, and you can check it yourself.
+        </p>
+        </>
+      ) : (
+        <>
+        <h1>We're new, and we're earning our reviews one job at a time.</h1>
+        <p class="lede mt-5">
+          Dominion Haul is a new local business, so we don't have reviews to show yet. We
+          won't post made-up ones. As real customers leave reviews on Google, they'll
+          appear here.
+        </p>
+        </>
+      )}
       <div class="btn-row mt-6">
         <a href={site.social.google} class="btn" rel="noopener" target="_blank">
           <Icon name="star" size={17} /> See us on Google
@@ -39,11 +54,13 @@ const crumbs = [
     </div>
   </section>
 
+  {hasReviews && (
   <section class="section">
     <div class="container">
       <Testimonials />
     </div>
   </section>
+  )}
 
   <!-- ── How to leave one ─────────────────────────────────────────────── -->
   <section class="section-sm" data-band="dark">

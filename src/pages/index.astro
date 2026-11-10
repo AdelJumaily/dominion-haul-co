@@ -24,6 +24,7 @@ import {
 } from '../components/motion/HomeMotion';
 
 const locations = await getCollection('locations');
+const hasReviews = (await getCollection('testimonials')).some((r) => r.data.verified);
 const counties = locations
   .filter((l) => l.data.kind === 'county')
   .sort((a, b) => a.data.order - b.data.order);
@@ -266,7 +267,8 @@ const priceTiers = tiers.map((t) => ({
     </div>
   </section>
 
-  <!-- ══ REVIEWS ═══════════════════════════════════════════════════════ -->
+  <!-- ══ REVIEWS (hidden until real, verified reviews exist) ════════════ -->
+  {hasReviews && (
   <section class="section">
     <div class="container">
       <SectionIntro
@@ -290,6 +292,7 @@ const priceTiers = tiers.map((t) => ({
       <MarqueeRow client:visible items={platforms} variant="platforms" speed={36} reverse />
     </div>
   </section>
+  )}
 
   <!-- ══ SERVICE AREA ══════════════════════════════════════════════════ -->
   <section class="section area-sec" data-band="muted">

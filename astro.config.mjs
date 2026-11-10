@@ -5,7 +5,7 @@ import react from '@astrojs/react';
 
 // Change SITE to the real domain before launch — it drives sitemap.xml,
 // canonical URLs and every absolute URL inside the Schema.org JSON-LD.
-const SITE = 'https://dominionhaulco.com';
+const SITE = 'https://dominionhaul.com';
 
 export default defineConfig({
   site: SITE,
