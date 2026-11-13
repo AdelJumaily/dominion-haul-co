@@ -3,44 +3,50 @@
  *  DOMINION HAUL — SINGLE SOURCE OF TRUTH
  * ─────────────────────────────────────────────────────────────────────────────
  *  Everything business-specific lives here. Change it once and it updates the
- *  sticky header, every hero, every tel:/sms: link, the footer, and all of the
+ *  header, every hero, every tel:/sms: link, the footer, and all of the
  *  Schema.org JSON-LD across the site.
  *
- *  Keep NAP (name / address / phone) identical to your Google Business Profile.
+ *  Dominion Haul is a SERVICE-AREA business: no public street address. Keep it
+ *  that way. The JSON-LD publishes locality + region only, which is what
+ *  Google wants for a business that works out of a truck.
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
 export const site = {
   name: 'Dominion Haul',
   legalName: 'Dominion Haul',
-  shortName: 'Dominion Haul',
-  tagline: 'Call before noon. Reston by 2. Price before we lift.',
+  tagline: 'Prices on the site. Final price before we load.',
   description:
-    'Same-day junk removal based in Chantilly, VA. Published load-size pricing, no franchise call centre — pickups across Fairfax, Loudoun, Prince William and Arlington.',
-  founded: '2026',
+    'Junk removal out of Chantilly, VA. We publish our prices, we do the lifting, and we confirm the price before anything goes on the truck. Fairfax, Loudoun, Prince William and Arlington.',
   base: 'Chantilly',
 
   phone: {
     display: '(571) 477-7222',
     e164: '+15714777222',
-    isPlaceholder: false,
   },
 
   email: 'adel@dominionhaul.com',
 
+  /**
+   * Service-area business — locality and region only, no street address.
+   * This is what gets published in the LocalBusiness JSON-LD.
+   */
   address: {
-    street: '14600 Flint Lee Rd',
     city: 'Chantilly',
     state: 'VA',
-    zip: '20151',
     country: 'US',
   },
 
-  /** Business location — Flint Lee Rd, Chantilly. */
-  geo: { lat: 38.8828, lng: -77.4415 },
+  /** Approximate Chantilly town center — NOT a street address. */
+  geo: { lat: 38.8943, lng: -77.4311 },
 
-  /** Radius covered from the geo point above, in miles. */
-  serviceRadiusMiles: 30,
+  /** The four counties we serve. Drives areaServed in the JSON-LD. */
+  counties: [
+    'Fairfax County',
+    'Loudoun County',
+    'Prince William County',
+    'Arlington County',
+  ],
 
   hours: [
     { days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], open: '07:00', close: '19:00' },
@@ -49,233 +55,168 @@ export const site = {
   ],
   hoursLabel: 'Mon–Fri 7a–7p · Sat 7a–5p · Sun 9a–3p',
 
-  social: {
-    google: 'https://www.google.com/maps',
-    facebook: 'https://www.facebook.com',
-    instagram: 'https://www.instagram.com',
-  },
-
   /**
-   * Aggregate rating used in the LocalBusiness JSON-LD.
+   * ───────────────────────────────────────────────────────────────────────────
+   *  PASTE REAL LINKS HERE
+   * ───────────────────────────────────────────────────────────────────────────
+   *  Every one of these is null until you paste the real URL. While a value is
+   *  null, the site hides the link entirely and leaves it out of the JSON-LD
+   *  `sameAs` — nothing points at a dead or generic page.
    *
-   * ⚠️ LEGAL / SEO WARNING: Google requires that AggregateRating markup reflect
-   * genuine, verifiable reviews that are actually visible on the page. These
-   * numbers are seeded for layout only. Emitting them before you have real
-   * reviews risks a manual structured-data penalty.
+   *  GBP_PROFILE_URL — your Google Business Profile page.
+   *    Get it: Google Maps → search your business → Share → Copy link
    *
-   * Set `verified: true` ONLY once the numbers match your real Google profile.
-   * While it is false the rating markup is OMITTED from the JSON-LD entirely.
+   *  GBP_REVIEW_URL — the direct "write a review" link.
+   *    Get it: Google Business Profile dashboard → Ask for reviews → copy link
+   *    (looks like https://g.page/r/XXXXXXXX/review)
+   *
+   *  Both are used on /reviews. GBP_PROFILE_URL also goes into the homepage
+   *  LocalBusiness `sameAs`.
+   * ───────────────────────────────────────────────────────────────────────────
    */
-  rating: {
-    verified: false,
-    value: 5.0,
-    count: 37,
+  links: {
+    GBP_PROFILE_URL: null as string | null,
+    GBP_REVIEW_URL: null as string | null,
+    INSTAGRAM_URL: null as string | null,
+    FACEBOOK_URL: null as string | null,
+    YELP_URL: null as string | null,
   },
 } as const;
 
 export const phoneHref = `tel:${site.phone.e164}`;
 export const smsHref = `sms:${site.phone.e164}`;
-export const addressOneLine = `${site.address.street}, ${site.address.city}, ${site.address.state} ${site.address.zip}`;
+export const cityState = `${site.address.city}, ${site.address.state}`;
 
-/** Primary nav. `mega` marks items that expand into a dropdown panel. */
+/** Non-null social/profile URLs, for `sameAs` and footer icons. */
+export const profileLinks = Object.entries(site.links)
+  .filter((e): e is [string, string] => typeof e[1] === 'string' && e[1].length > 0)
+  .map(([key, url]) => ({ key, url }));
+
+/** Primary nav. */
 export const nav = [
   { label: 'Services', href: '/services' },
+  { label: 'Pricing', href: '/pricing' },
+  { label: 'Areas', href: '/locations' },
   { label: 'Commercial', href: '/commercial' },
-  { label: 'Service Area', href: '/locations' },
   { label: 'About', href: '/about' },
-  { label: 'Contact', href: '/contact' },
 ];
 
 /**
  * ─────────────────────────────────────────────────────────────────────────────
- *  IMAGE MANIFEST — how to swap placeholders for real photography
+ *  PHOTOS
  * ─────────────────────────────────────────────────────────────────────────────
- *  Every image on the site is referenced by KEY, never by raw path. Each entry
- *  starts as `src: null`, which renders a labelled placeholder block showing
- *  the exact shot to capture and the ideal aspect ratio.
+ *  Keys are named for WHAT IS IN THE FRAME, not for the slot they fill, so a
+ *  photo can never drift into claiming something it does not show.
  *
- *  TO DROP IN A REAL PHOTO:
- *    1. Save the file to  public/images/  (e.g. public/images/truck-hero.jpg)
- *    2. Set  src: '/images/truck-hero.jpg'  on the matching key below
- *    3. Update `alt` to describe THAT specific photo
- *  Nothing else changes — every page using that key picks it up on next build.
+ *  Alt text describes only what is visible. None of it claims whose job it was,
+ *  whose truck it is, or who is in it — swap in specific alt text once the real
+ *  provenance of each shot is confirmed.
  *
- *  Real job photos (your truck, your crew, real before/afters) outrank stock
- *  photography for local SEO and convert far better. Prioritise the keys
- *  marked PRIORITY below.
+ *  All WebP, max 1400px on the long edge. Width/height are the real intrinsic
+ *  dimensions and must stay accurate — they prevent layout shift.
+ *
+ *  TO ADD A REAL PHOTO:
+ *    1. Save to public/images/jobs/
+ *    2. Run the WebP conversion (see README)
+ *    3. Add an entry here with real width/height and honest alt text
  * ─────────────────────────────────────────────────────────────────────────────
  */
-/**
- * Stock placeholders via Pexels CDN (source.unsplash.com is unreliable).
- * Hero background stays on Pexels until a dedicated truck exterior exists.
- * Everything else points at real job photos in /public/images/jobs/.
- */
-const pexels = (id: number, w = 1600) =>
-  `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=${w}`;
-
-const job = (file: string) => `/images/jobs/${file}`;
+const job = (file: string) => `/images/jobs/${file}.webp`;
 
 export const images = {
-  heroTruck: {
-    src: pexels(11802122),
-    alt: 'Dominion Haul box truck parked in a Northern Virginia driveway with the loading ramp down',
-    shot: 'Hero background — keep until a dedicated truck exterior shot is ready.',
-    ratio: '16/9',
+  truckLoad: {
+    src: job('truck-load'),
+    width: 788,
+    height: 1400,
+    alt: 'Box truck bed loaded with bagged household junk and furniture, parked on a residential street',
   },
-  heroCrewLoading: {
-    src: job('truck-load.png'),
-    alt: 'Loaded Dominion Haul truck bed packed with household junk, looking out at a Northern Virginia street',
-    shot: 'Real job — truck load, residential neighborhood.',
-    ratio: '1/1',
+  garageFlooring: {
+    src: job('garage-flooring'),
+    width: 1050,
+    height: 1400,
+    alt: 'Garage piled with torn-out wood flooring, wallpaper and flattened cardboard from a renovation',
   },
-  beforeGarage: {
-    src: job('garage-flooring.png'),
-    alt: 'Northern Virginia garage piled with torn-out wood flooring, wallpaper and cardboard from a renovation',
-    shot: 'Real job — garage flooring tear-out.',
-    ratio: '3/2',
+  garageRenovation: {
+    src: job('garage-renovation'),
+    width: 1400,
+    height: 1050,
+    alt: 'Garage stacked with moving boxes, lengths of trim and tied-off trash bags from a remodel',
   },
-  afterGarage: {
-    src: job('garage-renovation.png'),
-    alt: 'Cluttered garage in Northern Virginia stacked with renovation boxes, trim and trash bags ready for haul-away',
-    shot: 'Real job — garage renovation debris.',
-    ratio: '3/2',
+  dumpsterLoad: {
+    src: job('dumpster-load'),
+    width: 788,
+    height: 1400,
+    alt: 'Open dumpster filled with rolled carpet, scrap lumber and household debris',
   },
-  founderPortrait: {
-    src: job('dumpster-load.png'),
-    alt: 'Dominion Haul dumpster loaded with carpet, lumber and household debris on a Northern Virginia job',
-    shot: 'Real job — dumpster load.',
-    ratio: '4/5',
+  constructionYard: {
+    src: job('construction-yard'),
+    width: 1400,
+    height: 1050,
+    alt: 'Backyard pile of broken drywall sheets, loose insulation and empty fixture boxes',
   },
-  crewTeam: {
-    src: job('construction-yard.png'),
-    alt: 'Construction debris pile in a Northern Virginia backyard including drywall, insulation and fixture boxes',
-    shot: 'Real job — backyard construction cleanout.',
-    ratio: '3/2',
+  bedroomCleanout: {
+    src: job('bedroom-cleanout'),
+    width: 1050,
+    height: 1400,
+    alt: 'Bedroom packed with stacked suitcases, cardboard boxes and loose household items',
   },
-  serviceJunkRemoval: {
-    src: job('truck-load.png'),
-    alt: 'Household junk packed into the Dominion Haul truck after a residential pickup in Northern Virginia',
-    shot: 'Real job — full household load in the truck.',
-    ratio: '3/2',
+  roomCleanout: {
+    src: job('room-cleanout'),
+    width: 1050,
+    height: 1400,
+    alt: 'Wood-paneled room filled floor to waist with boxes, bedding and household goods',
   },
-  serviceFurniture: {
-    src: job('bedroom-cleanout.png'),
-    alt: 'Bedroom packed with suitcases, boxes and household items during a Northern Virginia furniture cleanout',
-    shot: 'Real job — bedroom / furniture cleanout.',
-    ratio: '3/2',
+  constructionDebris: {
+    src: job('construction-debris'),
+    width: 1400,
+    height: 1050,
+    alt: 'Drywall offcuts, insulation batts and cardboard packaging piled on a backyard lawn',
   },
-  serviceAppliance: {
-    src: job('garage-renovation.png'),
-    alt: 'Garage stacked with fixture boxes, trim and renovation debris during an appliance and remodel haul-out',
-    shot: 'Real job — remodel / fixture haul-out.',
-    ratio: '3/2',
+  shedCleanout: {
+    src: job('shed-cleanout'),
+    width: 788,
+    height: 1400,
+    alt: 'Outdoor storage shed packed to the door with plastic bins, bags and yard tools',
   },
-  serviceEstate: {
-    src: job('room-cleanout.png'),
-    alt: 'Wood-paneled room filled with boxes, bedding and household goods during an estate cleanout in Northern Virginia',
-    shot: 'Real job — estate / whole-room cleanout.',
-    ratio: '3/2',
-  },
-  serviceConstruction: {
-    src: job('construction-debris.png'),
-    alt: 'Drywall, insulation and fixture packaging piled in a Northern Virginia backyard after a renovation',
-    shot: 'Real job — construction debris.',
-    ratio: '3/2',
-  },
-  serviceYardWaste: {
-    src: job('yard-demo.png'),
-    alt: 'Backyard debris pile with demo bags, old cabinets and scrap lumber ready for haul-away in Northern Virginia',
-    shot: 'Real job — yard / demo debris.',
-    ratio: '3/2',
-  },
-  serviceShed: {
-    src: job('shed-cleanout.png'),
-    alt: 'Overstuffed outdoor storage shed packed with bins, bags and household junk before a Dominion Haul cleanout',
-    shot: 'Real job — shed cleanout.',
-    ratio: '3/2',
-  },
-  serviceCommercial: {
-    src: job('dumpster-load.png'),
-    alt: 'Open dumpster filled with carpet remnants, wood frames and household debris from a Northern Virginia job',
-    shot: 'Real job — dumpster / bulk load.',
-    ratio: '3/2',
-  },
-  truckLoadDiagram: {
-    src: job('truck-load.png'),
-    alt: 'Inside the Dominion Haul truck bed showing a real mixed household load of bags, furniture and debris',
-    shot: 'Real job — truck bed from the tailgate.',
-    ratio: '16/9',
-  },
-  serviceAreaMap: {
-    src: job('construction-yard.png'),
-    alt: 'Residential backyard in Northern Virginia with a construction debris pile staged for same-day haul-away',
-    shot: 'Real job — typical NoVA residential site.',
-    ratio: '4/3',
+  yardDemo: {
+    src: job('yard-demo'),
+    width: 768,
+    height: 1024,
+    alt: 'Backyard pile of filled demo bags, torn-out cabinets and scrap lumber',
   },
 } as const;
 
 export type ImageKey = keyof typeof images;
 
-/** Recent-job gallery — all real photos, used on the home page. */
-export const jobPhotos = [
-  {
-    src: job('truck-load.png'),
-    alt: 'Loaded Dominion Haul truck looking out at a Northern Virginia neighborhood',
-    caption: 'Truck load — residential pickup',
-    span: 'feature',
-  },
-  {
-    src: job('garage-flooring.png'),
-    alt: 'Garage piled with torn-out flooring and wallpaper after a remodel',
-    caption: 'Garage flooring tear-out',
-    span: 'feature',
-  },
-  {
-    src: job('shed-cleanout.png'),
-    alt: 'Cluttered backyard shed packed with bins and household junk',
-    caption: 'Shed cleanout',
-    span: 'cell',
-  },
-  {
-    src: job('dumpster-load.png'),
-    alt: 'Dumpster packed with carpet, lumber and household debris',
-    caption: 'Dumpster load',
-    span: 'cell',
-  },
-  {
-    src: job('bedroom-cleanout.png'),
-    alt: 'Bedroom stacked with suitcases and boxes during a cleanout',
-    caption: 'Bedroom cleanout',
-    span: 'cell',
-  },
-  {
-    src: job('construction-debris.png'),
-    alt: 'Drywall and insulation piled in a backyard after a renovation',
-    caption: 'Construction debris',
-    span: 'cell',
-  },
-  {
-    src: job('room-cleanout.png'),
-    alt: 'Packed room with boxes and household goods during an estate cleanout',
-    caption: 'Estate room clear-out',
-    span: 'cell',
-  },
-  {
-    src: job('garage-renovation.png'),
-    alt: 'Garage filled with renovation boxes, trim and trash bags',
-    caption: 'Garage remodel haul',
-    span: 'cell',
-  },
-  {
-    src: job('yard-demo.png'),
-    alt: 'Backyard pile of demo bags, cabinets and scrap lumber',
-    caption: 'Yard demo pile',
-    span: 'cell',
-  },
-  {
-    src: job('construction-yard.png'),
-    alt: 'Northern Virginia backyard with insulation, drywall and fixture boxes staged for removal',
-    caption: 'Backyard renovation cleanout',
-    span: 'cell',
-  },
-] as const;
+/**
+ * Homepage gallery. Captions describe the contents of the photo only.
+ *
+ * NOTE: these are not labelled as completed Dominion Haul jobs anywhere on the
+ * site, because that has not been confirmed. Once you confirm which shots are
+ * yours, the captions can name the town and the job.
+ */
+export const galleryKeys: ImageKey[] = [
+  'truckLoad',
+  'garageFlooring',
+  'shedCleanout',
+  'dumpsterLoad',
+  'bedroomCleanout',
+  'constructionDebris',
+  'roomCleanout',
+  'garageRenovation',
+  'yardDemo',
+  'constructionYard',
+];
+
+export const galleryCaptions: Record<string, string> = {
+  truckLoad: 'A full truck, loaded',
+  garageFlooring: 'Flooring tear-out',
+  shedCleanout: 'Shed clear-out',
+  dumpsterLoad: 'Carpet and lumber',
+  bedroomCleanout: 'Bedroom clear-out',
+  constructionDebris: 'Remodel debris',
+  roomCleanout: 'Whole-room clear-out',
+  garageRenovation: 'Garage remodel haul',
+  yardDemo: 'Yard demo pile',
+  constructionYard: 'Backyard cleanup',
+};
