@@ -1,9 +1,8 @@
 ---
 title: Herndon
-metaTitle: Junk Removal in Herndon VA 20170 | Same-Day Pickup
-metaDescription: Junk removal in Herndon VA — historic downtown, Sugarland Run, Franklin Farm and the Dulles corridor. Rental turnovers, garage clearing, from $95 with published pricing.
-headline: A railroad town that turned into a tech corridor.
-lede: Herndon runs from 1890s frame houses near the old depot to condo blocks built last year, and the hauling work changes completely across about two miles.
+metaTitle: Junk Removal in Herndon VA 20170 | Dominion Haul
+metaDescription: Junk removal in Herndon VA, covering downtown, Sugarland Run, Franklin Farm and the Dulles corridor. Apartments, garages and rental turnovers. Published prices.
+lede: About 15 minutes from our base, covering the old town core and the corridor out by the toll road.
 kind: city
 county: fairfax-county
 countyLabel: Fairfax County
@@ -18,58 +17,37 @@ areas:
 zips:
   - '20170'
   - '20171'
-responseTime: 'Same day — 20 minutes from base'
+driveTime: About 15 minutes from Chantilly
 geo:
   lat: 38.9696
   lng: -77.3861
-order: 12
+accessNotes:
+  - Streets in the old town core are narrow and a box truck takes up real room. Give us the exact address so we can plan where it goes.
+  - Older houses downtown often have tight staircases and pull-down attic access, so furniture comes apart in the room.
+  - Garden-style apartment complexes are easy, ground-level access. Mid-rise buildings near Worldgate may want a certificate of insurance and an elevator booking.
 faq:
-  - q: Do you serve the Town of Herndon and the surrounding area?
-    a: Both. The incorporated Town of Herndon has its own council and its own refuse collection, and the wider 20170 and 20171 area outside the town limits is straight Fairfax County. We work across all of it, including Sugarland Run, Franklin Farm and the Dulles Corner corridor.
+  - q: Do you cover the Town of Herndon and the area around it?
+    a: Both. The incorporated town has its own council and its own refuse collection, and the wider 20170 and 20171 area outside the town limits is Fairfax County. We work across all of it.
   - q: Can you handle apartment and condo removals?
-    a: Yes, and Herndon has a lot of them. Garden-style apartment complexes are straightforward — ground-level access, usually somewhere to put the truck. Mid-rise and newer buildings near Worldgate and the Metro may want a certificate of insurance and an elevator reservation, which we arrange, but that pushes the job to a day or two out rather than same day.
-  - q: How much for a single mattress or sofa in Herndon?
-    a: Single items start at $95. Mattresses are worth calling out because Town of Herndon and Fairfax County collection both restrict them, and no kerbside service will take one as ordinary waste — Virginia handles them separately. We collect from inside the unit rather than requiring you to get it downstairs first.
-  - q: Do you work with landlords doing turnovers?
-    a: Frequently. Herndon has a large rental population tied to the Dulles corridor employers, and turnover clearing is a steady part of what we do here. We quote from photos, work to a lease gap, and send completion photographs — no need for anyone to drive out and supervise.
-  - q: What about old paint and chemicals in the garage?
-    a: We cannot take them, legally. Paint, solvents, motor oil, fuel and pool chemicals need household hazardous waste handling. Fairfax County accepts residential quantities free at the I-66 Transfer Station on West Ox Road, which is about ten minutes from Herndon. Everything else in the garage we will take.
+    a: Yes. Garden-style complexes are straightforward. Newer mid-rise buildings may want a certificate of insurance and a booked elevator, which we can arrange, but that pushes the job a day or two out rather than same-day.
+  - q: How much for a single mattress or sofa?
+    a: One heavy item is our smallest booking and the price is on this page. We collect from inside the unit, so you do not need to get it downstairs first. If you were planning to put a mattress out for collection instead, check the rules with the town or county first, because they are usually handled separately from regular trash.
+  - q: Do you work with landlords on turnovers?
+    a: Yes. You send photos, we agree on a price, you leave a lockbox code or hand a key to the property manager, and we send photos of the empty unit when we are done. Nobody needs to drive out and supervise.
+recentJobs: []
+order: 12
 ---
 
-## Two Herndons, about two miles apart
+## Two different jobs about two miles apart
 
-Herndon started as a stop on the Washington and Old Dominion railroad, and the old town core still reads that way — a compact grid of late nineteenth and early twentieth century frame houses around the restored depot, on small lots with narrow streets and detached garages that were built for a Model A.
+Herndon's old town core is a compact grid of older frame houses on small lots with narrow streets and detached garages out back. Small rooms, tight staircases, and attics with pull-down ladders. Everything comes apart in the room and the main thing that slows a job down is where the truck can legally sit.
 
-Two miles east, along the Dulles Toll Road, is a completely different town: office parks, corporate campuses, Worldgate, and dense residential development built to house the people working in them. Garden apartments, townhouse rows, mid-rise condos, much of it from the 1980s onward and a good deal of it from the last fifteen years.
+Out east along the toll road it is a different place entirely. Garden apartments, townhouse rows and newer mid-rise condos. Ground-level complexes are quick. The newer buildings have the same requirements as an Arlington tower, so those need lead time.
 
-The hauling work in those two Herndons has almost nothing in common.
+## Rentals
 
-## The old town: small houses, big accumulation
+There is a lot of rental housing on the corridor side of Herndon, and turnover clearing works well remotely. Photos in, price agreed, lockbox code, photos of the empty unit back. We will not promise same-day into a building whose elevator we have not booked, because that promise fails at the front desk.
 
-Housing near downtown is genuinely old by Northern Virginia standards, and it comes with the usual companions — small rooms, tight staircases, unfinished attics with pull-down ladders, and detached garages and sheds at the back of the lot that have been absorbing things since before anyone currently living there arrived.
+## Booking
 
-Attic clearing is a bigger share of our downtown Herndon work than elsewhere. A lot of these houses have proper walk-up or pull-down attic space that has never been fully emptied by anyone, across multiple owners. What comes down is frequently not the current owner's at all.
-
-Detached garages and backyard sheds are the other constant. Structures of that age under tree cover rot from the sill up, and shed removal here is common enough that we usually assume it will be part of a downtown Herndon call.
-
-## The corridor: turnover, constantly
-
-The Dulles-corridor side of Herndon runs on a rental cycle, driven by the employers along the toll road and the Silver Line extension.
-
-People arrive for a job, stay two or three years, and leave — frequently out of the region entirely, which is when furniture stops being worth moving. That produces a reliable stream of apartment and condo clearing, concentrated but not confined to the summer months.
-
-Landlords and property managers are the repeat customers here, and the work is almost entirely remote-managed. Photos in, price agreed, lockbox code, photographs of the empty unit sent back. Nobody needs to be present.
-
-## Newer buildings, older rules
-
-The mid-rise and newer condo buildings near Worldgate and the Herndon Metro station operate like small versions of Arlington towers: certificate of insurance naming the building and management, freight elevator booked in advance, moves restricted to certain hours.
-
-None of that is a problem, and all of it takes lead time. We issue certificates routinely. What we will not do is promise you same-day service into a building whose elevator we have not booked, because that promise fails at the front desk.
-
-Garden-style apartment complexes — of which Herndon has many — have none of these constraints and are usually same-day work.
-
-## Getting here
-
-Herndon is about twenty minutes from our base depending on the Fairfax County Parkway, which puts it comfortably inside our same-day range for houses and garden apartments.
-
-The one thing that reliably slows a Herndon job is parking in the old town core. Streets there are narrow, some have restrictions, and a box truck occupies real estate. Tell us the address when you book and we will have already worked out where the truck goes.
+Tell us the address when you book, especially downtown. Working out the approach beforehand is the difference between a smooth morning and a truck blocking a one-way street.

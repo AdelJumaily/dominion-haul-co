@@ -6,10 +6,9 @@ import FAQ from '../../components/FAQ.astro';
 import CTABand from '../../components/CTABand.astro';
 import QuoteForm from '../../components/QuoteForm.astro';
 import ServiceGrid from '../../components/ServiceGrid.astro';
-import Testimonials from '../../components/Testimonials.astro';
 import Icon from '../../components/Icon.astro';
 import { site, phoneHref, smsHref } from '../../config/site';
-import { tiers } from '../../config/pricing';
+import { tiers, heavyMaterial, priceRule } from '../../config/pricing';
 
 export async function getStaticPaths() {
   const locations = await getCollection('locations');
@@ -19,8 +18,6 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 const d = entry.data;
 const { Content } = await render(entry);
-
-const hasReviews = (await getCollection('testimonials')).some((r) => r.data.verified);
 
 const all = await getCollection('locations');
 // County pages list their cities; city pages list their siblings.
@@ -38,6 +35,9 @@ const crumbs = [
   ...(parent ? [{ name: parent.data.title, url: `/locations/${parent.id}` }] : []),
   { name: d.title, url: `/locations/${entry.id}` },
 ];
+
+const dateFmt = (v: Date) =>
+  v.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
 ---
 
 <Base
@@ -45,7 +45,6 @@ const crumbs = [
   description={d.metaDescription}
   geoPlacename={`${d.title}, VA`}
   geoPosition={d.geo}
-  keywords={`junk removal ${d.title}, junk hauling ${d.title} VA, ${d.title} furniture removal, estate cleanout ${d.title}, ${d.zips.join(', ')}`}
   ogImage="/images/logo.png"
   schema={{
     type: 'WebPage',
@@ -54,14 +53,11 @@ const crumbs = [
     service: {
       name: `Junk Removal in ${d.title}`,
       description: d.metaDescription,
-      priceFrom: 95,
-      priceTo: 795,
     },
     areaServed: {
       name: `${d.title}, Virginia`,
       lat: d.geo.lat,
       lng: d.geo.lng,
-      postalCode: d.zips[0],
     },
   }}
 >
@@ -74,7 +70,6 @@ const crumbs = [
         {d.kind === 'city' ? `${d.countyLabel} · ${d.zips.join(' · ')}` : 'Northern Virginia'}
       </p>
       <h1>Junk Removal in {d.title}, VA</h1>
-      <p class="loc-deck">{d.headline}</p>
       <p class="lede loc-lede">{d.lede}</p>
 
       <div class="btn-row mt-6">
@@ -90,12 +85,12 @@ const crumbs = [
 
       <dl class="loc-stats">
         <div>
-          <dt><Icon name="clock" size={15} /> Response time</dt>
-          <dd>{d.responseTime}</dd>
+          <dt><Icon name="clock" size={15} /> Drive from Chantilly</dt>
+          <dd>{d.driveTime}</dd>
         </div>
         <div>
           <dt><Icon name="tag" size={15} /> Starting price</dt>
-          <dd>$95 · single items</dd>
+          <dd>{tiers[0].price} for one heavy item</dd>
         </div>
         <div>
           <dt><Icon name="pin" size={15} /> ZIP codes covered</dt>
@@ -109,7 +104,7 @@ const crumbs = [
   <section class="areas">
     <div class="container">
       <p class="areas-label">
-        {d.kind === 'county' ? 'Cities, towns and communities we cover' : 'Neighbourhoods we cover'}
+        {d.kind === 'county' ? 'Towns and communities we cover' : 'Neighborhoods we cover'}
       </p>
       <ul class="chip-row">
         {d.areas.map((a) => <li><span class="chip">{a}</span></li>)}
@@ -117,11 +112,25 @@ const crumbs = [
     </div>
   </section>
 
-  <!-- ── Body ─────────────────────────────────────────────────────────── -->
+  <!-- ── Body + price rail ────────────────────────────────────────────── -->
   <section class="section">
     <div class="container loc-body">
-      <div class="prose">
-        <Content />
+      <div>
+        {
+          d.accessNotes.length > 0 && (
+            <div class="access">
+              <h2>Getting to you in {d.title}</h2>
+              <ul class="access-list">
+                {d.accessNotes.map((n) => (
+                  <li><Icon name="check" size={17} /> {n}</li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
+        <div class="prose">
+          <Content />
+        </div>
       </div>
 
       <aside class="loc-rail">
@@ -138,7 +147,8 @@ const crumbs = [
             }
           </ul>
           <p class="rail-note">
-            Same rates across our whole service area — no zone pricing, no distance fee.
+            {heavyMaterial.note} Same rates across our whole area, with no distance fee.
+            <strong> {priceRule}</strong>
           </p>
           <a href="/pricing" class="link-arrow rail-link">
             Full pricing <Icon name="arrow" size={15} class="arrow" />
@@ -159,6 +169,37 @@ const crumbs = [
     </div>
   </section>
 
+  {/*
+    ── Recent jobs in <Town> ──────────────────────────────────────────────
+    Renders ONLY when there is a real job in the recentJobs array of this
+    town's markdown file. Empty array = this whole section does not exist.
+    See the comment in src/content.config.ts for how to add one.
+  */}
+  {
+    d.recentJobs.length > 0 && (
+      <section class="section-sm recent" data-band="muted">
+        <div class="container">
+          <h2 class="recent-head">Recent jobs in {d.title}</h2>
+          <ul class="recent-list">
+            {d.recentJobs.map((j) => (
+              <li>
+                <Icon name="check" size={17} />
+                <span>
+                  <strong>{j.what}</strong>
+                  {(j.where || j.date) && (
+                    <em>
+                      {[j.where, j.date ? dateFmt(j.date) : null].filter(Boolean).join(' · ')}
+                    </em>
+                  )}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
   <!-- ── Child / sibling locations ────────────────────────────────────── -->
   {
     (children.length > 0 || siblings.length > 0) && (
@@ -166,8 +207,8 @@ const crumbs = [
         <div class="container">
           <h2 class="nearby-head">
             {children.length > 0
-              ? `Cities and towns in ${d.title}`
-              : `Also serving nearby in ${d.countyLabel}`}
+              ? `Towns we cover in ${d.title}`
+              : `Also nearby in ${d.countyLabel}`}
           </h2>
           <ul class="nearby-grid">
             {(children.length > 0 ? children : siblings).map((l) => (
@@ -211,7 +252,7 @@ const crumbs = [
     </div>
   </section>
 
-  <!-- ── FAQ (schema-marked, unique per location) ─────────────────────── -->
+  <!-- ── FAQ ──────────────────────────────────────────────────────────── -->
   <section class="section" data-band="dark">
     <div class="container">
       <FAQ
@@ -223,19 +264,6 @@ const crumbs = [
     </div>
   </section>
 
-  <!-- ── Reviews (hidden until real, verified reviews exist) ──────────── -->
-  {hasReviews && (
-  <section class="section-sm">
-    <div class="container">
-      <div class="section-head">
-        <p class="eyebrow">Local reviews</p>
-        <h2>What your neighbours say</h2>
-      </div>
-      <Testimonials limit={3} />
-    </div>
-  </section>
-  )}
-
   <!-- ── Quote ────────────────────────────────────────────────────────── -->
   <section class="section quote-sec" id="quote">
     <div class="container quote-inner">
@@ -243,8 +271,7 @@ const crumbs = [
         <p class="eyebrow">Free quote</p>
         <h2>Get a price for your {d.title} job</h2>
         <p class="lede mt-4">
-          Send a couple of photos and we will come back with a firm number. No obligation,
-          no charge for looking, and nobody chasing you afterwards.
+          Send a couple of photos and we will come back with a number. No obligation.
         </p>
       </div>
       <div class="card quote-card">
@@ -253,7 +280,7 @@ const crumbs = [
     </div>
   </section>
 
-  <CTABand context={d.title} heading={`Serving ${d.title} today`} />
+  <CTABand context={d.title} heading={`Need something gone in ${d.title}?`} />
 </Base>
 
 <style>
@@ -266,16 +293,6 @@ const crumbs = [
   .loc-hero h1 {
     font-size: var(--step-5);
     max-width: 18ch;
-  }
-  .loc-deck {
-    margin-top: var(--sp-4);
-    font-family: var(--font-display);
-    font-size: var(--step-2);
-    font-weight: 400;
-    letter-spacing: -0.025em;
-    line-height: 1.25;
-    max-width: 28ch;
-    color: var(--ink);
   }
   .loc-lede {
     margin-top: var(--sp-4);
@@ -331,6 +348,33 @@ const crumbs = [
     display: grid;
     gap: var(--sp-7);
     align-items: start;
+  }
+
+  .access {
+    margin-bottom: var(--sp-6);
+    padding-bottom: var(--sp-6);
+    border-bottom: 1px solid var(--line);
+  }
+  .access h2 {
+    font-size: var(--step-2);
+    margin-bottom: var(--sp-4);
+  }
+  .access-list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--sp-3);
+  }
+  .access-list li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--sp-3);
+    align-items: start;
+    line-height: 1.55;
+  }
+  .access-list :global(svg) {
+    color: var(--gold);
+    margin-top: 0.3em;
   }
 
   .rail-card {
@@ -405,6 +449,42 @@ const crumbs = [
     margin-top: var(--sp-2);
   }
 
+  .recent-head {
+    font-size: var(--step-2);
+    margin-bottom: var(--sp-5);
+  }
+  .recent-list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--sp-3);
+  }
+  .recent-list li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--sp-3);
+    align-items: start;
+    padding: var(--sp-4);
+    background: var(--surface-raised);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+  }
+  .recent-list :global(svg) {
+    color: var(--accent-deep);
+    margin-top: 0.2em;
+  }
+  .recent-list strong {
+    display: block;
+    font-size: 0.95rem;
+  }
+  .recent-list em {
+    display: block;
+    font-style: normal;
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
   .nearby {
     background: var(--surface-sunk);
   }
@@ -469,6 +549,9 @@ const crumbs = [
       gap: var(--sp-5);
     }
     .nearby-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .recent-list {
       grid-template-columns: repeat(2, 1fr);
     }
   }

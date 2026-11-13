@@ -1,16 +1,14 @@
 ---
 title: Vienna
-metaTitle: Junk Removal in Vienna VA 22180 | Teardown & Estate Clearing
-metaDescription: Junk removal in Vienna VA — whole-house clearing before teardowns, estate cleanouts and basement hauling. Town of Vienna access aware. Published pricing from $95.
-headline: Where perfectly good houses get emptied before they get demolished.
-lede: Vienna has more pre-teardown clearing than anywhere else we work. It also has the region's least forgiving basement staircases.
+metaTitle: Junk Removal in Vienna VA 22180 | Dominion Haul
+metaDescription: Junk removal in Vienna VA, covering the Town of Vienna, Wolf Trap, Dunn Loring and the Tysons edge. Basement and whole-house clearing. Published prices.
+lede: About 20 minutes from our base. The older split-levels here have the tightest basement stairs we work in.
 kind: city
 county: fairfax-county
 countyLabel: Fairfax County
 areas:
   - Town of Vienna
   - Wolf Trap
-  - Tysons edge
   - Dunn Loring
   - Nottoway
   - Cedar Lane
@@ -19,58 +17,39 @@ zips:
   - '22180'
   - '22181'
   - '22182'
-responseTime: 'Same day — we are 10 minutes away'
+driveTime: About 20 minutes from Chantilly
 geo:
   lat: 38.9012
   lng: -77.2653
-order: 11
+accessNotes:
+  - Basement staircases in the older housing here are narrow, usually with a turn partway down and sometimes a low beam at the bottom.
+  - Side doors and walk-outs are less common in the older stock, so things often travel out through the main floor.
+  - Larger lots out toward Wolf Trap mean sheds, outbuildings and more generous garages.
 faq:
-  - q: Do you cover the Town of Vienna itself, or just the surrounding area?
-    a: Both. The incorporated Town of Vienna runs its own government and its own trash collection separately from Fairfax County, and we work inside the town limits as well as the wider 22180, 22181 and 22182 area including Dunn Loring and Wolf Trap. We are based in Chantilly, about twenty minutes away, so Vienna stays firmly inside same-day range.
-  - q: I am clearing a house before it gets demolished. Can you do the whole thing?
-    a: Yes, and it is a large part of our Vienna work. Whole-house clearing before a teardown is usually two to three truck loads across consecutive days. We coordinate directly with your builder or demolition contractor so the house is empty when their machine arrives, which is the part that actually matters to the schedule.
-  - q: The Town of Vienna already collects bulk items. Why would I pay you?
-    a: If your item is small enough, you can get it to the kerb, and you can wait for the schedule, then use the town service — you are already paying for it. The gap is everything else. Town collection has limits per pickup, will not take construction debris, and requires everything at the kerb, which is the whole difficulty when the item is a sleeper sofa in a 1958 basement.
-  - q: What does junk removal cost in Vienna?
-    a: The same published rates as everywhere we serve — $95 single items, $389 to $499 for a half load, $679 to $795 for a full one. Vienna skews to larger jobs because of the teardown and estate work, and whole-house clearings are quoted after a walkthrough rather than off the standard table.
+  - q: Do you cover the Town of Vienna itself, or just the area around it?
+    a: Both. The incorporated town runs its own government and its own trash collection separately from Fairfax County. We work inside the town limits and across the wider 22180, 22181 and 22182 area, including Dunn Loring and Wolf Trap.
+  - q: I am clearing a whole house. Can you do all of it?
+    a: Yes. Whole-house clearing usually runs more than one truckload, so we walk through it first and give you a number rather than working off the standard table. We can work to a builder's or a buyer's date if there is one.
+  - q: The town already collects bulk items. Why would I pay you?
+    a: If the item is small enough, you can get it to the curb, and you can wait for the schedule, use the town service. You already pay for it. The gap is everything else, and mainly it is anything you cannot physically get down to the street.
   - q: Can you take renovation debris?
-    a: Yes — drywall, lumber, cabinets, trim, old flooring and carpet. Two Vienna-specific cautions. Concrete and tile are priced by weight rather than volume because that is how disposal is billed. And a lot of housing here predates 1980, so if you are demolishing rather than remodelling, test for asbestos in floor tile, mastic and pipe insulation first. We cannot haul it, and disturbing it is a genuine health issue rather than a formality.
+    a: Yes. Drywall, lumber, cabinets, trim, old flooring and carpet. Concrete and tile are priced by weight instead, quoted on site. A lot of housing here predates 1980, so if you are demolishing rather than remodeling, test for asbestos first. We cannot haul asbestos-containing material.
+recentJobs: []
+order: 11
 ---
 
-## The town where the land outgrew the houses
+## The staircases
 
-Vienna has a housing economics problem that generates a very particular kind of work.
+The older housing in and around Vienna is mostly split-levels, colonials and ramblers built when both families and their furniture were smaller.
 
-Lots inside the town and immediately around it have appreciated to the point where a sound, well-maintained 1960s split-level is worth substantially less than the ground beneath it. So it sells, and within a few months it is gone, replaced by something considerably larger that fills most of the lot.
+Basement stairs from that era are narrower than current code, usually turn partway down, and often have a low beam at the bottom that catches anything tall. Side doors and walk-outs are rarer than in the newer parts of the county, so most things come out through the main floor and out the front.
 
-Before the demolition contractor can start, the house has to be emptied. Frequently nobody has lived in it for months, the previous owner has moved or died, and the contents are whatever forty years of one family produced — with no one left who knows which box matters.
+This is where taking furniture apart stops being optional. A sectional that went into a Vienna basement years ago very often went in pieces, and it is not coming out intact. We pull the legs and connectors off in the room, which is the difference between a clean exit and a gouged stairwell.
 
-That is our most common Vienna job, and it is nothing like a standard junk haul. It is a full clearing with a keepsake protocol, run across two or three days against a builder's schedule.
+## Whole-house clearing
 
-## Split-levels, and their staircases
+If you are emptying a house ahead of a sale or a demolition, that is usually a two or three day job rather than a single load. We walk it first and price it properly. Anything that looks personal — papers, photos, documents — gets set aside for you instead of loaded.
 
-The dominant housing stock in and around Vienna is 1955 to 1975 — split-levels, colonials and ramblers, built when families and their possessions were smaller.
+## Wolf Trap and the edges
 
-Basement staircases from that period are narrower than modern code, usually have a turn partway down, and frequently a low header beam at the bottom that catches anything tall. Side doors and walk-outs are rarer than in the newer parts of the county, which means everything comes out through the main floor and out the front.
-
-This is where furniture disassembly stops being optional. A sectional that came into a Vienna basement in 2003 very often did so before a railing was installed, or in pieces, and it is not leaving intact. We take the legs and connectors off in the room, which is the difference between a clean exit and a gouged stairwell.
-
-## The Town is its own jurisdiction
-
-Worth knowing: the Town of Vienna is incorporated. It runs its own council, its own permitting and its own refuse collection, separate from Fairfax County.
-
-For our purposes that mostly affects the alternatives available to you rather than our work. Town bulk collection exists and is included in what residents already pay, so if what you have is one modest item and you can get it kerbside, use it. Town collection will not take construction and demolition debris, has per-pickup limits, and runs on a schedule rather than on demand.
-
-Where jurisdiction does matter is demolition. Teardowns and larger structural work inside the town go through the town's own permitting rather than the county's, and the builder handles that — but it is why we always confirm whose schedule we are actually working to.
-
-## Wolf Trap, Dunn Loring and the edges
-
-Outside the town limits the character shifts. Wolf Trap and the northern edge toward Great Falls have larger lots and larger houses, which means outbuildings, sheds, pool equipment and generous garages. Dunn Loring and the Tysons edge have newer, denser townhouse and condo development on the Metro corridor, which behaves more like Reston or Arlington work — smaller loads, tighter access, occasional building requirements.
-
-We cover all of it. Vienna is about twenty minutes from our base in Chantilly, which keeps same-day pickups routine on weekday mornings.
-
-## Estate work, because of who lives here
-
-The other reliable stream of Vienna work is estate clearing, for a straightforward demographic reason: a lot of people bought here in the sixties and seventies and never left.
-
-Those houses hold fifty years of one family. The clearing is emotional as often as it is logistical, and it moves at whatever pace the family needs. Documents, photographs, military records and anything that looks personal get set aside rather than loaded — we would far rather flag twenty worthless things than bin one that mattered.
+Outside the town limits the lots get bigger, which means sheds, outbuildings and bigger garages. Over toward Dunn Loring and Tysons it is newer townhouse and condo development, so smaller loads and tighter access.

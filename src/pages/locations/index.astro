@@ -19,21 +19,20 @@ const crumbs = [
 ---
 
 <Base
-  title="Service Area | Junk Removal Across Northern Virginia"
-  description="Dominion Haul serves Fairfax, Loudoun, Prince William and Arlington counties — plus Reston, Ashburn, Vienna, Manassas, Woodbridge and more. Same pricing everywhere, no distance fees."
+  title="Where We Work | Junk Removal Across Northern Virginia"
+  description="Dominion Haul covers Fairfax, Loudoun, Prince William and Arlington counties, including Reston, Ashburn, Vienna, Manassas and Woodbridge. Same prices everywhere, no distance fee."
   schema={{ type: 'CollectionPage', breadcrumbs: crumbs }}
 >
   <Breadcrumbs crumbs={crumbs} />
 
   <section class="hd">
     <div class="container">
-      <p class="eyebrow">Service area</p>
-      <h1>Four counties. One price list. No distance fees.</h1>
+      <p class="eyebrow">Where we work</p>
+      <h1>Four counties. One price list.</h1>
       <p class="lede mt-5">
-        We cover everything within about {site.serviceRadiusMiles} miles of Chantilly, which
-        takes in essentially all of Northern Virginia. A half load costs the same in
-        Haymarket as it does in Vienna — the drive is our routing problem, not a line on
-        your invoice.
+        We work across Fairfax, Loudoun, Prince William and Arlington counties out of
+        {' '}{site.base}. Half a truck costs the same in Haymarket as it does in Vienna. The
+        drive is our problem to route around, not a line on your bill.
       </p>
     </div>
   </section>
@@ -90,8 +89,8 @@ const crumbs = [
                   ))}
                 </ul>
                 <p class="more-note">
-                  These do not all have their own page yet, and we absolutely serve them.
-                  Call and ask — the answer is nearly always yes.
+                  These do not all have their own page yet. We cover them the same way and
+                  at the same prices. Call and ask.
                 </p>
               </details>
             </div>
@@ -105,18 +104,17 @@ const crumbs = [
     <div class="container map-inner">
       <div>
         <p class="eyebrow">Not sure if you're in it?</p>
-        <h2>Just ask. It's usually yes.</h2>
+        <h2>Just ask.</h2>
         <p class="lede mt-4">
-          Our radius reaches Purcellville in the west, Woodbridge in the south, the Potomac
-          in the north and the DC line in the east. If you're near an edge, call — we would
-          rather tell you honestly than have you guess.
+          If you're anywhere in those four counties, call and we'll tell you straight away.
+          If you're right on the edge we'll say so rather than let you guess.
         </p>
         <a href="/contact" class="btn mt-5">
           Check your address
           <Icon name="arrow" size={17} class="arrow" />
         </a>
       </div>
-      <Figure imageKey="serviceAreaMap" ratio="4/3" />
+      <Figure imageKey="truckLoad" ratio="4/3" />
     </div>
   </section>
 
