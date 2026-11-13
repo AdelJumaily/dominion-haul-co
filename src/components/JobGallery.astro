@@ -1,14 +1,37 @@
 ---
-import { jobPhotos } from '../config/site';
+/**
+ * Photo grid.
+ *
+ * Captions describe what is in the frame. They do not claim a town, a
+ * customer or a completed job, because that has not been confirmed. Once the
+ * real provenance of each shot is known, captions can get specific.
+ */
+import { images, galleryKeys, galleryCaptions } from '../config/site';
+
+const photos = galleryKeys.map((key, i) => ({
+  key,
+  ...images[key],
+  caption: galleryCaptions[key] ?? '',
+  // First two cells are the large feature tiles.
+  span: i < 2 ? 'feature' : 'cell',
+}));
 ---
 
 <ul class="jobs">
   {
-    jobPhotos.map((photo) => (
+    photos.map((photo, i) => (
       <li class={`jobs-cell jobs-${photo.span}`}>
         <figure>
           <div class="jobs-frame">
-            <img src={photo.src} alt={photo.alt} loading="lazy" decoding="async" />
+            <img
+              src={photo.src}
+              alt={photo.alt}
+              width={photo.width}
+              height={photo.height}
+              loading="lazy"
+              decoding="async"
+              sizes={photo.span === 'feature' ? '(max-width: 720px) 100vw, 50vw' : '(max-width: 720px) 50vw, 25vw'}
+            />
           </div>
           <figcaption>{photo.caption}</figcaption>
         </figure>

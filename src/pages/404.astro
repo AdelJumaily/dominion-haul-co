@@ -37,7 +37,7 @@ const counties = (await getCollection('locations'))
         <div>
           <h2>Services</h2>
           <ul>
-            {services.map((s) => <li><a href={`/services#${s.id}`}>{s.title}</a></li>)}
+            {services.map((s) => <li><a href={`/services/${s.id}`}>{s.title}</a></li>)}
           </ul>
         </div>
         <div>

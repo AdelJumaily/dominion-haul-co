@@ -33,7 +33,7 @@ const year = new Date().getFullYear();
         <div class="foot-col">
           <h2>Services</h2>
           <ul>
-            {services.map((s) => <li><a href={`/services#${s.id}`}>{s.title}</a></li>)}
+            {services.map((s) => <li><a href={`/services/${s.id}`}>{s.title}</a></li>)}
           </ul>
         </div>
 
@@ -59,7 +59,7 @@ const year = new Date().getFullYear();
     </div>
 
     <div class="foot-bottom">
-      <p>&copy; {year} {site.name}. Insured.</p>
+      <p>&copy; {year} {site.name}. Fully insured.</p>
       <p>Based in Chantilly, VA</p>
     </div>
   </div>

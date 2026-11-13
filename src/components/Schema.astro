@@ -1,9 +1,20 @@
 ---
 /**
- * Schema.org JSON-LD — connected @graph for local SEO.
- * AggregateRating emits ONLY when site.rating.verified is true.
+ * Schema.org JSON-LD.
+ *
+ * Rules that must not be broken here:
+ *   • NO Review and NO AggregateRating nodes, ever. Dominion Haul has no
+ *     reviews yet, and fabricated review markup risks a manual penalty.
+ *   • NO streetAddress. Service-area business: locality + region only.
+ *   • sameAs only ever contains real URLs pasted into site.links. While those
+ *     are null, sameAs is omitted rather than pointing at generic network roots.
+ *
+ * The full LocalBusiness node is emitted once, on the homepage. Every other
+ * page references it by @id, which is what Google prefers over repeating the
+ * whole entity on each URL.
  */
-import { site, addressOneLine, images } from '../config/site';
+import { site, profileLinks } from '../config/site';
+import { priceFloor, priceCeiling } from '../config/pricing';
 
 interface FaqItem {
   q: string;
@@ -15,16 +26,14 @@ interface Crumb {
 }
 
 interface Props {
-  type?: 'WebPage' | 'Service' | 'AboutPage' | 'ContactPage' | 'BlogPosting' | 'CollectionPage';
+  type?: 'WebPage' | 'Service' | 'AboutPage' | 'ContactPage' | 'CollectionPage';
   title: string;
   description: string;
   url: string;
   faq?: FaqItem[];
   breadcrumbs?: Crumb[];
-  service?: { name: string; description: string; priceFrom?: number; priceTo?: number };
-  areaServed?: { name: string; lat: number; lng: number; postalCode?: string };
-  article?: { published: string; modified?: string; author: string };
-  /** Absolute or site-relative image for page / OG alignment */
+  service?: { name: string; description: string };
+  areaServed?: { name: string; lat: number; lng: number };
   image?: string;
 }
 
@@ -37,15 +46,17 @@ const {
   breadcrumbs = [],
   service,
   areaServed,
-  article,
   image,
 } = Astro.props;
 
 const origin = Astro.site?.origin ?? 'https://dominionhaul.com';
 const abs = (p: string) => new URL(p, origin).href;
 const BIZ = `${origin}/#business`;
+const SITE_ID = `${origin}/#website`;
 const logoUrl = abs('/images/logo.png');
 const primaryImage = image ? abs(image) : logoUrl;
+
+const isHome = url === '/' || url === '';
 
 const dayMap: Record<string, string> = {
   Monday: 'Mo',
@@ -57,152 +68,96 @@ const dayMap: Record<string, string> = {
   Sunday: 'Su',
 };
 
-const countyAreas = [
-  { '@type': 'AdministrativeArea', name: 'Fairfax County, Virginia' },
-  { '@type': 'AdministrativeArea', name: 'Loudoun County, Virginia' },
-  { '@type': 'AdministrativeArea', name: 'Prince William County, Virginia' },
-  { '@type': 'AdministrativeArea', name: 'Arlington County, Virginia' },
-  {
-    '@type': 'GeoCircle',
-    geoMidpoint: {
+/** The four counties, as administrative areas. */
+const countyAreas = site.counties.map((name) => ({
+  '@type': 'AdministrativeArea',
+  name: `${name}, Virginia`,
+}));
+
+const graph: Record<string, unknown>[] = [];
+
+if (isHome) {
+  const business: Record<string, unknown> = {
+    '@type': ['LocalBusiness', 'HomeAndConstructionBusiness'],
+    '@id': BIZ,
+    name: site.name,
+    legalName: site.legalName,
+    description: site.description,
+    url: origin,
+    telephone: site.phone.e164,
+    email: site.email,
+    image: [logoUrl],
+    logo: { '@type': 'ImageObject', url: logoUrl, width: 1200, height: 361 },
+    priceRange: `$${priceFloor}–$${priceCeiling}`,
+    currenciesAccepted: 'USD',
+    paymentAccepted: 'Cash, Credit Card, Debit Card',
+    slogan: site.tagline,
+    // Service-area business: no streetAddress, no postalCode.
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: site.address.city,
+      addressRegion: site.address.state,
+      addressCountry: site.address.country,
+    },
+    geo: {
       '@type': 'GeoCoordinates',
       latitude: site.geo.lat,
       longitude: site.geo.lng,
     },
-    geoRadius: `${site.serviceRadiusMiles * 1609.34}`,
-  },
-  { '@type': 'City', name: 'Chantilly, Virginia' },
-  { '@type': 'City', name: 'Reston, Virginia' },
-  { '@type': 'City', name: 'Vienna, Virginia' },
-  { '@type': 'City', name: 'Fairfax, Virginia' },
-  { '@type': 'City', name: 'Ashburn, Virginia' },
-  { '@type': 'City', name: 'Leesburg, Virginia' },
-  { '@type': 'City', name: 'Manassas, Virginia' },
-  { '@type': 'City', name: 'Arlington, Virginia' },
-];
-
-const sameAs = Object.values(site.social).filter((u) => {
-  if (!u) return false;
-  // Drop generic network roots — they dilute the entity graph.
-  if (/^https?:\/\/(www\.)?(google\.com\/maps|facebook\.com|instagram\.com)\/?$/i.test(u)) {
-    return false;
-  }
-  return true;
-});
-
-const business: Record<string, unknown> = {
-  '@type': ['LocalBusiness', 'HomeAndConstructionBusiness'],
-  '@id': BIZ,
-  name: site.name,
-  legalName: site.legalName,
-  description: site.description,
-  url: origin,
-  telephone: site.phone.e164,
-  email: site.email,
-  image: [
-    logoUrl,
-    abs(images.heroTruck.src),
-    abs(images.serviceJunkRemoval.src),
-    abs(images.serviceConstruction.src),
-    abs(images.serviceShed.src),
-  ],
-  logo: {
-    '@type': 'ImageObject',
-    url: logoUrl,
-    width: 480,
-    height: 360,
-  },
-  priceRange: '$$',
-  currenciesAccepted: 'USD',
-  paymentAccepted: 'Cash, Credit Card, Debit Card, Apple Pay, Google Pay',
-  foundingDate: site.founded,
-  slogan: site.tagline,
-  knowsAbout: [
-    'Junk removal',
-    'Furniture removal',
-    'Appliance removal',
-    'Estate cleanouts',
-    'Construction debris removal',
-    'Yard waste removal',
-    'Shed removal',
-    'Commercial cleanouts',
-    'Northern Virginia junk hauling',
-  ],
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: site.address.street,
-    addressLocality: site.address.city,
-    addressRegion: site.address.state,
-    postalCode: site.address.zip,
-    addressCountry: site.address.country,
-  },
-  geo: {
-    '@type': 'GeoCoordinates',
-    latitude: site.geo.lat,
-    longitude: site.geo.lng,
-  },
-  hasMap: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(addressOneLine)}`,
-  areaServed: countyAreas,
-  openingHoursSpecification: site.hours.map((h) => ({
-    '@type': 'OpeningHoursSpecification',
-    dayOfWeek: h.days.map((d) => dayMap[d]),
-    opens: h.open,
-    closes: h.close,
-  })),
-  contactPoint: [
-    {
-      '@type': 'ContactPoint',
-      telephone: site.phone.e164,
-      contactType: 'customer service',
-      areaServed: 'US-VA',
-      availableLanguage: ['English'],
-    },
-  ],
-};
-
-if (sameAs.length) {
-  business.sameAs = sameAs;
-}
-
-if (site.rating.verified) {
-  business.aggregateRating = {
-    '@type': 'AggregateRating',
-    ratingValue: site.rating.value,
-    reviewCount: site.rating.count,
-    bestRating: 5,
-    worstRating: 1,
+    areaServed: countyAreas,
+    openingHoursSpecification: site.hours.map((h) => ({
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: h.days.map((d) => dayMap[d]),
+      opens: h.open,
+      closes: h.close,
+    })),
+    contactPoint: [
+      {
+        '@type': 'ContactPoint',
+        telephone: site.phone.e164,
+        contactType: 'customer service',
+        areaServed: 'US-VA',
+        availableLanguage: ['English'],
+      },
+    ],
   };
+
+  // Only real, pasted-in URLs. Omitted entirely while the placeholders are null.
+  if (profileLinks.length) {
+    business.sameAs = profileLinks.map((l) => l.url);
+  }
+
+  graph.push(business);
 }
 
 const pageId = `${abs(url)}#page`;
 
-const graph: Record<string, unknown>[] = [
-  business,
-  {
-    '@type': type === 'BlogPosting' ? 'WebPage' : type,
-    '@id': pageId,
-    url: abs(url),
-    name: title,
-    description,
-    isPartOf: { '@id': `${origin}/#website` },
-    about: { '@id': BIZ },
-    primaryImageOfPage: { '@type': 'ImageObject', url: primaryImage },
-    inLanguage: 'en-US',
-    ...(breadcrumbs.length
-      ? { breadcrumb: { '@id': `${abs(url)}#breadcrumbs` } }
-      : {}),
-  },
-  {
+graph.push({
+  '@type': type,
+  '@id': pageId,
+  url: abs(url),
+  name: title,
+  description,
+  isPartOf: { '@id': SITE_ID },
+  about: { '@id': BIZ },
+  primaryImageOfPage: { '@type': 'ImageObject', url: primaryImage },
+  inLanguage: 'en-US',
+  ...(breadcrumbs.length ? { breadcrumb: { '@id': `${abs(url)}#breadcrumbs` } } : {}),
+});
+
+if (isHome) {
+  graph.push({
     '@type': 'WebSite',
-    '@id': `${origin}/#website`,
+    '@id': SITE_ID,
     url: origin,
     name: site.name,
     description: site.description,
     publisher: { '@id': BIZ },
     inLanguage: 'en-US',
-  },
-];
+  });
+}
 
+/** BreadcrumbList — service pages and town pages both pass crumbs. */
 if (breadcrumbs.length) {
   graph.push({
     '@type': 'BreadcrumbList',
@@ -226,21 +181,10 @@ if (service) {
           latitude: areaServed.lat,
           longitude: areaServed.lng,
         },
-        ...(areaServed.postalCode
-          ? {
-              address: {
-                '@type': 'PostalAddress',
-                addressLocality: areaServed.name.replace(/, Virginia$/, ''),
-                addressRegion: 'VA',
-                postalCode: areaServed.postalCode,
-                addressCountry: 'US',
-              },
-            }
-          : {}),
       }
     : null;
 
-  const node: Record<string, unknown> = {
+  graph.push({
     '@type': 'Service',
     '@id': `${abs(url)}#service`,
     name: service.name,
@@ -248,35 +192,23 @@ if (service) {
     serviceType: service.name,
     category: 'Junk Removal',
     provider: { '@id': BIZ },
-    brand: { '@id': BIZ },
     areaServed: place ? [place] : countyAreas,
-    termsOfService: abs('/pricing'),
-  };
-  if (service.priceFrom != null) {
-    node.offers = {
+    // Price range only — no Offer node asserting a single price for a
+    // volume-based service whose final number is confirmed on site.
+    offers: {
       '@type': 'Offer',
       url: abs(url),
       priceCurrency: 'USD',
-      price: String(service.priceFrom),
       priceSpecification: {
         '@type': 'PriceSpecification',
-        minPrice: service.priceFrom,
-        maxPrice: service.priceTo ?? service.priceFrom,
+        minPrice: priceFloor,
+        maxPrice: priceCeiling,
         priceCurrency: 'USD',
+        valueAddedTaxIncluded: false,
       },
       availability: 'https://schema.org/InStock',
-      eligibleRegion: {
-        '@type': 'Place',
-        name: 'Northern Virginia, US-VA',
-      },
-    };
-  }
-  graph.push(node);
-
-  // Surface offers on the LocalBusiness for richer local panels
-  if (!graph[0].makesOffer) {
-    graph[0].makesOffer = { '@id': `${abs(url)}#service` };
-  }
+    },
+  });
 }
 
 if (faq.length) {
@@ -288,21 +220,6 @@ if (faq.length) {
       name: f.q,
       acceptedAnswer: { '@type': 'Answer', text: f.a },
     })),
-  });
-}
-
-if (article) {
-  graph.push({
-    '@type': 'BlogPosting',
-    '@id': `${abs(url)}#article`,
-    headline: title,
-    description,
-    image: primaryImage,
-    datePublished: article.published,
-    dateModified: article.modified ?? article.published,
-    author: { '@type': 'Organization', name: article.author, '@id': BIZ },
-    publisher: { '@id': BIZ },
-    mainEntityOfPage: { '@id': pageId },
   });
 }
 

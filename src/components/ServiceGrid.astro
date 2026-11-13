@@ -17,7 +17,7 @@ const { locationTitle } = Astro.props;
   {
     services.map((s) => (
       <li>
-        <a href={`/services#${s.id}`} class="sg-card">
+        <a href={`/services/${s.id}`} class="sg-card">
           <span class="sg-icon">
             <Icon name={s.icon} size={24} />
           </span>

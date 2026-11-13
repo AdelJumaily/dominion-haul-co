@@ -1,20 +1,20 @@
 ---
 /**
- * Figure — the swap-a-placeholder-for-a-real-photo component.
+ * Image wrapper. Every photo on the site goes through here, referenced by key
+ * from the manifest in config/site.ts.
  *
- * Every image on the site goes through here, referenced by KEY from the
- * manifest in src/config/site.ts. Stock CDN URLs are temporary; replace with
- * real /images/... paths when business photography is ready.
+ * Always emits real width/height (prevents layout shift) and lazy-loads by
+ * default. Pass `priority` for anything above the fold.
  */
 import { images, type ImageKey } from '../config/site';
 
 interface Props {
-  imageKey: ImageKey | string;
-  /** Overrides the manifest ratio when a layout needs a specific crop. */
+  imageKey: ImageKey;
+  /** Overrides the natural aspect ratio when a layout needs a specific crop. */
   ratio?: string;
-  /** Above-the-fold images must set priority so they are not lazy-loaded. */
+  /** Above-the-fold images must set this so they are not lazy-loaded. */
   priority?: boolean;
-  /** Overrides the manifest alt text for context-specific pages. */
+  /** Override the manifest alt text where page context makes it more specific. */
   alt?: string;
   sizes?: string;
   class?: string;
@@ -29,45 +29,40 @@ const {
   class: className = '',
 } = Astro.props;
 
-const entry = (images as Record<string, (typeof images)[ImageKey]>)[imageKey];
+const entry = images[imageKey];
 
 if (!entry) {
   throw new Error(
-    `Figure: unknown imageKey "${imageKey}". Add it to the \`images\` manifest in src/config/site.ts.`
+    `Figure: unknown imageKey "${imageKey}". Add it to the images manifest in src/config/site.ts.`
   );
 }
 
-const aspect = ratio ?? entry.ratio;
-const altText = alt ?? entry.alt;
-const isStock = entry.src?.includes('pexels.com') || entry.src?.includes('unsplash.com');
+const aspect = ratio ?? `${entry.width}/${entry.height}`;
 ---
 
-{
-  entry.src ? (
-    <div class={`frame ${className}`} style={`aspect-ratio:${aspect}`}>
-      {/* PLACEHOLDER - replace with real business photo */}
-      <img
-        src={entry.src}
-        alt={altText}
-        loading={priority ? 'eager' : 'lazy'}
-        decoding={priority ? 'sync' : 'async'}
-        fetchpriority={priority ? 'high' : 'auto'}
-        sizes={sizes}
-        data-placeholder={isStock ? 'stock' : undefined}
-      />
-    </div>
-  ) : (
-    <div
-      class={`ph ${className}`}
-      style={`aspect-ratio:${aspect}`}
-      role="img"
-      aria-label={altText}
-    >
-      <span class="ph-tag">Placeholder</span>
-      <div class="ph-body">
-        <span class="ph-key">images.{imageKey}</span>
-        <span class="ph-shot">{entry.shot}</span>
-      </div>
-    </div>
-  )
-}
+<div class={`frame ${className}`} style={`aspect-ratio:${aspect}`}>
+  <img
+    src={entry.src}
+    alt={alt ?? entry.alt}
+    width={entry.width}
+    height={entry.height}
+    loading={priority ? 'eager' : 'lazy'}
+    decoding={priority ? 'sync' : 'async'}
+    fetchpriority={priority ? 'high' : 'auto'}
+    sizes={sizes}
+  />
+</div>
+
+<style>
+  .frame {
+    overflow: hidden;
+    border-radius: var(--r-lg);
+    background: var(--surface-sunk);
+  }
+  .frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+</style>

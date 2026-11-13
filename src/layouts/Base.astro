@@ -19,8 +19,6 @@ interface Props {
   geoPlacename?: string;
   /** Optional lat,lng override for location pages. */
   geoPosition?: { lat: number; lng: number };
-  /** Comma-separated keywords — used sparingly; Google mostly ignores but others don't. */
-  keywords?: string;
 }
 
 const {
@@ -32,7 +30,6 @@ const {
   ogImage = '/images/logo.png',
   geoPlacename = 'Northern Virginia',
   geoPosition = site.geo,
-  keywords,
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname.replace(/\/$/, '') || '/', Astro.site).href;
@@ -49,7 +46,6 @@ const geoPos = `${geoPosition.lat};${geoPosition.lng}`;
 
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
-    {keywords && <meta name="keywords" content={keywords} />}
     <link rel="canonical" href={canonical} />
     {!index && <meta name="robots" content="noindex, follow" />}
     {index && (
@@ -59,7 +55,6 @@ const geoPos = `${geoPosition.lat};${geoPosition.lng}`;
       />
     )}
     <meta name="author" content={site.name} />
-    <meta name="publisher" content={site.legalName} />
 
     <!-- Open Graph -->
     <meta property="og:type" content={ogType} />
@@ -116,7 +111,6 @@ const geoPos = `${geoPosition.lat};${geoPosition.lng}`;
     <script>
       const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       const targets = document.querySelectorAll('[data-reveal]');
-      const counters = document.querySelectorAll<HTMLElement>('[data-count]');
 
       if (!reduced && targets.length && 'IntersectionObserver' in window) {
         document.documentElement.classList.add('reveal-ready');
