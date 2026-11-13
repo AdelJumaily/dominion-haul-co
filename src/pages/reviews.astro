@@ -1,52 +1,48 @@
 ---
 import Base from '../layouts/Base.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
-import Testimonials from '../components/Testimonials.astro';
 import CTABand from '../components/CTABand.astro';
 import Icon from '../components/Icon.astro';
 import { site, phoneHref } from '../config/site';
-import { getCollection } from 'astro:content';
-
-const hasReviews = (await getCollection('testimonials')).some((r) => r.data.verified);
 
 const crumbs = [
   { name: 'Home', url: '/' },
   { name: 'Reviews', url: '/reviews' },
 ];
+
+/**
+ * These stay null until the real links are pasted into src/config/site.ts.
+ * While they are null the buttons do not render at all, so nothing on this
+ * page ever points at a generic google.com/maps URL.
+ */
+const profileUrl = site.links.GBP_PROFILE_URL;
+const reviewUrl = site.links.GBP_REVIEW_URL;
 ---
 
 <Base
   title="Reviews | Dominion Haul"
-  description="Dominion Haul is a new local junk removal company in Northern Virginia. Worked with us? Leave a review on Google, or tell us directly if anything went wrong."
-  schema={{ type: 'CollectionPage', breadcrumbs: crumbs }}
+  description="Dominion Haul is a new junk removal company in Chantilly, VA. We don't have reviews yet and we won't post fake ones. Worked with us? Tell us how it went."
+  schema={{ type: 'WebPage', breadcrumbs: crumbs }}
 >
   <Breadcrumbs crumbs={crumbs} />
 
   <section class="hd">
     <div class="container">
       <p class="eyebrow">Reviews</p>
-      {hasReviews ? (
-        <>
-        <h1>Every review here is from a real job.</h1>
-        <p class="lede mt-5">
-          We are a new business, so there are not hundreds of them yet. Every review below
-          was left by a real customer on our Google profile, and you can check it yourself.
-        </p>
-        </>
-      ) : (
-        <>
-        <h1>We're new, and we're earning our reviews one job at a time.</h1>
-        <p class="lede mt-5">
-          Dominion Haul is a new local business, so we don't have reviews to show yet. We
-          won't post made-up ones. As real customers leave reviews on Google, they'll
-          appear here.
-        </p>
-        </>
-      )}
+      <h1>We don't have reviews yet.</h1>
+      <p class="lede mt-5">
+        Dominion Haul is new, so there is nothing to show here yet. We are not going to
+        post made-up ones to fill the space. When real customers leave reviews, they will
+        show up on our Google profile and we will point you there.
+      </p>
       <div class="btn-row mt-6">
-        <a href={site.social.google} class="btn" rel="noopener" target="_blank">
-          <Icon name="star" size={17} /> See us on Google
-        </a>
+        {
+          profileUrl && (
+            <a href={profileUrl} class="btn" rel="noopener" target="_blank">
+              <Icon name="star" size={17} /> See us on Google
+            </a>
+          )
+        }
         <a href={phoneHref} class="btn btn-ghost">
           <Icon name="phone" size={17} /> {site.phone.display}
         </a>
@@ -54,33 +50,38 @@ const crumbs = [
     </div>
   </section>
 
-  {hasReviews && (
-  <section class="section">
-    <div class="container">
-      <Testimonials />
-    </div>
-  </section>
-  )}
-
   <!-- ── How to leave one ─────────────────────────────────────────────── -->
   <section class="section-sm" data-band="dark">
     <div class="container container-tight center-block">
       <p class="eyebrow">Worked with us?</p>
-      <h2>Reviews are how a new local business survives</h2>
+      <h2>A review from you actually matters right now</h2>
       <p class="lede mt-4">
-        We are competing against national brands with fifteen years of review history. If
-        we did a good job, thirty seconds of your time genuinely changes our week. If we did
-        not, tell us directly first — we would much rather fix it.
+        We are starting from zero against companies that have been collecting reviews for
+        years. If we did a good job, thirty seconds of your time changes our week. If we
+        did not, tell us directly first. We would much rather fix it.
       </p>
       <div class="btn-row mt-6 center-btns">
-        <a href={site.social.google} class="btn" rel="noopener" target="_blank">
-          Leave a Google review
-          <Icon name="arrow" size={17} class="arrow" />
-        </a>
+        {
+          reviewUrl && (
+            <a href={reviewUrl} class="btn" rel="noopener" target="_blank">
+              Leave a Google review
+              <Icon name="arrow" size={17} class="arrow" />
+            </a>
+          )
+        }
         <a href={`mailto:${site.email}`} class="btn btn-ghost">
-          Tell us what went wrong
+          Email us directly
         </a>
       </div>
+      {
+        !reviewUrl && (
+          <p class="pending">
+            Our Google review link is not live yet. For now, email
+            {' '}<a href={`mailto:${site.email}`}>{site.email}</a> or text
+            {' '}{site.phone.display} and tell us how it went.
+          </p>
+        )
+      }
     </div>
   </section>
 
@@ -93,7 +94,7 @@ const crumbs = [
     background: linear-gradient(180deg, var(--surface-sunk), var(--surface));
   }
   .hd h1 {
-    max-width: 18ch;
+    max-width: 20ch;
   }
   .hd .lede {
     max-width: 58ch;
@@ -107,5 +108,14 @@ const crumbs = [
   }
   .center-btns {
     justify-content: center;
+  }
+  .pending {
+    margin-top: var(--sp-5);
+    font-size: 0.9rem;
+    color: var(--muted-light, #c5d3cc);
+  }
+  .pending a {
+    color: inherit;
+    font-weight: 700;
   }
 </style>

@@ -3,12 +3,9 @@ import Base from '../layouts/Base.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import Figure from '../components/Figure.astro';
 import CTABand from '../components/CTABand.astro';
-import Testimonials from '../components/Testimonials.astro';
 import Icon from '../components/Icon.astro';
 import { site, phoneHref } from '../config/site';
-import { getCollection } from 'astro:content';
-
-const hasReviews = (await getCollection('testimonials')).some((r) => r.data.verified);
+import { priceRule } from '../config/pricing';
 
 const crumbs = [
   { name: 'Home', url: '/' },
@@ -17,27 +14,27 @@ const crumbs = [
 
 const promises = [
   {
-    t: 'A real local crew — not a call centre',
-    d: 'No regional scheduling desk in another state. The phone rings to the people who own the truck and will be in your driveway.',
+    t: 'You get the same person every time',
+    d: 'The phone rings to the people who own the truck and will be in your driveway. No scheduling desk in another state.',
   },
   {
-    t: 'Price is locked in your driveway before we load',
-    d: 'Out loud, after we have looked at the actual pile. If it is smaller than the photo suggested, the number goes down.',
+    t: 'The price is locked before we load',
+    d: 'Out loud, after we have looked at the actual pile. Smaller than the photo suggested? The number comes down.',
   },
   {
-    t: 'Insured for NoVA buildings',
-    d: 'Certificates of insurance for Arlington high-rises and Tysons suites on request. We know which buildings need freight elevators booked ahead.',
+    t: 'Fully insured',
+    d: 'If your building or your company needs a certificate of insurance, ask and we will send one.',
   },
   {
-    t: 'Sorted for donation and recycle when we can',
-    d: 'Usable furniture to local partners, metal to scrap, electronics through e-waste. It does not cost you extra — it is just how we haul.',
+    t: 'Donation and recycling where we can',
+    d: 'Usable furniture to a donation drop-off, metal to scrap, electronics to an e-waste recycler. It costs you nothing extra.',
   },
 ];
 ---
 
 <Base
-  title={`About ${site.name} | Junk Removal in Chantilly, VA`}
-  description="Dominion Haul is a local junk removal company based in Chantilly, Virginia. Published prices, same-day pickups across Fairfax, Loudoun, Prince William and Arlington — no franchise call centre."
+  title="About Dominion Haul | Junk Removal in Chantilly, VA"
+  description="Dominion Haul is a new, local junk removal company based in Chantilly, Virginia. One truck, published prices, and the price confirmed before we load."
   schema={{ type: 'AboutPage', breadcrumbs: crumbs }}
 >
   <Breadcrumbs crumbs={crumbs} />
@@ -45,11 +42,9 @@ const promises = [
   <section class="about-hero">
     <div class="container about-hero-inner">
       <div>
-        <h1>Local junk removal. Published prices. Chantilly base.</h1>
+        <h1>A new local hauler, out of Chantilly.</h1>
         <p class="lede mt-5">
-          Dominion Haul is an independent hauling company based at {site.address.street} in{' '}
-          {site.address.city}. One crew, load-size pricing on this site, and nobody between you
-          and the people who show up.
+          One truck, published prices, and nobody between you and the people who show up.
         </p>
         <div class="btn-row mt-6">
           <a href={phoneHref} class="btn btn-lg">
@@ -57,8 +52,8 @@ const promises = [
           </a>
         </div>
       </div>
-      <div class="frame-offset about-portrait">
-        <Figure imageKey="founderPortrait" priority ratio="4/5" sizes="(max-width:900px) 80vw, 35vw" />
+      <div class="about-photo">
+        <Figure imageKey="truckLoad" priority ratio="4/5" sizes="(max-width:900px) 80vw, 35vw" />
       </div>
     </div>
   </section>
@@ -66,52 +61,46 @@ const promises = [
   <section class="section">
     <div class="container container-tight">
       <div class="prose">
-        <h2>Why we built it this way</h2>
+        <h2>We're new. Here's why that's fine.</h2>
         <p>
-          Junk removal around Northern Virginia is dominated by national franchises. The crews
-          are usually fine. The model is not. You call a centre that has never driven the
-          Fairfax County Parkway, someone reads you a range, a truck shows up, and the price
-          moves.
+          Dominion Haul started this year. One truck, based in {site.base}. We have not done
+          hundreds of jobs and we are not going to pretend we have.
         </p>
         <p>
-          We put the load-size prices on this website — which almost nobody else in NoVA will
-          do — and we answer the phone locally. When you call, you are talking to someone who
-          will actually be carrying your sofa.
+          What you get instead: we answer our own phone, our prices are on the website, and
+          we are working hard to get this right because we need the jobs and we need the
+          reviews. There is no version of this where we take your money and shrug.
         </p>
 
-        <h2>What “local” means when you live here</h2>
+        <h2>How we price</h2>
         <p>
-          We know a Burke Centre unit might have zero curb access, so we send the right crew
-          size. We know Reston cluster parking courts will not take a box truck. We know Old
-          Town Manassas has alley access on some blocks, and that a Rosslyn high-rise needs
-          its freight elevator booked a couple days out. A Sterling Park reno from the ’60s
-          sometimes needs an asbestos check before anyone swings a hammer.
+          By how much space your stuff takes up in the truck. Not by the hour. Hourly
+          pricing means you pay extra because your basement stairs are narrow or your unit
+          is at the end of a walkway, and that is not something you chose.
         </p>
         <p>
-          None of that is in a franchise ops manual written for a hundred markets. It is why
-          we can say: call before noon and we can usually hit a Reston pickup by 2pm — we
-          know how the Parkway actually moves.
+          {priceRule} If the pile turns out smaller than the photos suggested, the number
+          comes down. We would rather have that conversation in your driveway than on your
+          invoice.
         </p>
 
-        <h2>What we will not do</h2>
+        <h2>What we won't do</h2>
         <p>
-          We will not quote one number on the phone and change it in your driveway. We will
-          not add a fuel surcharge because you live in Gainesville. We will not charge extra
-          for stairs or a basement — carrying it out is the job.
+          We will not quote one number on the phone and a different one in your driveway.
+          We will not add a fuel surcharge because you live further out. We will not charge
+          extra for stairs.
         </p>
         <p>
-          We will also tell you when we are the wrong answer. Whole-house gut? Rent a
-          dumpster; it is cheaper per yard and we will say so. Standing tree? You need an
-          arborist. Gas range still hooked up? Get a licensed fitter first. Sending you
-          elsewhere costs us one job. It is still the right call.
+          We will also tell you when we are the wrong answer. Long renovation throwing off
+          debris for weeks? Rent a dumpster, it is cheaper per load, and we will say so.
+          Standing tree? You need an arborist. Gas range still hooked up? Get a licensed
+          fitter first. We do not do moving, pianos, safes or hot tubs at all.
         </p>
 
         <h2>Where we work</h2>
         <p>
-          Fairfax, Loudoun, Prince William and Arlington — about a {site.serviceRadiusMiles}-mile
-          radius from Chantilly. That reaches Purcellville west, Woodbridge south, the Potomac
-          north, and the District line east. Same published price everywhere inside it. The
-          drive is our routing problem, not a line on your invoice.
+          Fairfax, Loudoun, Prince William and Arlington counties. Same published price
+          everywhere in them. The drive is our routing problem, not a line on your bill.
         </p>
       </div>
     </div>
@@ -120,7 +109,7 @@ const promises = [
   <section class="section" data-band="dark">
     <div class="container">
       <div class="section-head wide">
-        <h2>Four things we will not compromise on</h2>
+        <h2>Four things we hold to</h2>
       </div>
       <ul class="promises">
         {
@@ -137,36 +126,26 @@ const promises = [
 
   <section class="section-sm">
     <div class="container crew-inner">
-      <Figure imageKey="crewTeam" ratio="3/2" />
+      <Figure imageKey="roomCleanout" ratio="3/2" />
       <div>
-        <h2>Same crew. Same standards.</h2>
+        <h2>On cleanouts and estate work</h2>
         <p class="lede mt-4">
-          Small company on purpose. The people who show up know floor protection, door-frame
-          padding, furniture disassembly, and when a job needs a licensed trade instead of us.
+          We know floor protection, door-frame padding and furniture disassembly, and we
+          know when a job needs a licensed trade instead of us.
         </p>
         <p class="crew-note">
-          On estate and cleanout jobs we run one hard rule: if it looks personal, it does not
-          go in the truck. Photos, papers, jewellery, anything handwritten — we set it aside
-          for you every time.
+          One rule we hold to on estate and cleanout jobs: if it looks personal, it does not
+          go on the truck. Photos, papers, jewelry, anything handwritten gets set aside for
+          you. We would rather flag twenty things that turn out to be nothing than bin one
+          that mattered.
         </p>
       </div>
     </div>
   </section>
 
-  {hasReviews && (
-  <section class="section">
-    <div class="container">
-      <div class="section-head">
-        <h2>What neighbours have said so far</h2>
-      </div>
-      <Testimonials limit={6} />
-    </div>
-  </section>
-  )}
-
   <CTABand
-    heading="Ready for a clear driveway?"
-    sub="Text a photo of the pile. We will text back a firm number — usually in under fifteen minutes when we are not mid-carry."
+    heading="Need a clear driveway?"
+    sub="Text a photo of the pile and we'll come back with a number."
   />
 </Base>
 
@@ -181,9 +160,12 @@ const promises = [
     align-items: center;
   }
   .about-hero h1 {
-    max-width: 16ch;
+    max-width: 18ch;
   }
-  .about-portrait {
+  .about-hero .lede {
+    max-width: 44ch;
+  }
+  .about-photo {
     max-width: 420px;
   }
 
@@ -207,7 +189,7 @@ const promises = [
     max-width: 22ch;
   }
   .promises p {
-    color: var(--fg-muted);
+    color: var(--fg-muted, #c5d3cc);
     font-size: 0.94rem;
     line-height: 1.6;
     max-width: 48ch;

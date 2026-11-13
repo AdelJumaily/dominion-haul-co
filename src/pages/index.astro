@@ -1,16 +1,15 @@
 ---
 import Base from '../layouts/Base.astro';
 import ServiceGrid from '../components/ServiceGrid.astro';
-import Testimonials from '../components/Testimonials.astro';
 import QuoteForm from '../components/QuoteForm.astro';
 import JobGallery from '../components/JobGallery.astro';
 import FAQ from '../components/FAQ.astro';
 import Icon from '../components/Icon.astro';
-import { site, phoneHref, smsHref } from '../config/site';
+import { site, phoneHref, smsHref, images } from '../config/site';
+import { tiers, heavyMaterial, priceRule } from '../config/pricing';
 import { getCollection } from 'astro:content';
 
 const locations = await getCollection('locations');
-const hasReviews = (await getCollection('testimonials')).some((r) => r.data.verified);
 
 const countyOrder = ['fairfax-county', 'loudoun-county', 'prince-william-county', 'arlington-county'];
 const areaGroups = countyOrder
@@ -26,15 +25,15 @@ const areaGroups = countyOrder
 const steps = [
   {
     t: 'Send a photo or call',
-    d: `Text a picture of what's going to ${site.phone.display}, or call and describe it. We'll give you a price range.`,
+    d: `Text a picture of what's going to ${site.phone.display}, or call and describe it. We'll give you a price.`,
   },
   {
     t: 'We confirm the price on site',
-    d: 'When we arrive, we give you the final price before we lift anything. No surprises.',
+    d: 'When we show up, you get the final number before we lift anything. If the pile is smaller than it looked, the price comes down.',
   },
   {
     t: 'We haul it and sweep up',
-    d: 'We carry everything out from wherever it is, load the truck, and leave the space swept.',
+    d: 'We carry it out from wherever it is, load the truck, and leave the space swept.',
   },
 ];
 
@@ -42,87 +41,94 @@ const whyUs = [
   {
     icon: 'phone',
     t: 'You talk to the person who shows up',
-    d: 'We are a local Chantilly company, not a national call center.',
+    d: "We're a local Chantilly company. No call center in another state.",
   },
   {
     icon: 'tag',
-    t: 'Price agreed before loading',
-    d: 'You know exactly what you are paying before anything goes on the truck.',
+    t: 'Our prices are on the site',
+    d: 'A lot of companies make you call for a price. Ours are published, and the number is agreed before anything goes on the truck.',
   },
   {
     icon: 'truck',
-    t: 'We do all the heavy lifting',
-    d: 'Stairs, basements, attics and backyards. You just point.',
+    t: 'We do all the lifting',
+    d: 'Stairs, basements, attics, back yards. You point, we carry.',
   },
   {
     icon: 'shield',
-    t: 'Insured',
-    d: 'Certificates of insurance available for buildings and commercial clients.',
+    t: 'Fully insured',
+    d: 'We can send a certificate of insurance if your building or company needs one.',
   },
 ];
 
 const homeFaq = [
   {
     q: 'How much does junk removal cost?',
-    a: `We price by how much space your items take up in our truck, not by the hour. A single item costs much less than a full truckload. Text a photo to ${site.phone.display} and we'll send you a price range. When we arrive, we confirm the final price before loading anything.`,
+    a: `We price by how much space your stuff takes up in the truck, not by the hour. One heavy item is ${tiers[0].price}. Half a truck is ${tiers[2].price.toLowerCase()}. A full truck is ${tiers[3].price.toLowerCase()}. ${heavyMaterial.items} are priced by weight instead and we quote that on site. ${priceRule}`,
   },
   {
-    q: 'What items do you take?',
-    a: 'Most things from a home, garage, or yard: furniture, mattresses, appliances, treadmills and exercise equipment, electronics, boxes and clutter, yard waste, and debris from small remodeling projects. If you are unsure about an item, send us a photo and ask.',
+    q: 'What do you take?',
+    a: 'Most things from a house, garage or yard. Furniture, mattresses, appliances, treadmills and exercise equipment, electronics, boxes, yard waste, and debris from remodeling. If you are not sure about something, send a photo and ask.',
   },
   {
-    q: "What items can't you take?",
-    a: 'We cannot take hazardous materials, including paint, solvents, gasoline, oil, pool chemicals, propane tanks, asbestos, and medical waste. We also cannot take firearms or ammunition. Each Northern Virginia county runs a household hazardous waste drop-off, and we can point you to the right one.',
+    q: "What won't you take?",
+    a: 'No hazardous material: paint, solvents, gas, oil, pool chemicals, propane tanks, asbestos, medical waste. No firearms or ammunition. We also do not do moving, pianos, safes or hot tubs. Every county around here runs a household hazardous waste drop-off, and we can point you to yours.',
   },
   {
-    q: 'How does scheduling work? Can you come today?',
-    a: 'Call or text to tell us what you need removed and when. Same-day or next-day pickup is often possible when our schedule allows, especially if you reach out early in the day.',
+    q: 'How soon can you come?',
+    a: 'Depends on the day and where you are. Call or text and we will tell you the soonest slot we can actually keep. We would rather give you a real time than a promise we miss.',
   },
   {
     q: 'Do I have to carry everything outside first?',
-    a: 'No. We carry items out from wherever they are, including basements, attics, upstairs bedrooms, garages, and backyards. Just show us what is going.',
+    a: 'No. That is the job. We carry it out from wherever it is, including basements, attics, upstairs bedrooms, garages and back yards.',
   },
   {
-    q: 'What areas do you serve?',
-    a: 'We are based in Chantilly and serve Fairfax, Loudoun, Prince William, and Arlington counties, including Fairfax, Chantilly, Centreville, Herndon, Reston, Vienna, Ashburn, Leesburg, Manassas, Woodbridge, and Arlington.',
+    q: 'What areas do you cover?',
+    a: 'We are based in Chantilly and work across Fairfax, Loudoun, Prince William and Arlington counties. Same prices everywhere, with no distance fee.',
+  },
+  {
+    q: 'You seem new. Why should I call you?',
+    a: 'We are new, and we are not going to pretend otherwise. What that means for you is that we answer our own phone, we publish our prices, and we are trying to get this right because we need the work and the reviews. You are not a ticket number here.',
   },
 ];
 ---
 
 <Base
-  title="Junk Removal Northern Virginia | Dominion Haul"
-  description="Dominion Haul removes furniture, appliances, and household junk across Fairfax, Loudoun, Prince William & Arlington. Call or text 571-477-7222."
+  title="Junk Removal in Northern Virginia | Dominion Haul"
+  description="Junk removal out of Chantilly VA. Furniture, appliances, cleanouts and remodel debris across Fairfax, Loudoun, Prince William and Arlington. Call or text 571-477-7222."
   schema={{ type: 'WebPage', faq: homeFaq }}
 >
   <!-- ══ HERO ══════════════════════════════════════════════════════════ -->
   <section class="hero" data-band="dark">
     <div class="container hero-inner">
       <div class="hero-copy">
-        <p class="eyebrow">Local &middot; Based in Chantilly, VA</p>
-        <h1>Junk Removal and Hauling in Northern Virginia</h1>
+        <p class="eyebrow">Based in Chantilly, VA &middot; Fully insured</p>
+        <h1>Junk Removal in Northern Virginia</h1>
         <p class="hero-sub">
-          Furniture, appliances, treadmills, yard waste and full cleanouts. You point to what's
-          going. We lift it, load it, and haul it away.
+          Furniture, appliances, cleanouts and yard waste. You point at what's going. We
+          carry it out and haul it off.
         </p>
         <div class="btn-row hero-btns">
           <a href={phoneHref} class="btn btn-gold btn-lg" data-track="call-hero">
             <Icon name="phone" size={20} /> Call {site.phone.display}
           </a>
-          <a href="#quote" class="btn btn-ghost btn-lg">Get a Free Quote</a>
+          <a href="#quote" class="btn btn-ghost btn-lg">Get a price</a>
         </div>
         <ul class="hero-checks">
-          <li><Icon name="check" size={18} /> Price agreed before we load</li>
-          <li><Icon name="check" size={18} /> We do all the lifting</li>
-          <li><Icon name="check" size={18} /> Insured</li>
+          <li><Icon name="check" size={18} /> Prices on the site</li>
+          <li><Icon name="check" size={18} /> Final price before we load</li>
+          <li><Icon name="check" size={18} /> We do the lifting</li>
         </ul>
       </div>
       <div class="hero-photo">
         <img
-          src="/images/jobs/truck-load.png"
-          alt="Dominion Haul truck loaded with household junk from a Northern Virginia pickup"
-          width="900"
-          height="900"
+          src={images.truckLoad.src}
+          alt={images.truckLoad.alt}
+          width={images.truckLoad.width}
+          height={images.truckLoad.height}
+          loading="eager"
           fetchpriority="high"
+          decoding="sync"
+          sizes="(max-width: 960px) 100vw, 40vw"
         />
       </div>
     </div>
@@ -131,10 +137,39 @@ const homeFaq = [
   <!-- ══ AREA STRIP ════════════════════════════════════════════════════ -->
   <div class="area-strip">
     <div class="container">
-      Serving <strong>Fairfax</strong> &middot; <strong>Loudoun</strong> &middot;
-      <strong>Prince William</strong> &middot; <strong>Arlington</strong> counties
+      <strong>Fairfax</strong> &middot; <strong>Loudoun</strong> &middot;
+      <strong>Prince William</strong> &middot; <strong>Arlington</strong>
     </div>
   </div>
+
+  <!-- ══ PRICES ════════════════════════════════════════════════════════ -->
+  <section class="section" data-band="muted">
+    <div class="container">
+      <div class="section-head center-head">
+        <p class="eyebrow">No calling to find out</p>
+        <h2>What it costs</h2>
+      </div>
+      <ul class="price-strip">
+        {
+          tiers.map((t) => (
+            <li>
+              <span class="ps-name">{t.name}</span>
+              <strong class="ps-price">{t.price}</strong>
+              <span class="ps-covers">{t.covers}</span>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="price-foot">
+        {heavyMaterial.note} <strong>{priceRule}</strong>
+      </p>
+      <div class="btn-row center-btns mt-5">
+        <a href="/pricing" class="btn btn-ghost">
+          Full pricing <Icon name="arrow" size={17} class="arrow" />
+        </a>
+      </div>
+    </div>
+  </section>
 
   <!-- ══ SERVICES ══════════════════════════════════════════════════════ -->
   <section class="section">
@@ -142,7 +177,7 @@ const homeFaq = [
       <div class="section-head center-head">
         <p class="eyebrow">What we haul</p>
         <h2>Our Services</h2>
-        <p class="lede">From a single couch to a whole house. If it's junk, we can probably take it.</p>
+        <p class="lede">One heavy item or a whole house.</p>
       </div>
       <ServiceGrid />
     </div>
@@ -152,7 +187,7 @@ const homeFaq = [
   <section class="section" data-band="muted">
     <div class="container">
       <div class="section-head center-head">
-        <p class="eyebrow">Simple and upfront</p>
+        <p class="eyebrow">Three steps</p>
         <h2>How It Works</h2>
       </div>
       <ol class="steps">
@@ -173,11 +208,12 @@ const homeFaq = [
   <section class="section">
     <div class="container why">
       <div class="why-lead">
-        <p class="eyebrow">Why Dominion Haul</p>
-        <h2>A Local Crew You Can Actually Reach</h2>
+        <p class="eyebrow">Why us</p>
+        <h2>We're New, and That's the Pitch</h2>
         <p class="lede mt-4">
-          We're a new, local company building our name one job at a time. That means straight
-          answers, fair prices, and a crew that cares how your place looks when we leave.
+          Dominion Haul started this year. One truck, out of Chantilly. We don't have a
+          wall of reviews yet, so we're earning them one job at a time. Straight prices,
+          straight answers, and we care what your place looks like when we pull away.
         </p>
         <a href="/about" class="link-arrow mt-5">About us <Icon name="arrow" size={17} class="arrow" /></a>
       </div>
@@ -197,48 +233,35 @@ const homeFaq = [
     </div>
   </section>
 
-  <!-- ══ COMMERCIAL PARTNERS ═══════════════════════════════════════════ -->
+  <!-- ══ COMMERCIAL ════════════════════════════════════════════════════ -->
   <section class="section-sm partner" data-band="dark">
     <div class="container partner-inner">
       <div>
         <p class="eyebrow">For businesses</p>
-        <h2>Become a Commercial Partner</h2>
+        <h2>Work With Us</h2>
         <p class="lede mt-4">
-          Property managers, realtors, remodelers and HOAs: add Dominion Haul to your trusted
-          vendor list. One contact, priority scheduling, and photos of every job for your
-          records.
+          Property managers, realtors, remodelers and HOAs: one number to call, and photos
+          of the job for your records.
         </p>
       </div>
       <div class="btn-row">
         <a href="/commercial" class="btn btn-gold btn-lg">
-          Partner With Us <Icon name="arrow" size={18} class="arrow" />
+          How it works <Icon name="arrow" size={18} class="arrow" />
         </a>
       </div>
     </div>
   </section>
 
-  <!-- ══ RECENT JOBS ═══════════════════════════════════════════════════ -->
+  <!-- ══ PHOTOS ════════════════════════════════════════════════════════ -->
   <section class="section" data-band="muted">
     <div class="container">
       <div class="section-head center-head">
-        <p class="eyebrow">Real jobs, real photos</p>
-        <h2>Recent Work</h2>
+        <p class="eyebrow">The kind of thing we clear</p>
+        <h2>What a Load Looks Like</h2>
       </div>
       <JobGallery />
     </div>
   </section>
-
-  {hasReviews && (
-    <section class="section">
-      <div class="container">
-        <div class="section-head center-head">
-          <p class="eyebrow">Reviews</p>
-          <h2>What Customers Say</h2>
-        </div>
-        <Testimonials limit={3} featuredOnly />
-      </div>
-    </section>
-  )}
 
   <!-- ══ SERVICE AREA ══════════════════════════════════════════════════ -->
   <section class="section">
@@ -247,8 +270,8 @@ const homeFaq = [
         <p class="eyebrow">Where we work</p>
         <h2>Service Area</h2>
         <p class="lede">
-          Our truck is based in Chantilly. Don't see your town? If you're in one of these four
-          counties, call us. The answer is almost always yes.
+          Our truck is based in Chantilly. Don't see your town? If you're in one of these
+          four counties, call and ask.
         </p>
       </div>
       <div class="areas">
@@ -280,14 +303,15 @@ const homeFaq = [
     <div class="container quote">
       <div class="quote-copy">
         <p class="eyebrow">Free, no obligation</p>
-        <h2>Get a Free Quote</h2>
+        <h2>Get a Price</h2>
         <p class="lede mt-4">
-          Send us the details and a photo or two. We'll get back to you with a price range.
+          Send the details and a photo or two. We'll come back with a number.
         </p>
         <div class="quote-direct">
           <a href={phoneHref} class="quote-phone"><Icon name="phone" size={22} /> {site.phone.display}</a>
           <a href={smsHref} class="link-arrow">Or text us a photo <Icon name="arrow" size={16} class="arrow" /></a>
           <a href={`mailto:${site.email}`} class="link-arrow">{site.email}</a>
+          <p class="quote-hours"><Icon name="clock" size={15} /> {site.hoursLabel}</p>
         </div>
       </div>
       <div class="quote-card">
@@ -318,7 +342,7 @@ const homeFaq = [
     font-size: var(--step-1);
     line-height: 1.5;
     color: #dbe7e1;
-    max-width: 46ch;
+    max-width: 44ch;
   }
   .hero-btns {
     margin-top: var(--sp-6);
@@ -370,6 +394,66 @@ const homeFaq = [
   }
   .center-head .lede {
     margin-inline: auto;
+  }
+  .center-btns {
+    justify-content: center;
+  }
+
+  /* Price strip */
+  .price-strip {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--sp-4);
+  }
+  .price-strip li {
+    display: grid;
+    gap: var(--sp-1);
+    padding: var(--sp-5);
+    background: #fff;
+    border: 1px solid var(--line);
+    border-top: 4px solid var(--accent);
+    border-radius: var(--r-lg);
+  }
+  .ps-name {
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .ps-price {
+    font-size: var(--step-2);
+    font-weight: 850;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+  }
+  .ps-covers {
+    font-size: 0.88rem;
+    line-height: 1.45;
+    color: var(--muted);
+  }
+  .price-foot {
+    margin-top: var(--sp-5);
+    text-align: center;
+    font-size: 0.93rem;
+    line-height: 1.6;
+    color: var(--muted);
+    max-width: 70ch;
+    margin-inline: auto;
+  }
+  .price-foot strong {
+    color: var(--ink);
+  }
+  @media (min-width: 620px) {
+    .price-strip {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1000px) {
+    .price-strip {
+      grid-template-columns: repeat(4, 1fr);
+    }
   }
 
   /* Steps */
@@ -527,6 +611,13 @@ const homeFaq = [
     font-weight: 800;
     color: var(--accent);
     text-decoration: none;
+  }
+  .quote-hours {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+    font-size: 0.86rem;
+    color: var(--muted);
   }
   .quote-card {
     background: #fff;

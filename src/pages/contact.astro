@@ -4,7 +4,7 @@ import Breadcrumbs from '../components/Breadcrumbs.astro';
 import QuoteForm from '../components/QuoteForm.astro';
 import Icon from '../components/Icon.astro';
 import CTABand from '../components/CTABand.astro';
-import { site, phoneHref, smsHref, addressOneLine } from '../config/site';
+import { site, phoneHref, smsHref, cityState } from '../config/site';
 
 const crumbs = [
   { name: 'Home', url: '/' },
@@ -14,22 +14,22 @@ const crumbs = [
 const faq = [
   {
     q: 'How fast will you get back to me?',
-    a: 'Within business hours, usually inside 30 minutes. Outside them, first thing the next morning. If you need an answer immediately, call — the phone is faster than the form and it rings to a person.',
+    a: 'During business hours we get back to you the same day. Outside them, the next morning. If you need an answer right now, call. The phone is faster than the form and it rings to a person.',
   },
   {
     q: 'Do I have to be home for the quote?',
-    a: 'No. A couple of photos is usually enough for a firm price, and plenty of jobs are booked and completed without the owner present. For anything inside the house we would rather someone was there or that access is arranged.',
+    a: 'No. A couple of photos is usually enough for a price, and a job can be booked and done without you there as long as we can get access. For anything inside the house we would rather someone was there.',
   },
   {
     q: 'Is the quote binding?',
-    a: 'The driveway quote is. We confirm the price out loud after looking at the actual job and before anything is loaded, and that number is what you pay. A quote given from photos is our best estimate from what we can see — if the reality is different, we tell you before starting, not after.',
+    a: 'The on-site one is. We confirm the price out loud after looking at the actual job, before anything is loaded, and that is what you pay. A quote from photos is our best read on what we can see. If the reality is different, we tell you before we start, not after.',
   },
 ];
 ---
 
 <Base
-  title="Get a Free Quote | Call, Text or Send Photos"
-  description="Get a free junk removal quote in Northern Virginia. Call, text a photo, or send details through the form. Firm pricing, no obligation, usually a reply within 30 minutes."
+  title="Get a Quote | Call, Text or Send Photos | Dominion Haul"
+  description="Get a junk removal quote in Northern Virginia. Call, text a photo, or use the form. No obligation. Based in Chantilly VA, fully insured. 571-477-7222."
   schema={{ type: 'ContactPage', faq, breadcrumbs: crumbs }}
 >
   <Breadcrumbs crumbs={crumbs} />
@@ -39,8 +39,8 @@ const faq = [
       <p class="eyebrow">Get a quote</p>
       <h1>Three ways to reach us. All of them reach a person.</h1>
       <p class="lede mt-5">
-        Fastest route to a firm price is a photo of the pile. No obligation, no charge for
-        looking, and nobody chasing you for the next fortnight.
+        Quickest way to a price is a photo of the pile. No obligation and nobody chasing
+        you afterwards.
       </p>
     </div>
   </section>
@@ -99,7 +99,7 @@ const faq = [
           </li>
           <li>
             <Icon name="clock" size={17} />
-            <span><strong>Say if it's urgent.</strong> We hold afternoon slots for same-day work and there is no rush fee.</span>
+            <span><strong>Say if it's urgent.</strong> Tell us your deadline and we'll be straight about whether we can hit it. No rush fee either way.</span>
           </li>
         </ul>
 
@@ -114,7 +114,7 @@ const faq = [
           </div>
           <div>
             <dt>Based in</dt>
-            <dd>{addressOneLine}</dd>
+            <dd>{cityState}</dd>
           </div>
         </dl>
       </div>

@@ -43,24 +43,24 @@ const partners = [
 ];
 
 const perks = [
-  { t: 'One point of contact', d: 'Your calls and texts go straight to us, not a call center.' },
-  { t: 'Priority scheduling', d: 'Partners get first pick of open time slots, including quick turnarounds.' },
-  { t: 'Certificate of insurance', d: 'We are insured and can send a COI naming your company or building.' },
+  { t: 'One point of contact', d: 'Your calls and texts come straight to us, not a call center.' },
+  { t: 'Quote from photos', d: 'Send pictures of the unit and we come back with a price in writing. No site visit needed to get started.' },
+  { t: 'Fully insured', d: 'Ask and we will send a certificate of insurance for your company or building.' },
   { t: 'W-9 for your vendor file', d: 'We send the paperwork you need to set us up as an approved vendor.' },
-  { t: 'Before & after photos', d: 'Photos of every job for your records, owners or clients.' },
-  { t: 'Clear invoices', d: 'A simple invoice for each job, sent by email.' },
+  { t: 'Photos when the job is done', d: 'We send pictures of the empty space for your records or your owner.' },
+  { t: 'Clear invoices', d: 'One simple invoice per job, sent by email.' },
 ];
 
 const steps = [
-  { t: 'Reach out', d: 'Fill out the form below or call us. Tell us about your company and the kind of work you need.' },
+  { t: 'Reach out', d: 'Use the form below or call. Tell us about your company and the kind of work you need.' },
   { t: 'Get set up', d: 'We send our certificate of insurance and W-9 so you can add us to your vendor list.' },
-  { t: 'Book your first job', d: 'Call or text whenever you need us. Save our number and we will take it from there.' },
+  { t: 'Book your first job', d: 'Call or text whenever you need us. Save the number and we take it from there.' },
 ];
 ---
 
 <Base
-  title="Commercial Junk Removal Partners | Dominion Haul"
-  description="Add Dominion Haul to your vendor list. Junk removal for property managers, realtors, remodelers, HOAs, and businesses in Northern Virginia."
+  title="Commercial Junk Removal | Property Managers & Realtors"
+  description="Junk removal for property managers, realtors, remodelers, HOAs and businesses in Northern Virginia. Quote from photos, fully insured, W-9 on request."
   schema={{ type: 'WebPage', breadcrumbs: crumbs }}
 >
   <Breadcrumbs crumbs={crumbs} />
@@ -68,11 +68,11 @@ const steps = [
   <section class="page-hero" data-band="dark">
     <div class="container hero-grid">
       <div>
-        <p class="eyebrow">Commercial partnerships</p>
-        <h1>Make Dominion Haul Your Trusted Hauling Vendor</h1>
+        <p class="eyebrow">For businesses</p>
+        <h1>Add Us to Your Vendor List</h1>
         <p class="lede mt-4">
-          For property managers, realtors, remodelers, HOAs and businesses across Northern
-          Virginia. One reliable crew to call every time something needs to go.
+          Property managers, realtors, remodelers, HOAs and businesses across Northern
+          Virginia. One number to call when something needs to go.
         </p>
         <div class="btn-row mt-6">
           <a href="#partner-form" class="btn btn-gold btn-lg">Become a Partner</a>
@@ -105,8 +105,8 @@ const steps = [
   <section class="section" data-band="muted">
     <div class="container">
       <div class="section-head center-head">
-        <p class="eyebrow">What partners get</p>
-        <h2>Why Businesses Choose Us</h2>
+        <p class="eyebrow">What you get</p>
+        <h2>How We Work With You</h2>
       </div>
       <ul class="perks">
         {
@@ -150,8 +150,7 @@ const steps = [
         <p class="eyebrow">Vendor inquiry</p>
         <h2>Let's Work Together</h2>
         <p class="lede mt-4">
-          Tell us a little about your company. We'll follow up with our paperwork and answer
-          any questions.
+          Tell us about your company. We'll send our paperwork and answer any questions.
         </p>
         <p class="mt-5">
           Prefer to talk? Call <a href={phoneHref} class="strong-link">{site.phone.display}</a>
