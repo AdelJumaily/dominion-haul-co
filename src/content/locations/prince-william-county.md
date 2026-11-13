@@ -59,7 +59,7 @@ order: 3
 
 The drive to Woodbridge is about 40 minutes in the morning and a lot longer in the afternoon peak. Same story on I-66 heading toward Manassas. No amount of planning changes that.
 
-So we run this area early in the day and try not to schedule a return leg through the evening. If someone offers you a four o'clock Friday arrival in Woodbridge, the interstate is going to decide that, not them.
+So we run this area early in the day and try not to schedule a return leg through the evening. We will not give you a late Friday afternoon arrival window out here, because that is a time the interstate gets to decide, not us.
 
 ## What it costs
 

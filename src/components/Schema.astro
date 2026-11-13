@@ -88,7 +88,8 @@ if (isHome) {
     email: site.email,
     image: [logoUrl],
     logo: { '@type': 'ImageObject', url: logoUrl, width: 1200, height: 361 },
-    priceRange: `$${priceFloor}–$${priceCeiling}`,
+    // Plain hyphen, not an en-dash — this is a machine-read field.
+    priceRange: `$${priceFloor}-$${priceCeiling}`,
     currenciesAccepted: 'USD',
     paymentAccepted: 'Cash, Credit Card, Debit Card',
     slogan: site.tagline,

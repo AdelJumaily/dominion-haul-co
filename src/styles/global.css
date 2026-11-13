@@ -497,6 +497,35 @@ button,
   background-size: 100% 2px;
 }
 
+/* ── Touch targets ───────────────────────────────────────────────────────────
+   On touch devices, standalone action links and list navigation need a real
+   tap area. 44px is the accessibility floor. Links that sit inside a flowing
+   sentence are deliberately left alone — growing those breaks the paragraph,
+   and the same action is always available as a full-size button nearby. */
+@media (hover: none) {
+  .link-arrow {
+    min-height: 44px;
+  }
+  .area-col li a,
+  .area-col h3 a,
+  .nf-cols a,
+  .foot-col a,
+  .foot-cities a,
+  .jump a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+  }
+  .rail-phone,
+  .quote-phone,
+  .foot-phone,
+  .strong-link {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+}
+
 /* ── Cards — use sparingly; interactive containers only ──────────────────── */
 .card {
   background: var(--card);

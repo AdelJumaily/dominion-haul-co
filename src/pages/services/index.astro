@@ -247,9 +247,11 @@ const wontDo = ['Moving', 'Pianos', 'Safes', 'Hot tubs'];
     margin-bottom: var(--sp-3);
   }
   .wont-list {
-    grid-auto-flow: column;
-    grid-auto-columns: max-content;
-    gap: var(--sp-4);
+    /* Wraps rather than forcing a single row — a column grid of max-content
+       items overflows the viewport on a narrow phone. */
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-3) var(--sp-4);
   }
   @media (min-width: 800px) {
     .cant {

@@ -45,7 +45,7 @@ order: 31
 
 The drive from Chantilly is roughly 40 minutes in the morning and can be an hour and a half or worse in the afternoon peak. Nothing about planning changes that.
 
-So we run eastern Prince William early in the day and try to avoid a return leg through the evening. Book in the morning and same-day is realistic. If a hauler promises you a late-afternoon Friday arrival out here, the interstate is making that call, not them.
+So we run eastern Prince William early in the day and try to avoid a return leg through the evening. Book in the morning and same-day is realistic. What we will not do is give you a late Friday afternoon window, because that is a time the interstate decides and we would be guessing.
 
 ## Rental turnovers
 

@@ -133,46 +133,6 @@ const geoPos = `${geoPosition.lat};${geoPosition.lng}`;
         });
       }
 
-      const animateCount = (el: HTMLElement) => {
-        const end = Number(el.dataset.count || 0);
-        const prefix = el.dataset.prefix || '';
-        const suffix = el.dataset.suffix || '';
-        const duration = 1100;
-        const start = performance.now();
-
-        const tick = (now: number) => {
-          const t = Math.min(1, (now - start) / duration);
-          const eased = 1 - Math.pow(1 - t, 3);
-          el.textContent = `${prefix}${Math.round(end * eased)}${suffix}`;
-          if (t < 1) requestAnimationFrame(tick);
-        };
-
-        if (reduced) {
-          el.textContent = `${prefix}${end}${suffix}`;
-          return;
-        }
-        requestAnimationFrame(tick);
-      };
-
-      if (counters.length && 'IntersectionObserver' in window) {
-        const cio = new IntersectionObserver(
-          (entries) => {
-            for (const entry of entries) {
-              if (entry.isIntersecting) {
-                animateCount(entry.target as HTMLElement);
-                cio.unobserve(entry.target);
-              }
-            }
-          },
-          { threshold: 0.4 }
-        );
-        counters.forEach((el) => cio.observe(el));
-      } else {
-        counters.forEach((el) => {
-          const end = el.dataset.count || '0';
-          el.textContent = `${el.dataset.prefix || ''}${end}${el.dataset.suffix || ''}`;
-        });
-      }
     </script>
   </body>
 </html>
