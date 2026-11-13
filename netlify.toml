@@ -9,38 +9,32 @@
 [build.environment]
   NODE_VERSION = "22"
 
-# ── Redirects for pages removed in the simplified site ───────────────────────
-# Old individual service pages → their section on the single /services page.
+# ── Service redirects ────────────────────────────────────────────────────────
+# Each main service now has its own real page at /services/<slug>, so the old
+# "redirect to an anchor" rules are gone. What remains maps retired slugs onto
+# the page that now covers them.
 [[redirects]]
-  from = "/services/junk-removal"
-  to = "/services#junk-removal"
+  from = "/services/treadmill-removal"
+  to = "/services/furniture-removal"
   status = 301
 [[redirects]]
-  from = "/services/furniture-removal"
-  to = "/services#furniture-removal"
-  status = 301
-[[redirects]]
-  from = "/services/appliance-removal"
-  to = "/services#appliance-removal"
-  status = 301
-[[redirects]]
-  from = "/services/yard-waste-removal"
-  to = "/services#yard-waste-removal"
+  from = "/services/garage-cleanouts"
+  to = "/services/garage-basement-attic-cleanouts"
   status = 301
 [[redirects]]
   from = "/services/shed-removal"
-  to = "/services#yard-waste-removal"
-  status = 301
-[[redirects]]
-  from = "/services/estate-cleanouts"
-  to = "/services#estate-cleanouts"
-  status = 301
-[[redirects]]
-  from = "/services/construction-debris-removal"
-  to = "/commercial"
+  to = "/services/yard-waste-removal"
   status = 301
 [[redirects]]
   from = "/services/commercial-cleanouts"
+  to = "/commercial"
+  status = 301
+[[redirects]]
+  from = "/services/pre-listing-cleanouts"
+  to = "/commercial"
+  status = 301
+[[redirects]]
+  from = "/services/remodeler-property-manager-hauling"
   to = "/commercial"
   status = 301
 

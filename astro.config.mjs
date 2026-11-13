@@ -17,30 +17,30 @@ export default defineConfig({
       changefreq: 'weekly',
       priority: 0.7,
       lastmod: new Date(),
+      // 404 is noindex; keep it out of the sitemap too.
+      filter: (page) => !page.includes('/404'),
       serialize(item) {
         const u = item.url;
         if (u === `${SITE}/` || u === `${SITE}`) {
           item.priority = 1.0;
-          item.changefreq = 'daily';
-          return item;
-        }
-        // City × service landers — high commercial intent
-        if (/\/locations\/[^/]+\/[^/]+\/?$/.test(u)) {
-          item.priority = 0.95;
           item.changefreq = 'weekly';
           return item;
         }
-        if (u.includes('/locations/') || u.includes('/services/')) {
+        // Service pages carry the commercial intent.
+        if (u.includes('/services/')) {
           item.priority = 0.9;
           return item;
         }
-        if (u.includes('/pricing') || u.includes('/contact')) {
-          item.priority = 0.85;
+        if (u.includes('/pricing')) {
+          item.priority = 0.9;
           return item;
         }
-        if (u.includes('/blog/')) {
-          item.priority = 0.5;
-          item.changefreq = 'monthly';
+        if (u.includes('/locations/')) {
+          item.priority = 0.8;
+          return item;
+        }
+        if (u.includes('/contact') || u.includes('/commercial')) {
+          item.priority = 0.7;
           return item;
         }
         return item;

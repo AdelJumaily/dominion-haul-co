@@ -4,7 +4,8 @@ import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import CTABand from '../../components/CTABand.astro';
 import Icon from '../../components/Icon.astro';
 import { site, phoneHref } from '../../config/site';
-import { services } from '../../config/services';
+import { navServices } from '../../config/services';
+import { tiers, heavyMaterial } from '../../config/pricing';
 
 const crumbs = [
   { name: 'Home', url: '/' },
@@ -12,18 +13,20 @@ const crumbs = [
 ];
 
 const cantTake = [
-  'Paint, solvents, gasoline and oil',
-  'Pool chemicals and other chemicals',
-  'Propane tanks and pressurized tanks',
+  'Paint, solvents, gas and oil',
+  'Pool chemicals',
+  'Propane and pressurized tanks',
   'Asbestos',
   'Medical waste',
   'Firearms and ammunition',
 ];
+
+const wontDo = ['Moving', 'Pianos', 'Safes', 'Hot tubs'];
 ---
 
 <Base
-  title="Junk Removal & Hauling Services | Dominion Haul"
-  description="Furniture, appliances, treadmills, yard waste, cleanouts, and hauling for realtors and remodelers in Northern Virginia. See what we take."
+  title="Junk Removal Services | Dominion Haul, Chantilly VA"
+  description="What Dominion Haul hauls: furniture, appliances, garage and basement cleanouts, estate cleanouts, yard waste and remodel debris. One heavy item from $165. Chantilly, VA."
   schema={{ type: 'CollectionPage', breadcrumbs: crumbs }}
 >
   <Breadcrumbs crumbs={crumbs} />
@@ -31,56 +34,77 @@ const cantTake = [
   <section class="page-hero" data-band="dark">
     <div class="container">
       <p class="eyebrow">What we haul</p>
-      <h1>Junk Removal and Hauling Services</h1>
+      <h1>Our Services</h1>
       <p class="lede mt-4">
-        One crew for everything from a single couch to a whole house. Every job is priced by how
-        much space it takes in our truck, and the price is agreed before we load.
+        One heavy item or a whole house. You point at what's going, we carry it out and
+        haul it off. Price is set before anything goes on the truck.
       </p>
-      <nav class="jump" aria-label="Jump to a service">
-        {services.map((s) => <a href={`#${s.id}`}>{s.title}</a>)}
-      </nav>
+      <div class="btn-row mt-6">
+        <a href={phoneHref} class="btn btn-gold btn-lg">
+          <Icon name="phone" size={19} /> {site.phone.display}
+        </a>
+        <a href="/pricing" class="btn btn-ghost btn-lg">See prices</a>
+      </div>
     </div>
   </section>
 
   <section class="section">
-    <div class="container svc-list">
-      {
-        services.map((s, i) => (
-          <article id={s.id} class="svc">
-            <div class="svc-head">
-              <span class="svc-icon"><Icon name={s.icon} size={28} /></span>
-              <div>
+    <div class="container">
+      <ul class="svc-cards">
+        {
+          navServices.map((s) => (
+            <li>
+              <a href={`/services/${s.id}`} class="svc-card">
+                <span class="sc-icon"><Icon name={s.icon} size={24} /></span>
                 <h2>{s.title}</h2>
-                <p class="svc-short">{s.short}</p>
-              </div>
-            </div>
-            <div class="svc-body">
-              <ul class="svc-items">
-                {s.items.map((item) => (
-                  <li><Icon name="check" size={18} /> {item}</li>
-                ))}
-              </ul>
-              {s.note && <p class="svc-note">{s.note}</p>}
-              <div class="btn-row mt-5">
-                <a href={phoneHref} class="btn"><Icon name="phone" size={18} /> {site.phone.display}</a>
-                <a href="/contact" class="btn btn-ghost">Get a quote</a>
-              </div>
-            </div>
-          </article>
-        ))
-      }
+                <p>{s.short}</p>
+                <span class="sc-more">
+                  See details &amp; price <Icon name="arrow" size={15} class="arrow" />
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
     </div>
   </section>
 
   <section class="section-sm" data-band="muted">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Pricing, short version</p>
+        <h2>What things cost</h2>
+      </div>
+      <ul class="mini-prices">
+        {
+          tiers.map((t) => (
+            <li>
+              <span>{t.name}</span>
+              <strong>{t.price}</strong>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="mini-note">{heavyMaterial.note}</p>
+      <a href="/pricing" class="link-arrow mt-4">
+        Full pricing <Icon name="arrow" size={15} class="arrow" />
+      </a>
+    </div>
+  </section>
+
+  <section class="section-sm">
     <div class="container cant">
       <div>
-        <p class="eyebrow">For safety and legal reasons</p>
-        <h2>What We Can't Take</h2>
+        <p class="eyebrow">Straight answers</p>
+        <h2>What we can't take</h2>
         <p class="mt-4 muted">
-          Each Northern Virginia county runs a household hazardous waste drop-off. Ask us and
-          we'll point you to the right one.
+          Hazardous material needs a household hazardous waste drop-off. Every county around
+          here runs one. Ask us and we'll point you at it.
         </p>
+        <h3 class="wont-head">And a few things we don't do</h3>
+        <ul class="wont-list">
+          {wontDo.map((w) => <li><Icon name="x" size={16} /> {w}</li>)}
+        </ul>
       </div>
       <ul class="cant-list">
         {cantTake.map((c) => <li><Icon name="x" size={18} /> {c}</li>)}
@@ -101,128 +125,136 @@ const cantTake = [
   }
   .page-hero .lede {
     color: #dbe7e1;
-    max-width: 60ch;
-  }
-  .jump {
-    margin-top: var(--sp-6);
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--sp-2);
-  }
-  .jump a {
-    padding: 0.4rem 0.8rem;
-    border: 1px solid rgb(255 255 255 / 0.3);
-    border-radius: 999px;
-    color: #fff;
-    text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 600;
-  }
-  .jump a:hover {
-    background: var(--gold);
-    border-color: var(--gold);
-    color: var(--ink);
+    max-width: 54ch;
   }
 
-  .svc-list {
+  .svc-cards {
+    list-style: none;
+    padding: 0;
     display: grid;
-    gap: var(--sp-5);
+    gap: var(--sp-4);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
   }
-  .svc {
-    display: grid;
-    gap: var(--sp-5);
-    padding: var(--sp-6) var(--sp-5);
+  .svc-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+    height: 100%;
+    padding: var(--sp-5);
     background: #fff;
     border: 1px solid var(--line);
-    border-left: 5px solid var(--accent);
+    border-top: 4px solid var(--accent);
     border-radius: var(--r-lg);
-    scroll-margin-top: calc(var(--header-h) + var(--sp-4));
+    text-decoration: none;
+    color: var(--ink);
+    transition: box-shadow var(--dur) var(--ease), transform var(--dur) var(--ease),
+      border-color var(--dur) var(--ease);
   }
-  .svc:target {
-    border-left-color: var(--gold);
+  .svc-card:hover {
     box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+    border-top-color: var(--gold);
   }
-  .svc-head {
-    display: flex;
-    gap: var(--sp-4);
-    align-items: flex-start;
-  }
-  .svc-icon {
-    flex: none;
+  .sc-icon {
     display: grid;
     place-items: center;
-    width: 56px;
-    height: 56px;
+    width: 48px;
+    height: 48px;
+    margin-bottom: var(--sp-2);
     border-radius: var(--r-md);
     background: var(--accent);
     color: #fff;
   }
-  .svc h2 {
-    font-size: var(--step-3);
-  }
-  .svc-short {
-    margin-top: var(--sp-2);
-    color: var(--muted);
+  .svc-card h2 {
     font-size: var(--step-1);
-    line-height: 1.4;
   }
-  .svc-items {
+  .svc-card p {
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .sc-more {
+    margin-top: auto;
+    padding-top: var(--sp-4);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    font-size: 0.86rem;
+    font-weight: 700;
+    color: var(--accent-deep, var(--accent));
+  }
+
+  .mini-prices {
     list-style: none;
     padding: 0;
     display: grid;
-    gap: var(--sp-2) var(--sp-5);
+    gap: var(--sp-3);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
   }
-  .svc-items li {
-    display: flex;
-    gap: var(--sp-2);
-    align-items: flex-start;
+  .mini-prices li {
+    display: grid;
+    gap: 2px;
+    padding: var(--sp-4);
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
   }
-  .svc-items :global(svg) {
-    flex: none;
-    margin-top: 0.25em;
-    color: var(--gold);
-  }
-  .svc-note {
-    margin-top: var(--sp-4);
-    font-style: italic;
+  .mini-prices span {
+    font-size: 0.82rem;
     color: var(--muted);
+    font-weight: 600;
   }
-  @media (min-width: 640px) {
-    .svc-items {
-      grid-template-columns: 1fr 1fr;
-    }
+  .mini-prices strong {
+    font-size: var(--step-1);
+    font-weight: 850;
+    letter-spacing: -0.03em;
   }
-  @media (min-width: 960px) {
-    .svc {
-      grid-template-columns: 0.9fr 1.1fr;
-      gap: var(--sp-7);
-      padding: var(--sp-7);
-    }
+  .mini-note {
+    margin-top: var(--sp-4);
+    font-size: 0.92rem;
+    color: var(--muted);
   }
 
   .cant {
     display: grid;
     gap: var(--sp-6);
   }
-  .cant-list {
+  .cant-list,
+  .wont-list {
     list-style: none;
     padding: 0;
     display: grid;
     gap: var(--sp-3);
   }
-  .cant-list li {
+  .cant-list li,
+  .wont-list li {
     display: flex;
     gap: var(--sp-2);
     align-items: center;
     font-weight: 600;
   }
-  .cant-list :global(svg) {
+  .cant-list :global(svg),
+  .wont-list :global(svg) {
     color: #b3412e;
+    flex: none;
+  }
+  .wont-head {
+    margin-top: var(--sp-6);
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: var(--sp-3);
+  }
+  .wont-list {
+    grid-auto-flow: column;
+    grid-auto-columns: max-content;
+    gap: var(--sp-4);
   }
   @media (min-width: 800px) {
     .cant {
       grid-template-columns: 1fr 1fr;
-      align-items: center;
+      align-items: start;
     }
     .cant-list {
       grid-template-columns: 1fr 1fr;
