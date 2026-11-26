@@ -2,7 +2,8 @@
 import Base from '../layouts/Base.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import CTABand from '../components/CTABand.astro';
-import Icon from '../components/Icon.astro';
+import { buttonVariants } from '../components/ui/button';
+import { cn } from 'cn';
 import { site, phoneHref } from '../config/site';
 
 const crumbs = [
@@ -10,11 +11,6 @@ const crumbs = [
   { name: 'Reviews', url: '/reviews' },
 ];
 
-/**
- * These stay null until the real links are pasted into src/config/site.ts.
- * While they are null the buttons do not render at all, so nothing on this
- * page ever points at a generic google.com/maps URL.
- */
 const profileUrl = site.links.GBP_PROFILE_URL;
 const reviewUrl = site.links.GBP_REVIEW_URL;
 ---
@@ -26,59 +22,54 @@ const reviewUrl = site.links.GBP_REVIEW_URL;
 >
   <Breadcrumbs crumbs={crumbs} />
 
-  <section class="hd">
-    <div class="container">
-      <p class="eyebrow">Reviews</p>
-      <h1>We don't have reviews yet.</h1>
-      <p class="lede mt-5">
-        Dominion Haul is new, so there is nothing to show here yet. We are not going to
-        post made-up ones to fill the space. When real customers leave reviews, they will
-        show up on our Google profile and we will point you there.
+  <section class="bg-[#f4f7f5]">
+    <div class="mx-auto max-w-2xl px-4 py-16 text-center">
+      <p class="text-sm font-semibold text-brand">Reviews</p>
+      <h1 class="mt-2 font-heading text-4xl font-extrabold tracking-tight text-stone-900 md:text-5xl">
+        We don't have reviews yet.
+      </h1>
+      <p class="mt-4 text-lg leading-relaxed text-stone-600">
+        Dominion Haul is new. We are not going to post made-up reviews to fill the space. When real customers leave them, they will be on our Google profile.
       </p>
-      <div class="btn-row mt-6">
+      <div class="mt-8 flex flex-wrap justify-center gap-3">
         {
           profileUrl && (
-            <a href={profileUrl} class="btn" rel="noopener" target="_blank">
-              <Icon name="star" size={17} /> See us on Google
+            <a href={profileUrl} class={cn(buttonVariants(), 'h-11 px-5')} rel="noopener" target="_blank">
+              See us on Google
             </a>
           )
         }
-        <a href={phoneHref} class="btn btn-ghost">
-          <Icon name="phone" size={17} /> {site.phone.display}
+        <a href={phoneHref} class={cn(buttonVariants({ variant: 'outline' }), 'h-11 border-stone-300 bg-white px-5')}>
+          {site.phone.display}
         </a>
       </div>
     </div>
   </section>
 
-  <!-- ── How to leave one ─────────────────────────────────────────────── -->
-  <section class="section-sm" data-band="dark">
-    <div class="container container-tight center-block">
-      <p class="eyebrow">Worked with us?</p>
-      <h2>A review from you actually matters right now</h2>
-      <p class="lede mt-4">
-        We are starting from zero against companies that have been collecting reviews for
-        years. If we did a good job, thirty seconds of your time changes our week. If we
-        did not, tell us directly first. We would much rather fix it.
+  <section class="bg-white">
+    <div class="mx-auto max-w-2xl px-4 py-14 text-center">
+      <h2 class="font-heading text-3xl font-extrabold tracking-tight text-stone-900">A review from you matters right now</h2>
+      <p class="mt-4 text-lg leading-relaxed text-stone-600">
+        If we did a good job, thirty seconds changes our week. If we did not, tell us directly first. We would rather fix it.
       </p>
-      <div class="btn-row mt-6 center-btns">
+      <div class="mt-8 flex flex-wrap justify-center gap-3">
         {
           reviewUrl && (
-            <a href={reviewUrl} class="btn" rel="noopener" target="_blank">
+            <a href={reviewUrl} class={cn(buttonVariants(), 'h-11 px-5')} rel="noopener" target="_blank">
               Leave a Google review
-              <Icon name="arrow" size={17} class="arrow" />
             </a>
           )
         }
-        <a href={`mailto:${site.email}`} class="btn btn-ghost">
-          Email us directly
+        <a href={`mailto:${site.email}`} class={cn(buttonVariants({ variant: 'outline' }), 'h-11 border-stone-300 bg-white px-5')}>
+          Email us
         </a>
       </div>
       {
         !reviewUrl && (
-          <p class="pending">
-            Our Google review link is not live yet. For now, email
-            {' '}<a href={`mailto:${site.email}`}>{site.email}</a> or text
-            {' '}{site.phone.display} and tell us how it went.
+          <p class="mt-6 text-sm text-stone-600">
+            Our Google review link is not live yet. Email
+            <a href={`mailto:${site.email}`} class="font-semibold text-brand"> {site.email}</a>
+            or text {site.phone.display}.
           </p>
         )
       }
@@ -87,35 +78,3 @@ const reviewUrl = site.links.GBP_REVIEW_URL;
 
   <CTABand />
 </Base>
-
-<style>
-  .hd {
-    padding-block: var(--sp-8) var(--sp-7);
-    background: linear-gradient(180deg, var(--surface-sunk), var(--surface));
-  }
-  .hd h1 {
-    max-width: 20ch;
-  }
-  .hd .lede {
-    max-width: 58ch;
-  }
-  .center-block {
-    text-align: center;
-  }
-  .center-block .lede,
-  .center-block .eyebrow {
-    margin-inline: auto;
-  }
-  .center-btns {
-    justify-content: center;
-  }
-  .pending {
-    margin-top: var(--sp-5);
-    font-size: 0.9rem;
-    color: var(--muted-light, #c5d3cc);
-  }
-  .pending a {
-    color: inherit;
-    font-weight: 700;
-  }
-</style>

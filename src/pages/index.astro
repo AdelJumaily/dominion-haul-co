@@ -2,12 +2,14 @@
 import Base from '../layouts/Base.astro';
 import ServiceGrid from '../components/ServiceGrid.astro';
 import QuoteForm from '../components/QuoteForm.astro';
-import JobGallery from '../components/JobGallery.astro';
 import FAQ from '../components/FAQ.astro';
-import Icon from '../components/Icon.astro';
 import { site, phoneHref, smsHref, images } from '../config/site';
 import { tiers, heavyMaterial, priceRule } from '../config/pricing';
 import { getCollection } from 'astro:content';
+import { buttonVariants } from '../components/ui/button';
+import { cn } from 'cn';
+import { Badge } from '../components/ui/badge';
+import { Card, CardContent, CardHeader } from '../components/ui/card';
 
 const locations = await getCollection('locations');
 
@@ -37,27 +39,11 @@ const steps = [
   },
 ];
 
-const whyUs = [
-  {
-    icon: 'phone',
-    t: 'You talk to the person who shows up',
-    d: "We're a local Chantilly company. The phone rings to the owner, not a dispatcher.",
-  },
-  {
-    icon: 'tag',
-    t: 'Our prices are on the site',
-    d: 'A lot of companies make you call for a price. Ours are published, and the number is agreed before anything goes on the truck.',
-  },
-  {
-    icon: 'truck',
-    t: 'We do all the lifting',
-    d: 'Stairs, basements, attics, back yards. You point, we carry.',
-  },
-  {
-    icon: 'shield',
-    t: 'Fully insured',
-    d: 'We can send a certificate of insurance if your building or company needs one.',
-  },
+const points = [
+  { t: 'Prices on the site', d: 'You can see the range before you call. The number is agreed before anything goes on the truck.' },
+  { t: 'We do the lifting', d: 'Stairs, basements, attics, back yards. You point, we carry.' },
+  { t: 'You talk to us', d: 'Local company out of Chantilly. The phone rings to the owner, not a dispatcher.' },
+  { t: 'Fully insured', d: 'We can send a certificate of insurance if your building or company needs one.' },
 ];
 
 const homeFaq = [
@@ -90,6 +76,8 @@ const homeFaq = [
     a: 'We are new, and we are not going to pretend otherwise. What that means for you is that we answer our own phone, we publish our prices, and we are trying to get this right because we need the work and the reviews. You are not a ticket number here.',
   },
 ];
+
+const hero = images.garageRenovation;
 ---
 
 <Base
@@ -97,106 +85,86 @@ const homeFaq = [
   description="Junk removal out of Chantilly VA. Furniture, appliances, cleanouts and remodel debris across Fairfax, Loudoun, Prince William and Arlington. Call or text 571-477-7222."
   schema={{ type: 'WebPage', faq: homeFaq }}
 >
-  <!-- ══ HERO ══════════════════════════════════════════════════════════ -->
-  <section class="hero" data-band="dark">
-    <div class="container hero-inner">
-      <div class="hero-copy">
-        <p class="eyebrow">Based in Chantilly, VA &middot; Fully insured</p>
-        <h1>Junk Removal in Northern Virginia</h1>
-        <p class="hero-sub">
-          Furniture, appliances, cleanouts and yard waste. You point at what's going. We
-          carry it out and haul it off.
+  <section class="bg-[#f4f7f5]">
+    <div class="mx-auto grid max-w-7xl items-center gap-10 px-4 py-12 md:grid-cols-2 md:py-20">
+      <div>
+        <p class="mb-4 inline-flex items-center gap-2 text-sm font-semibold text-brand">
+          <span class="inline-block h-2 w-2 rounded-full bg-brand"></span>
+          Chantilly, VA · Fairfax, Loudoun, Prince William, Arlington
         </p>
-        <div class="btn-row hero-btns">
-          <a href={phoneHref} class="btn btn-gold btn-lg" data-track="call-hero">
-            <Icon name="phone" size={20} /> Call {site.phone.display}
-          </a>
-          <a href="#quote" class="btn btn-ghost btn-lg">Get a price</a>
+        <h1 class="font-heading text-5xl font-extrabold leading-[0.95] tracking-tight text-stone-900 md:text-6xl">
+          Got junk? We'll take it away.
+        </h1>
+        <p class="mt-5 max-w-md text-lg leading-relaxed text-stone-600">
+          Furniture, appliances, cleanouts and remodel debris. You point at what's going. We carry it out, and we confirm the price before we load.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href={phoneHref} data-track="call-hero" class={cn(buttonVariants(), "h-12 px-6 text-base")}>Call {site.phone.display}</a>
+          <a href="#quote" class={cn(buttonVariants({ variant: "outline" }), "h-12 border-stone-300 bg-white px-6 text-base")}>Get a price</a>
         </div>
-        <ul class="hero-checks">
-          <li><Icon name="check" size={18} /> Prices on the site</li>
-          <li><Icon name="check" size={18} /> Final price before we load</li>
-          <li><Icon name="check" size={18} /> We do the lifting</li>
-        </ul>
       </div>
-      <div class="hero-photo">
+      <div class="overflow-hidden rounded-2xl shadow-xl">
         <img
-          src={images.truckLoad.src}
-          alt={images.truckLoad.alt}
-          width={images.truckLoad.width}
-          height={images.truckLoad.height}
+          src={hero.src}
+          alt={hero.alt}
+          width={hero.width}
+          height={hero.height}
           loading="eager"
           fetchpriority="high"
-          decoding="sync"
-          sizes="(max-width: 960px) 100vw, 40vw"
+          decoding="async"
+          class="aspect-[4/3] w-full object-cover"
         />
       </div>
     </div>
   </section>
 
-  <!-- ══ AREA STRIP ════════════════════════════════════════════════════ -->
-  <div class="area-strip">
-    <div class="container">
-      <strong>Fairfax</strong> &middot; <strong>Loudoun</strong> &middot;
-      <strong>Prince William</strong> &middot; <strong>Arlington</strong>
-    </div>
-  </div>
-
-  <!-- ══ PRICES ════════════════════════════════════════════════════════ -->
-  <section class="section" data-band="muted">
-    <div class="container">
-      <div class="section-head center-head">
-        <p class="eyebrow">No calling to find out</p>
-        <h2>What it costs</h2>
-      </div>
-      <ul class="price-strip">
-        {
-          tiers.map((t) => (
-            <li>
-              <span class="ps-name">{t.name}</span>
-              <strong class="ps-price">{t.price}</strong>
-              <span class="ps-covers">{t.covers}</span>
-            </li>
-          ))
-        }
-      </ul>
-      <p class="price-foot">
-        {heavyMaterial.note} <strong>{priceRule}</strong>
-      </p>
-      <div class="btn-row center-btns mt-5">
-        <a href="/pricing" class="btn btn-ghost">
-          Full pricing <Icon name="arrow" size={17} class="arrow" />
-        </a>
-      </div>
-    </div>
+  <section class="border-y border-stone-200 bg-white">
+    <ul class="mx-auto grid max-w-7xl list-none gap-4 p-4 sm:grid-cols-2 lg:grid-cols-4 lg:py-8">
+      {
+        points.map((p) => (
+          <li>
+            <Card className="h-full border-0 shadow-none ring-0">
+              <CardHeader>
+                <h2 class="font-heading text-lg font-extrabold text-stone-900">{p.t}</h2>
+                <p class="text-sm leading-relaxed text-stone-600">{p.d}</p>
+              </CardHeader>
+            </Card>
+          </li>
+        ))
+      }
+    </ul>
   </section>
 
-  <!-- ══ SERVICES ══════════════════════════════════════════════════════ -->
-  <section class="section">
-    <div class="container">
-      <div class="section-head center-head">
-        <p class="eyebrow">What we haul</p>
-        <h2>Our Services</h2>
-        <p class="lede">One heavy item or a whole house.</p>
+  <section class="bg-brand text-white">
+    <div class="mx-auto max-w-7xl px-4 py-16">
+      <div class="mb-8 flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p class="text-sm font-semibold text-white/70">What we haul</p>
+          <h2 class="mt-1 font-heading text-3xl font-extrabold tracking-tight text-white md:text-4xl">Complete junk removal</h2>
+        </div>
+        <a href="/services" class={cn(buttonVariants(), "h-10 bg-white px-4 text-brand hover:bg-white/90")}>View all services</a>
       </div>
       <ServiceGrid />
     </div>
   </section>
 
-  <!-- ══ HOW IT WORKS ══════════════════════════════════════════════════ -->
-  <section class="section" data-band="muted">
-    <div class="container">
-      <div class="section-head center-head">
-        <p class="eyebrow">Three steps</p>
-        <h2>How It Works</h2>
-      </div>
-      <ol class="steps">
+  <section class="bg-white">
+    <div class="mx-auto max-w-7xl px-4 py-16">
+      <p class="text-sm font-semibold text-brand">How it works</p>
+      <h2 class="mt-1 font-heading text-3xl font-extrabold tracking-tight text-stone-900 md:text-4xl">Simple junk removal process</h2>
+      <ol class="mt-8 grid list-none gap-4 p-0 md:grid-cols-3">
         {
           steps.map((s, i) => (
             <li>
-              <span class="step-n">{i + 1}</span>
-              <h3>{s.t}</h3>
-              <p>{s.d}</p>
+              <Card className="h-full">
+                <CardHeader>
+                  <Badge className="mb-2 h-7 w-7 rounded-full p-0">{i + 1}</Badge>
+                  <h3 class="font-heading text-xl font-extrabold text-stone-900">{s.t}</h3>
+                </CardHeader>
+                <CardContent>
+                  <p class="text-sm leading-relaxed text-stone-600">{s.d}</p>
+                </CardContent>
+              </Card>
             </li>
           ))
         }
@@ -204,432 +172,112 @@ const homeFaq = [
     </div>
   </section>
 
-  <!-- ══ WHY US ════════════════════════════════════════════════════════ -->
-  <section class="section">
-    <div class="container why">
-      <div class="why-lead">
-        <p class="eyebrow">Why us</p>
-        <h2>We're New, and That's the Pitch</h2>
-        <p class="lede mt-4">
-          Dominion Haul started this year. One truck, out of Chantilly. We don't have a
-          wall of reviews yet, so we're earning them one job at a time. Straight prices,
-          straight answers, and we care what your place looks like when we pull away.
-        </p>
-        <a href="/about" class="link-arrow mt-5">About us <Icon name="arrow" size={17} class="arrow" /></a>
+  <section class="bg-[#f4f7f5]">
+    <div class="mx-auto max-w-7xl px-4 py-16">
+      <div class="mb-8 flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p class="text-sm font-semibold text-brand">Published prices</p>
+          <h2 class="mt-1 font-heading text-3xl font-extrabold tracking-tight text-stone-900 md:text-4xl">What it costs</h2>
+        </div>
+        <a href="/pricing" class="text-sm font-semibold text-brand hover:underline">Full pricing</a>
       </div>
-      <ul class="why-list">
+      <ul class="grid list-none gap-4 p-0 sm:grid-cols-2 lg:grid-cols-4">
         {
-          whyUs.map((w) => (
+          tiers.map((t) => (
             <li>
-              <span class="why-icon"><Icon name={w.icon} size={22} /></span>
-              <div>
-                <h3>{w.t}</h3>
-                <p>{w.d}</p>
-              </div>
+              <Card className="h-full">
+                <CardHeader>
+                  {t.popular && <Badge variant="secondary" className="mb-2 w-fit">Most booked</Badge>}
+                  <p class="text-sm font-medium text-stone-500">{t.name}</p>
+                  <p class="font-heading text-3xl font-extrabold tracking-tight text-brand">{t.price}</p>
+                </CardHeader>
+                <CardContent>
+                  <p class="text-sm leading-relaxed text-stone-600">{t.covers}</p>
+                </CardContent>
+              </Card>
             </li>
           ))
         }
       </ul>
+      <p class="mt-6 max-w-3xl text-sm leading-relaxed text-stone-600">
+        {heavyMaterial.note} {priceRule}
+      </p>
     </div>
   </section>
 
-  <!-- ══ COMMERCIAL ════════════════════════════════════════════════════ -->
-  <section class="section-sm partner" data-band="dark">
-    <div class="container partner-inner">
+  <section class="bg-brand text-white">
+    <div class="mx-auto grid max-w-7xl items-center gap-10 px-4 py-16 md:grid-cols-2">
+      <div class="overflow-hidden rounded-2xl">
+        <img
+          src={images.constructionYard.src}
+          alt={images.constructionYard.alt}
+          width={images.constructionYard.width}
+          height={images.constructionYard.height}
+          loading="lazy"
+          class="aspect-[4/3] w-full object-cover"
+        />
+      </div>
       <div>
-        <p class="eyebrow">For businesses</p>
-        <h2>Work With Us</h2>
-        <p class="lede mt-4">
-          Property managers, realtors, remodelers and HOAs: one number to call, and photos
-          of the job for your records.
+        <p class="text-sm font-semibold text-white/70">About us</p>
+        <h2 class="mt-1 font-heading text-3xl font-extrabold tracking-tight text-white md:text-4xl">Your local junk removal crew</h2>
+        <p class="mt-4 max-w-md text-lg leading-relaxed text-white/80">
+          Dominion Haul started this year. One truck, out of Chantilly. We don't have a wall of reviews yet, so we're earning them one job at a time. Straight prices, and we care what your place looks like when we pull away.
         </p>
-      </div>
-      <div class="btn-row">
-        <a href="/commercial" class="btn btn-gold btn-lg">
-          How it works <Icon name="arrow" size={18} class="arrow" />
-        </a>
+        <a href="/about" class={cn(buttonVariants(), "mt-6 h-11 bg-white px-5 text-brand hover:bg-white/90")}>Learn more about us</a>
       </div>
     </div>
   </section>
 
-  <!-- ══ PHOTOS ════════════════════════════════════════════════════════ -->
-  <section class="section" data-band="muted">
-    <div class="container">
-      <div class="section-head center-head">
-        <p class="eyebrow">The kind of thing we clear</p>
-        <h2>What a Load Looks Like</h2>
-      </div>
-      <JobGallery />
-    </div>
-  </section>
-
-  <!-- ══ SERVICE AREA ══════════════════════════════════════════════════ -->
-  <section class="section">
-    <div class="container">
-      <div class="section-head center-head">
-        <p class="eyebrow">Where we work</p>
-        <h2>Service Area</h2>
-        <p class="lede">
-          Our truck is based in Chantilly. Don't see your town? If you're in one of these
-          four counties, call and ask.
-        </p>
-      </div>
-      <div class="areas">
+  <section class="bg-white">
+    <div class="mx-auto max-w-7xl px-4 py-16">
+      <p class="text-sm font-semibold text-brand">Where we work</p>
+      <h2 class="mt-1 font-heading text-3xl font-extrabold tracking-tight text-stone-900 md:text-4xl">Service area</h2>
+      <p class="mt-3 max-w-xl text-stone-600">Four counties. Same price in every one of them.</p>
+      <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {
-          areaGroups.map(({ county, cities }) => (
-            <div class="area-col">
-              <h3><a href={`/locations/${county.id}`}>{county.data.title}</a></h3>
-              <ul>
-                {cities.map((c) => (
-                  <li><a href={`/locations/${c.id}`}>{c.data.title}</a></li>
-                ))}
-              </ul>
-            </div>
+          areaGroups.map(({ county }) => (
+            <a href={`/locations/${county.id}`} class="group block">
+              <Card className="h-full transition group-hover:-translate-y-0.5 group-hover:shadow-md">
+                <CardHeader>
+                  <h3 class="font-heading text-lg font-extrabold text-stone-900 group-hover:text-brand">
+                    {county.data.title}
+                  </h3>
+                  <p class="text-sm text-stone-500">View towns</p>
+                </CardHeader>
+              </Card>
+            </a>
           ))
         }
       </div>
     </div>
   </section>
 
-  <!-- ══ FAQ ═══════════════════════════════════════════════════════════ -->
-  <section class="section" data-band="muted">
-    <div class="container">
-      <FAQ items={homeFaq} title="Common Questions" openFirst />
+  <section class="bg-[#f4f7f5]">
+    <div class="mx-auto max-w-7xl px-4 py-16">
+      <FAQ items={homeFaq} title="Common questions" openFirst />
     </div>
   </section>
 
-  <!-- ══ QUOTE ═════════════════════════════════════════════════════════ -->
-  <section class="section" id="quote">
-    <div class="container quote">
-      <div class="quote-copy">
-        <p class="eyebrow">Free, no obligation</p>
-        <h2>Get a Price</h2>
-        <p class="lede mt-4">
+  <section class="bg-white" id="quote">
+    <div class="mx-auto grid max-w-7xl items-start gap-10 px-4 py-16 md:grid-cols-[0.8fr_1.2fr]">
+      <div>
+        <p class="text-sm font-semibold text-brand">Free, no obligation</p>
+        <h2 class="mt-1 font-heading text-3xl font-extrabold tracking-tight text-stone-900 md:text-4xl">Get a price</h2>
+        <p class="mt-4 text-lg leading-relaxed text-stone-600">
           Send the details and a photo or two. We'll come back with a number.
         </p>
-        <div class="quote-direct">
-          <a href={phoneHref} class="quote-phone"><Icon name="phone" size={22} /> {site.phone.display}</a>
-          <a href={smsHref} class="link-arrow">Or text us a photo <Icon name="arrow" size={16} class="arrow" /></a>
-          <a href={`mailto:${site.email}`} class="link-arrow">{site.email}</a>
-          <p class="quote-hours"><Icon name="clock" size={15} /> {site.hoursLabel}</p>
+        <div class="mt-6 grid gap-2">
+          <a href={phoneHref} class="font-heading text-3xl font-extrabold text-brand hover:underline">{site.phone.display}</a>
+          <a href={smsHref} class="text-sm font-semibold text-stone-800 hover:text-brand hover:underline">Or text us a photo</a>
+          <a href={`mailto:${site.email}`} class="text-sm text-stone-600 hover:text-brand hover:underline">{site.email}</a>
+          <p class="text-sm text-stone-500">{site.hoursLabel}</p>
         </div>
       </div>
-      <div class="quote-card">
-        <QuoteForm id="quote-home" />
-      </div>
+      <Card className="p-2">
+        <CardContent className="pt-4">
+          <QuoteForm id="quote-home" />
+        </CardContent>
+      </Card>
     </div>
   </section>
 </Base>
-
-<style>
-  /* Hero */
-  .hero {
-    background: var(--accent);
-    color: #fff;
-    padding-block: clamp(3rem, 2rem + 5vw, 6rem);
-  }
-  .hero-inner {
-    display: grid;
-    gap: var(--sp-7);
-    align-items: center;
-  }
-  .hero h1 {
-    color: #fff;
-    font-size: clamp(2.6rem, 1.6rem + 4.2vw, 4.6rem);
-  }
-  .hero-sub {
-    margin-top: var(--sp-5);
-    font-size: var(--step-1);
-    line-height: 1.5;
-    color: #dbe7e1;
-    max-width: 44ch;
-  }
-  .hero-btns {
-    margin-top: var(--sp-6);
-  }
-  .hero-checks {
-    list-style: none;
-    padding: 0;
-    margin-top: var(--sp-6);
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--sp-3) var(--sp-5);
-    font-weight: 600;
-  }
-  .hero-checks li {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--sp-2);
-  }
-  .hero-checks :global(svg) {
-    color: var(--gold);
-  }
-  .hero-photo img {
-    width: 100%;
-    aspect-ratio: 4 / 3;
-    object-fit: cover;
-    border-radius: var(--r-lg);
-    border: 4px solid var(--gold);
-    box-shadow: var(--shadow-lg);
-  }
-  @media (min-width: 960px) {
-    .hero-inner {
-      grid-template-columns: 1.15fr 1fr;
-      gap: var(--sp-8);
-    }
-  }
-
-  .area-strip {
-    background: var(--gold);
-    color: var(--ink);
-    text-align: center;
-    padding-block: 0.8rem;
-    font-size: 1.02rem;
-  }
-
-  .center-head {
-    text-align: center;
-    margin-inline: auto;
-    max-width: 52ch;
-  }
-  .center-head .lede {
-    margin-inline: auto;
-  }
-  .center-btns {
-    justify-content: center;
-  }
-
-  /* Price strip */
-  .price-strip {
-    list-style: none;
-    padding: 0;
-    display: grid;
-    gap: var(--sp-4);
-  }
-  .price-strip li {
-    display: grid;
-    gap: var(--sp-1);
-    padding: var(--sp-5);
-    background: #fff;
-    border: 1px solid var(--line);
-    border-top: 4px solid var(--accent);
-    border-radius: var(--r-lg);
-  }
-  .ps-name {
-    font-size: 0.7rem;
-    font-weight: 800;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-  .ps-price {
-    font-size: var(--step-2);
-    font-weight: 850;
-    letter-spacing: -0.03em;
-    line-height: 1.1;
-  }
-  .ps-covers {
-    font-size: 0.88rem;
-    line-height: 1.45;
-    color: var(--muted);
-  }
-  .price-foot {
-    margin-top: var(--sp-5);
-    text-align: center;
-    font-size: 0.93rem;
-    line-height: 1.6;
-    color: var(--muted);
-    max-width: 70ch;
-    margin-inline: auto;
-  }
-  .price-foot strong {
-    color: var(--ink);
-  }
-  @media (min-width: 620px) {
-    .price-strip {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-  @media (min-width: 1000px) {
-    .price-strip {
-      grid-template-columns: repeat(4, 1fr);
-    }
-  }
-
-  /* Steps */
-  .steps {
-    list-style: none;
-    padding: 0;
-    display: grid;
-    gap: var(--sp-5);
-  }
-  .steps li {
-    background: #fff;
-    border: 1px solid var(--line);
-    border-radius: var(--r-lg);
-    padding: var(--sp-6) var(--sp-5);
-    text-align: center;
-  }
-  .step-n {
-    display: grid;
-    place-items: center;
-    width: 56px;
-    height: 56px;
-    margin: 0 auto var(--sp-4);
-    border-radius: 50%;
-    background: var(--accent);
-    color: var(--gold);
-    font-family: var(--font-display);
-    font-size: 1.8rem;
-    font-weight: 800;
-  }
-  .steps p {
-    margin-top: var(--sp-3);
-    color: var(--muted);
-  }
-  @media (min-width: 800px) {
-    .steps {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-
-  /* Why */
-  .why {
-    display: grid;
-    gap: var(--sp-7);
-    align-items: start;
-  }
-  .why-list {
-    list-style: none;
-    padding: 0;
-    display: grid;
-    gap: var(--sp-5);
-  }
-  .why-list li {
-    display: flex;
-    gap: var(--sp-4);
-  }
-  .why-icon {
-    flex: none;
-    display: grid;
-    place-items: center;
-    width: 48px;
-    height: 48px;
-    border-radius: var(--r-md);
-    background: color-mix(in srgb, var(--gold) 18%, transparent);
-    color: var(--accent);
-  }
-  .why-list p {
-    margin-top: var(--sp-1);
-    color: var(--muted);
-  }
-  @media (min-width: 900px) {
-    .why {
-      grid-template-columns: 1fr 1.1fr;
-      gap: var(--sp-8);
-      align-items: center;
-    }
-  }
-
-  /* Partner band */
-  .partner {
-    background: var(--ink);
-  }
-  .partner-inner {
-    display: grid;
-    gap: var(--sp-6);
-    align-items: center;
-  }
-  .partner h2 {
-    color: #fff;
-  }
-  .partner .lede {
-    color: #c5d3cc;
-    max-width: 56ch;
-  }
-  @media (min-width: 900px) {
-    .partner-inner {
-      grid-template-columns: 1fr auto;
-    }
-  }
-
-  /* Areas */
-  .areas {
-    display: grid;
-    gap: var(--sp-5);
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
-  }
-  .area-col {
-    background: var(--surface-raised);
-    border: 1px solid var(--line);
-    border-top: 4px solid var(--accent);
-    border-radius: var(--r-lg);
-    padding: var(--sp-5);
-  }
-  .area-col h3 a {
-    color: var(--accent);
-    text-decoration: none;
-  }
-  .area-col h3 a:hover {
-    color: var(--gold);
-  }
-  .area-col ul {
-    list-style: none;
-    padding: 0;
-    margin-top: var(--sp-3);
-    display: grid;
-    gap: var(--sp-2);
-  }
-  .area-col li a {
-    color: var(--ink);
-    text-decoration: none;
-    font-weight: 500;
-  }
-  .area-col li a:hover {
-    color: var(--gold);
-    text-decoration: underline;
-  }
-
-  /* Quote */
-  .quote {
-    display: grid;
-    gap: var(--sp-7);
-    align-items: start;
-  }
-  .quote-direct {
-    margin-top: var(--sp-6);
-    display: grid;
-    gap: var(--sp-3);
-    justify-items: start;
-  }
-  .quote-phone {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--sp-2);
-    font-family: var(--font-display);
-    font-size: 2rem;
-    font-weight: 800;
-    color: var(--accent);
-    text-decoration: none;
-  }
-  .quote-hours {
-    display: flex;
-    align-items: center;
-    gap: var(--sp-2);
-    font-size: 0.86rem;
-    color: var(--muted);
-  }
-  .quote-card {
-    background: #fff;
-    border: 1px solid var(--line);
-    border-radius: var(--r-lg);
-    padding: var(--sp-5);
-    box-shadow: var(--shadow-md);
-  }
-  @media (min-width: 960px) {
-    .quote {
-      grid-template-columns: 0.85fr 1.15fr;
-      gap: var(--sp-8);
-    }
-  }
-</style>

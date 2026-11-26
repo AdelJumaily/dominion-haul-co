@@ -1,170 +1,78 @@
 ---
-import { site, phoneHref, smsHref } from '../config/site';
+import { site, phoneHref } from '../config/site';
 import { services } from '../config/services';
-import Icon from './Icon.astro';
+import { images, type ImageKey } from '../config/site';
 import BrandMark from './BrandMark.astro';
-import { getCollection } from 'astro:content';
-
-const cities = (await getCollection('locations'))
-  .filter((l) => l.data.kind === 'city')
-  .sort((a, b) => a.data.title.localeCompare(b.data.title));
 
 const year = new Date().getFullYear();
+
+const shortName: Record<string, string> = {
+  'junk-removal': 'Household junk',
+  'furniture-removal': 'Furniture',
+  'appliance-removal': 'Appliances',
+  'garage-basement-attic-cleanouts': 'Garage and attic',
+  'estate-cleanouts': 'Estate cleanouts',
+  'yard-waste-removal': 'Yard waste',
+  'construction-debris-removal': 'Remodel debris',
+};
+
+const shots: ImageKey[] = ['garageRenovation', 'constructionYard', 'yardDemo', 'constructionDebris'];
 ---
 
-<footer class="site-footer" data-band="dark">
-  <div class="container">
-    <div class="foot-top">
-      <div class="foot-brand">
-        <BrandMark inverted size="lockup" />
-        <p class="foot-blurb">
-          Local junk removal and hauling based in Chantilly, VA. Serving Fairfax, Loudoun,
-          Prince William and Arlington counties.
-        </p>
-        <div class="foot-contact">
-          <a href={phoneHref} class="foot-phone"><Icon name="phone" size={20} />{site.phone.display}</a>
-          <a href={smsHref} class="foot-link"><Icon name="message" size={16} />Text us a photo</a>
-          <a href={`mailto:${site.email}`} class="foot-link"><Icon name="mail" size={16} />{site.email}</a>
-          <span class="foot-link"><Icon name="clock" size={16} />{site.hoursLabel}</span>
-        </div>
-      </div>
-
-      <nav class="foot-cols" aria-label="Footer">
-        <div class="foot-col">
-          <h2>Services</h2>
-          <ul>
-            {services.map((s) => <li><a href={`/services/${s.id}`}>{s.title}</a></li>)}
-          </ul>
-        </div>
-
-        <div class="foot-col">
-          <h2>Company</h2>
-          <ul>
-            <li><a href="/about">About</a></li>
-            <li><a href="/commercial">Commercial Partners</a></li>
-            <li><a href="/locations">Service Area</a></li>
-            <li><a href="/pricing">Pricing</a></li>
-            <li><a href="/reviews">Reviews</a></li>
-            <li><a href="/contact">Free Quote</a></li>
-          </ul>
-        </div>
-
-        <div class="foot-col">
-          <h2>Areas We Serve</h2>
-          <ul class="foot-cities">
-            {cities.map((c) => <li><a href={`/locations/${c.id}`}>{c.data.title}</a></li>)}
-          </ul>
-        </div>
-      </nav>
+<footer class="bg-brand text-white">
+  <div class="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:grid-cols-2 lg:grid-cols-4">
+    <div>
+      <BrandMark inverted size="lockup" />
+      <p class="mt-4 max-w-xs text-sm leading-relaxed text-white/70">
+        Junk removal out of Chantilly, across Northern Virginia.
+      </p>
+      <a href={phoneHref} class="mt-4 inline-block text-sm font-semibold hover:underline">{site.phone.display}</a>
     </div>
 
-    <div class="foot-bottom">
-      <p>&copy; {year} {site.name}. Fully insured.</p>
-      <p>Based in Chantilly, VA</p>
+    <div>
+      <h2 class="text-sm font-semibold text-white">Company</h2>
+      <ul class="mt-4 space-y-2 text-sm text-white/70">
+        <li><a href="/" class="hover:text-white">Home</a></li>
+        <li><a href="/about" class="hover:text-white">About</a></li>
+        <li><a href="/pricing" class="hover:text-white">Pricing</a></li>
+        <li><a href="/locations" class="hover:text-white">Areas</a></li>
+        <li><a href="/contact" class="hover:text-white">Contact</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-semibold text-white">Services</h2>
+      <ul class="mt-4 space-y-2 text-sm text-white/70">
+        {services.map((s) => (
+          <li><a href={`/services/${s.id}`} class="hover:text-white">{shortName[s.id] ?? s.title}</a></li>
+        ))}
+      </ul>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-semibold text-white">Gallery</h2>
+      <ul class="mt-4 grid grid-cols-2 gap-2">
+        {
+          shots.map((key) => (
+            <li>
+              <img
+                src={images[key].src}
+                alt={images[key].alt}
+                width={images[key].width}
+                height={images[key].height}
+                loading="lazy"
+                class="aspect-square w-full rounded-md object-cover"
+              />
+            </li>
+          ))
+        }
+      </ul>
     </div>
   </div>
+
+  <div class="border-t border-white/10">
+    <p class="mx-auto max-w-7xl px-4 py-5 text-sm text-white/50">
+      &copy; {year} {site.name}
+    </p>
+  </div>
 </footer>
-
-<style>
-  .site-footer {
-    background: var(--accent-deep);
-    color: #fff;
-    padding-block: var(--sp-8) var(--sp-6);
-    border-top: 5px solid var(--gold);
-  }
-  .foot-top {
-    display: grid;
-    gap: var(--sp-7);
-  }
-  .foot-blurb {
-    margin-top: var(--sp-5);
-    color: #c5d3cc;
-    max-width: 40ch;
-    font-size: 0.97rem;
-  }
-  .foot-contact {
-    margin-top: var(--sp-5);
-    display: grid;
-    gap: var(--sp-3);
-    justify-items: start;
-  }
-  .foot-phone {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--sp-2);
-    font-family: var(--font-display);
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: var(--gold);
-    text-decoration: none;
-  }
-  .foot-phone:hover {
-    color: #fff;
-  }
-  .foot-link {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--sp-2);
-    color: #c5d3cc;
-    text-decoration: none;
-    font-size: 0.95rem;
-  }
-  a.foot-link:hover {
-    color: #fff;
-  }
-
-  .foot-cols {
-    display: grid;
-    gap: var(--sp-6);
-  }
-  .foot-col h2 {
-    font-size: 1.1rem;
-    letter-spacing: 0.06em;
-    color: var(--gold);
-    margin-bottom: var(--sp-4);
-  }
-  .foot-col ul {
-    list-style: none;
-    padding: 0;
-    display: grid;
-    gap: var(--sp-2);
-  }
-  .foot-col a {
-    color: #dce6e1;
-    text-decoration: none;
-    font-size: 0.95rem;
-  }
-  .foot-col a:hover {
-    color: var(--gold);
-  }
-  .foot-cities {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .foot-bottom {
-    margin-top: var(--sp-7);
-    padding-top: var(--sp-5);
-    border-top: 1px solid rgb(255 255 255 / 0.15);
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--sp-3) var(--sp-6);
-    justify-content: space-between;
-    font-size: 0.87rem;
-    color: #a9bbb3;
-  }
-
-  @media (min-width: 640px) {
-    .foot-cols {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-  @media (min-width: 1024px) {
-    .foot-top {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
-      gap: var(--sp-8);
-    }
-    .foot-cols {
-      grid-template-columns: 1.3fr 0.9fr 1.1fr;
-    }
-  }
-</style>

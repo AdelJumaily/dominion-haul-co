@@ -1,8 +1,8 @@
 # Dominion Haul — marketing site
 
 Static site built with [Astro](https://astro.build). 32 pages, minimal JavaScript.
-The only external runtime requests are Google Fonts (Barlow / Barlow Condensed), loaded
-in `src/layouts/Base.astro`. Self-host them if you want the site fully request-free.
+Fonts are self-hosted (Archivo for headings, Inter for body) via `@fontsource`,
+imported in `src/layouts/Base.astro`. No Google Fonts request at runtime.
 
 ```bash
 npm install
@@ -222,8 +222,9 @@ Verified against the built output:
 
 ## Design system
 
-Tokens are all declared at the top of `src/styles/global.css` — deep green accent, gold
-highlight, near-black ink. Change them there rather than in component styles.
+Tokens are all declared at the top of `src/styles/global.css` — brand green `#074B39`,
+gold `#B58645`, dark green `#04291F`, deep gold `#8A6430`. Change them there rather than
+in component styles.
 
 Touch targets: standalone action links and list navigation get a 44px minimum tap height
 under `@media (hover: none)`. Links that sit inside a flowing sentence are deliberately
@@ -233,10 +234,8 @@ is always available as a full-size button nearby and in the fixed mobile call ba
 Dark sections: add `data-band="dark"` to any `<section>`. It flips the semantic colour tokens
 wholesale; no component needs a dark variant.
 
-Type is Barlow and Barlow Condensed, currently loaded from Google Fonts in
-`Base.astro` with `display=swap`. To drop the external dependency, download the two
-families into `public/fonts/`, add `@font-face` rules in `global.css`, and remove the
-`preconnect` and stylesheet links from `Base.astro`.
+Type is Archivo 800 for headings and Inter 400/500/600 for body, self-hosted from
+`@fontsource` in `Base.astro`. All caps are only used for short labels and the nav.
 
 ## Performance notes
 

@@ -97,37 +97,36 @@ const { compact = false } = Astro.props;
     border-radius: var(--r-lg);
   }
   .tier-popular {
-    border-color: var(--accent);
+    border-color: var(--ink);
     border-width: 2px;
     box-shadow: var(--shadow-md);
   }
   .tier-flag {
-    position: absolute;
-    top: -11px;
-    left: var(--sp-5);
-    background: var(--accent);
-    color: #f4f7f4;
-    font-size: 0.66rem;
-    font-weight: 800;
-    letter-spacing: 0.09em;
-    text-transform: uppercase;
-    padding: 0.25rem 0.55rem;
-    border-radius: var(--r-sm);
+    position: static;
+    display: block;
+    margin-bottom: var(--sp-2);
+    background: none;
+    color: #5c564e;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
+    padding: 0;
   }
   .tier h3 {
     font-size: var(--step-1);
   }
   .tier-price {
     font-size: var(--step-3);
-    font-weight: 850;
+    font-weight: 800;
     letter-spacing: -0.04em;
     line-height: 1.1;
-    color: var(--accent-deep, var(--accent));
+    color: var(--ink);
   }
   .tier-covers {
     font-size: 0.9rem;
     line-height: 1.5;
-    color: var(--fg-muted, var(--muted));
+    color: var(--fg-muted, #5c564e);
     margin-top: auto;
   }
 
@@ -137,13 +136,13 @@ const { compact = false } = Astro.props;
     gap: var(--sp-3);
     align-items: start;
     padding: var(--sp-4);
-    border: 1px dashed color-mix(in srgb, var(--accent) 45%, transparent);
+    border: 1px dashed color-mix(in srgb, var(--green) 45%, transparent);
     border-radius: var(--r-md);
     font-size: 0.93rem;
     line-height: 1.55;
   }
   .heavy :global(svg) {
-    color: var(--accent-deep, var(--accent));
+    color: var(--accent-deep, var(--green));
     margin-top: 3px;
   }
 
@@ -178,14 +177,14 @@ const { compact = false } = Astro.props;
     margin-top: 2px;
   }
   .incl-list :global(.warn) {
-    color: var(--accent-deep, var(--accent));
+    color: var(--accent-deep, var(--green));
     margin-top: 2px;
   }
   .incl-note {
     padding-top: var(--sp-5);
     border-top: 1px solid var(--rule, var(--line));
     font-size: 0.96rem;
-    font-weight: 700;
+    font-weight: 600;
   }
 
   @media (min-width: 800px) {

@@ -1,228 +1,93 @@
 ---
 import Base from '../layouts/Base.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
-import Figure from '../components/Figure.astro';
-import CTABand from '../components/CTABand.astro';
-import Icon from '../components/Icon.astro';
-import { site, phoneHref } from '../config/site';
-import { priceRule } from '../config/pricing';
+import BrandMark from '../components/BrandMark.astro';
+import { site, phoneHref, images } from '../config/site';
 
 const crumbs = [
   { name: 'Home', url: '/' },
   { name: 'About', url: '/about' },
 ];
 
-const promises = [
-  {
-    t: 'You talk to the person who shows up',
-    d: 'The phone rings to the people who own the truck and will be in your driveway.',
-  },
-  {
-    t: 'The price is locked before we load',
-    d: 'Out loud, after we have looked at the actual pile. Smaller than the photo suggested? The number comes down.',
-  },
-  {
-    t: 'Fully insured',
-    d: 'If your building or your company needs a certificate of insurance, ask and we will send one.',
-  },
-  {
-    t: 'Donation and recycling where we can',
-    d: 'Usable furniture to a donation drop-off, metal to scrap, electronics to an e-waste recycler. It costs you nothing extra.',
-  },
+const checks = [
+  'Published prices',
+  'Price before we load',
+  'We do the lifting',
+  'No stair fees',
+  'Fully insured',
+  'No dumpster to rent',
+  'You talk to us',
+  'Based in Chantilly',
 ];
+
+const hero = images.garageRenovation;
 ---
 
 <Base
   title="About Dominion Haul | Junk Removal in Chantilly, VA"
-  description="Dominion Haul is a new, local junk removal company based in Chantilly, Virginia. One truck, published prices, and the price confirmed before we load."
+  description="Dominion Haul is a new junk removal company based in Chantilly, Virginia. One truck, published prices, price confirmed before we load."
   schema={{ type: 'AboutPage', breadcrumbs: crumbs }}
 >
   <Breadcrumbs crumbs={crumbs} />
 
-  <section class="about-hero">
-    <div class="container about-hero-inner">
-      <div>
-        <h1>A new local hauler, out of Chantilly.</h1>
-        <p class="lede mt-5">
-          One truck, published prices, and nobody between you and the people who show up.
-        </p>
-        <div class="btn-row mt-6">
-          <a href={phoneHref} class="btn btn-lg">
-            <Icon name="phone" size={19} /> Call {site.phone.display}
+  <section class="bg-[#f4f7f5]">
+    <div class="mx-auto max-w-5xl px-4 pb-16 pt-10">
+      <div class="flex flex-col items-center text-center">
+        <h1 class="sr-only">About Dominion Haul</h1>
+        <BrandMark size="lockup" href={false} />
+        <div class="mt-5 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm font-semibold">
+          <a href={phoneHref} class="text-brand hover:underline">Call {site.phone.display}</a>
+          <a href="/contact" class="inline-flex items-center gap-1 text-brand hover:underline">
+            Get a quote <span aria-hidden="true">→</span>
           </a>
         </div>
       </div>
-      <div class="about-photo">
-        <Figure imageKey="truckLoad" priority ratio="4/5" sizes="(max-width:900px) 80vw, 35vw" />
+
+      <img
+        src={hero.src}
+        alt={hero.alt}
+        width={hero.width}
+        height={hero.height}
+        class="mt-8 aspect-[16/9] w-full rounded-2xl object-cover shadow-xl ring-1 ring-stone-200"
+      />
+
+      <div class="mt-12 grid gap-12 md:grid-cols-2 md:gap-16">
+        <div>
+          <h2 class="font-heading text-2xl font-extrabold tracking-tight text-stone-900">Overview</h2>
+          <p class="mt-4 leading-relaxed text-stone-600">
+            Dominion Haul is a new junk removal company out of Chantilly. One truck. We publish the price, and we confirm it in the driveway before anything goes on the truck.
+          </p>
+          <ul class="mt-8 grid list-none gap-3 sm:grid-cols-2">
+            {
+              checks.map((item) => (
+                <li class="flex items-center gap-2.5 text-sm font-medium text-stone-800">
+                  <span class="grid size-5 shrink-0 place-items-center rounded-full bg-brand text-white">
+                    <svg viewBox="0 0 16 16" class="size-3" fill="none" aria-hidden="true">
+                      <path d="M3.5 8.2 6.4 11l6.1-6.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  {item}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <div class="grid gap-10">
+          <div>
+            <h2 class="font-heading text-2xl font-extrabold tracking-tight text-stone-900">Background</h2>
+            <p class="mt-4 leading-relaxed text-stone-600">
+              We're new, and we say so. There is one truck, and the phone rings to the people who show up. We haul across Fairfax, Loudoun, Prince William, and Arlington.
+            </p>
+          </div>
+          <div>
+            <h2 class="font-heading text-2xl font-extrabold tracking-tight text-stone-900">How a job goes</h2>
+            <p class="mt-4 leading-relaxed text-stone-600">
+              Call or text a photo. We price the load by how much of the truck it fills. If the pile is smaller when we arrive, the price comes down. Then we carry it out.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   </section>
-
-  <section class="section">
-    <div class="container container-tight">
-      <div class="prose">
-        <h2>We're new. Here's why that's fine.</h2>
-        <p>
-          Dominion Haul started this year. One truck, based in {site.base}. We have not done
-          hundreds of jobs and we are not going to pretend we have.
-        </p>
-        <p>
-          What you get instead: we answer our own phone, our prices are on the website, and
-          we are working hard to get this right because we need the jobs and we need the
-          reviews. There is no version of this where we take your money and shrug.
-        </p>
-
-        <h2>How we price</h2>
-        <p>
-          By how much space your stuff takes up in the truck. Not by the hour. Hourly
-          pricing means you pay extra because your basement stairs are narrow or your unit
-          is at the end of a walkway, and that is not something you chose.
-        </p>
-        <p>
-          {priceRule} If the pile turns out smaller than the photos suggested, the number
-          comes down. We would rather have that conversation in your driveway than on your
-          invoice.
-        </p>
-
-        <h2>What we won't do</h2>
-        <p>
-          We will not quote one number on the phone and a different one in your driveway.
-          We will not add a fuel surcharge because you live further out. We will not charge
-          extra for stairs.
-        </p>
-        <p>
-          We will also tell you when we are the wrong answer. Long renovation throwing off
-          debris for weeks? Rent a dumpster, it is cheaper per load, and we will say so.
-          Standing tree? You need an arborist. Gas range still hooked up? Get a licensed
-          fitter first. We do not do moving, pianos, safes or hot tubs at all.
-        </p>
-
-        <h2>Where we work</h2>
-        <p>
-          Fairfax, Loudoun, Prince William and Arlington counties. Same published price
-          everywhere in them. The drive is our routing problem, not a line on your bill.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" data-band="dark">
-    <div class="container">
-      <div class="section-head wide">
-        <h2>Four things we hold to</h2>
-      </div>
-      <ul class="promises">
-        {
-          promises.map((p) => (
-            <li data-reveal>
-              <h3>{p.t}</h3>
-              <p>{p.d}</p>
-            </li>
-          ))
-        }
-      </ul>
-    </div>
-  </section>
-
-  <section class="section-sm">
-    <div class="container crew-inner">
-      <Figure imageKey="roomCleanout" ratio="3/2" />
-      <div>
-        <h2>On cleanouts and estate work</h2>
-        <p class="lede mt-4">
-          We know floor protection, door-frame padding and furniture disassembly, and we
-          know when a job needs a licensed trade instead of us.
-        </p>
-        <p class="crew-note">
-          One rule we hold to on estate and cleanout jobs: if it looks personal, it does not
-          go on the truck. Photos, papers, jewelry, anything handwritten gets set aside for
-          you. We would rather flag twenty things that turn out to be nothing than bin one
-          that mattered.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <CTABand
-    heading="Need a clear driveway?"
-    sub="Text a photo of the pile and we'll come back with a number."
-  />
 </Base>
-
-<style>
-  .about-hero {
-    padding-block: var(--sp-8) var(--sp-7);
-    background: var(--surface-sunk);
-  }
-  .about-hero-inner {
-    display: grid;
-    gap: var(--sp-7);
-    align-items: center;
-  }
-  .about-hero h1 {
-    max-width: 18ch;
-  }
-  .about-hero .lede {
-    max-width: 44ch;
-  }
-  .about-photo {
-    max-width: 420px;
-  }
-
-  .promises {
-    list-style: none;
-    padding: 0;
-    display: grid;
-    gap: 0;
-  }
-  .promises li {
-    display: grid;
-    gap: var(--sp-3);
-    padding: var(--sp-5) 0;
-    border-top: 1px solid var(--ink-line);
-  }
-  .promises li:last-child {
-    border-bottom: 1px solid var(--ink-line);
-  }
-  .promises h3 {
-    font-size: var(--step-1);
-    max-width: 22ch;
-  }
-  .promises p {
-    color: var(--fg-muted, #c5d3cc);
-    font-size: 0.94rem;
-    line-height: 1.6;
-    max-width: 48ch;
-  }
-
-  .crew-inner {
-    display: grid;
-    gap: var(--sp-7);
-    align-items: center;
-  }
-  .crew-note {
-    margin-top: var(--sp-5);
-    padding-top: var(--sp-5);
-    border-top: 1px solid var(--line);
-    color: var(--muted);
-    line-height: 1.6;
-    font-size: 0.95rem;
-  }
-
-  @media (min-width: 700px) {
-    .promises {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0 var(--sp-8);
-    }
-  }
-  @media (min-width: 900px) {
-    .about-hero-inner {
-      grid-template-columns: 1.2fr 1fr;
-      gap: var(--sp-8);
-    }
-    .crew-inner {
-      grid-template-columns: 1fr 1fr;
-      gap: var(--sp-8);
-    }
-  }
-</style>

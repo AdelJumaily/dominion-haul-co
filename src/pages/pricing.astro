@@ -1,194 +1,115 @@
 ---
 import Base from '../layouts/Base.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
-import PricingTable from '../components/PricingTable.astro';
 import FAQ from '../components/FAQ.astro';
 import CTABand from '../components/CTABand.astro';
-import Icon from '../components/Icon.astro';
-import { site, phoneHref, smsHref } from '../config/site';
-import { tiers, heavyMaterial, priceRule } from '../config/pricing';
+import { buttonVariants } from '../components/ui/button';
+import { cn } from 'cn';
+import { tiers, heavyMaterial } from '../config/pricing';
 
 const crumbs = [
   { name: 'Home', url: '/' },
   { name: 'Pricing', url: '/pricing' },
 ];
 
-const single = tiers[0];
-const half = tiers[2];
-const full = tiers[3];
+const featured = tiers.find((t) => t.popular) ?? tiers[1];
+const rest = tiers.filter((t) => t.id !== featured.id);
+
+const points = [
+  { t: 'We do the lifting', d: 'Stairs, basements, and back yards included.' },
+  { t: 'Disposal included', d: 'The dump fee is already in the price.' },
+  { t: 'No extra fees', d: 'No stair, distance, or fuel charges.' },
+  { t: 'Price first', d: 'You hear the number before anything goes on the truck.' },
+];
 
 const faq = [
   {
-    q: 'Why are your prices on the site?',
-    a: 'Because it saves everybody a phone call. Many companies make you call for a price. We would rather you knew roughly what this costs before you talk to us, so nobody wastes an afternoon.',
-  },
-  {
-    q: 'Is the price I see the price I pay?',
-    a: `Close. We price by how much space your stuff takes in the truck, and we confirm the final number on site before anything gets loaded. If the pile is smaller than the photo suggested, the price comes down. ${heavyMaterial.items} are the exception, because disposal for those is billed by weight rather than volume, so we quote them separately. Same for anything that needs taking apart first, like a shed.`,
+    q: 'Is the price on the site the price I pay?',
+    a: 'We confirm the final number on site before we load. If the pile is smaller than it looked, the price comes down.',
   },
   {
     q: 'Do you charge by the hour?',
-    a: 'No. Hourly pricing would mean you pay more because your basement stairs are narrow or your unit is down a long walkway, and that is not your fault. The number comes from what you are throwing out, not how awkward the carry is.',
-  },
-  {
-    q: 'What if my load is between two sizes?',
-    a: 'We look at the truck and call it honestly. If it is borderline we round down. The whole point of quoting before we load rather than after is that you see the number first.',
+    a: 'No. The price is how much space it takes in the truck.',
   },
   {
     q: 'Is there a minimum?',
-    a: `Yes. ${single.price} covers one heavy item, and that is the floor. It is what it costs to send a truck and a crew to your address.`,
+    a: `${tiers[0].price} is one heavy item. That is the smallest job.`,
   },
   {
-    q: 'Do you charge extra for stairs or a long carry?',
-    a: 'No. No stair fee, no basement fee, no long-carry fee. Carrying it out is the service you are paying for.',
-  },
-  {
-    q: 'How do I pay, and when?',
-    a: 'When the job is done and you have seen the space clear. No deposit and nothing upfront. Cards or cash. If you need a donation receipt for anything we take, tell us before we load and we will try to get you one.',
-  },
-  {
-    q: 'What about a dumpster instead?',
-    a: 'If you are running a long project and generating debris every day, rent a container. It will probably work out cheaper per load and you can fill it on your own schedule. For a defined pile, or where an HOA makes a container difficult, hauling is simpler. We will tell you honestly which one you need.',
+    q: 'What about concrete or dirt?',
+    a: `${heavyMaterial.items} are priced by weight. We quote those on site.`,
   },
 ];
 ---
 
 <Base
   title="Junk Removal Prices | Dominion Haul, Northern Virginia"
-  description={`Our prices, published. One heavy item ${single.price}, half a truck ${half.price.toLowerCase()}, a full truck ${full.price.toLowerCase()}. No stair fees, no distance fees. Fairfax, Loudoun, Prince William, Arlington.`}
+  description={`Published prices. One heavy item ${tiers[0].price}, a living room set ${featured.price.toLowerCase()}, half a truck ${tiers[2].price.toLowerCase()}, a full truck ${tiers[3].price.toLowerCase()}.`}
   schema={{ type: 'WebPage', faq, breadcrumbs: crumbs }}
 >
   <Breadcrumbs crumbs={crumbs} />
 
-  <section class="hd">
-    <div class="container">
-      <p class="eyebrow">Pricing</p>
-      <h1>Here's what it costs.</h1>
-      <p class="lede mt-5">
-        We price by how much space your stuff takes up in the truck. Not by the hour, not
-        per item. {priceRule}
-      </p>
-      <div class="btn-row mt-6">
-        <a href={phoneHref} class="btn btn-lg">
-          <Icon name="phone" size={19} /> {site.phone.display}
-        </a>
-        <a href={smsHref} class="btn btn-lg btn-ghost">
-          Text a photo <Icon name="arrow" size={18} class="arrow" />
-        </a>
+  <section class="bg-brand text-white">
+    <div class="mx-auto grid max-w-7xl items-center gap-12 px-4 py-16 lg:grid-cols-2">
+      <div>
+        <h1 class="font-heading text-4xl font-extrabold tracking-tight text-white md:text-5xl">
+          What it costs
+        </h1>
+        <p class="mt-4 max-w-md text-lg text-white/70">
+          Priced by how much space it takes in the truck.
+        </p>
+        <ul class="mt-8 divide-y divide-white/10">
+          {
+            points.map((p) => (
+              <li class="flex gap-4 py-4">
+                <span class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-white/30 bg-white/15 backdrop-blur-md">
+                  <svg class="h-4 w-4 text-[#7dcea0]" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M16.7 5.3a1 1 0 0 1 0 1.4l-7.5 7.5a1 1 0 0 1-1.4 0L3.3 9.7a1 1 0 1 1 1.4-1.4l3.8 3.8 6.8-6.8a1 1 0 0 1 1.4 0Z" clip-rule="evenodd" />
+                  </svg>
+                </span>
+                <div>
+                  <p class="font-semibold text-white">{p.t}</p>
+                  <p class="mt-0.5 text-sm text-white/60">{p.d}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div class="rounded-2xl border border-white/35 bg-white/15 p-6 shadow-2xl backdrop-blur-xl md:p-8">
+        <div class="flex items-end justify-between gap-4">
+          <div>
+            <p class="text-sm font-semibold text-[#7dcea0]">Most booked</p>
+            <h2 class="mt-1 font-heading text-2xl font-extrabold text-white">{featured.name}</h2>
+          </div>
+          <p class="font-heading text-4xl font-extrabold tracking-tight text-white">{featured.price}</p>
+        </div>
+        <a href="/contact" class={cn(buttonVariants(), "mt-6 h-11 w-full bg-white text-brand hover:bg-white/90")}>Get a quote</a>
+        <ul class="mt-6 grid gap-3">
+          {
+            rest.map((t) => (
+              <li class="flex items-start gap-2 text-sm text-white/80">
+                <svg class="mt-0.5 h-4 w-4 shrink-0 text-[#7dcea0]" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path fill-rule="evenodd" d="M16.7 5.3a1 1 0 0 1 0 1.4l-7.5 7.5a1 1 0 0 1-1.4 0L3.3 9.7a1 1 0 1 1 1.4-1.4l3.8 3.8 6.8-6.8a1 1 0 0 1 1.4 0Z" clip-rule="evenodd" />
+                </svg>
+                <span>
+                  <span class="block text-white">{t.name}</span>
+                  <span class="text-white/60">{t.price}</span>
+                </span>
+              </li>
+            ))
+          }
+        </ul>
       </div>
     </div>
   </section>
 
-  <!-- ── The table ────────────────────────────────────────────────────── -->
-  <section class="section">
-    <div class="container">
-      <PricingTable />
+  <section class="bg-[#f4f7f5]">
+    <div class="mx-auto max-w-7xl px-4 py-16">
+      <FAQ items={faq} title="Pricing questions" eyebrow="FAQ" />
     </div>
   </section>
 
-  <!-- ── No-fee list ──────────────────────────────────────────────────── -->
-  <section class="section" data-band="dark">
-    <div class="container">
-      <div class="section-head">
-        <p class="eyebrow">What we don't add on</p>
-        <h2>Fees we don't have</h2>
-        <p class="lede">
-          None of these show up on your bill.
-        </p>
-      </div>
-
-      <ul class="nofee">
-        <li><Icon name="x" size={17} /> Stair or basement fees</li>
-        <li><Icon name="x" size={17} /> Long-carry fees</li>
-        <li><Icon name="x" size={17} /> Distance or zone pricing</li>
-        <li><Icon name="x" size={17} /> Fuel surcharges</li>
-        <li><Icon name="x" size={17} /> Deposits or upfront charges</li>
-        <li><Icon name="x" size={17} /> A higher number once loading starts</li>
-      </ul>
-    </div>
-  </section>
-
-  <!-- ── When to use something else ───────────────────────────────────── -->
-  <section class="section-sm">
-    <div class="container container-tight">
-      <div class="section-head">
-        <p class="eyebrow">Being straight with you</p>
-        <h2>When we're not the right call</h2>
-      </div>
-      <div class="prose">
-        <p>
-          We would rather tell you this than sell you the wrong thing.
-        </p>
-        <p>
-          If you are doing a long renovation that throws off debris every day for weeks,
-          rent a dumpster. You can fill it on your own schedule and it will likely work out
-          cheaper per load. The catch is that it sits in your driveway the whole time, and a
-          lot of HOAs around here want approval first and cap how long it can stay.
-        </p>
-        <p>
-          For a pile that already exists, or a cleanout with a date on it, we are the
-          simpler option. We come once, it is gone, and nothing is left on your property.
-        </p>
-        <p>
-          A few other things we will send you elsewhere for. Standing trees need an
-          arborist. A gas appliance needs a licensed gas fitter to disconnect it before we
-          touch it. Anything that might contain asbestos needs testing before demolition.
-          We do not do moving, pianos, safes or hot tubs at all.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── FAQ ──────────────────────────────────────────────────────────── -->
-  <section class="section" data-band="muted">
-    <div class="container">
-      <FAQ items={faq} title="Pricing questions" eyebrow="Pricing FAQ" />
-    </div>
-  </section>
-
-  <CTABand
-    heading="Want a number for your job?"
-    sub="Send a photo of the pile. We'll come back with a price from the table above."
-  />
+  <CTABand heading="Send a photo" sub="We'll come back with a number from the prices above." />
 </Base>
-
-<style>
-  .hd {
-    padding-block: var(--sp-8) var(--sp-7);
-    background:
-      radial-gradient(80ch 40ch at 85% 0%, color-mix(in srgb, var(--accent) 11%, transparent), transparent 70%),
-      linear-gradient(180deg, var(--surface-sunk), var(--surface));
-  }
-  .hd h1 {
-    max-width: 17ch;
-  }
-  .hd .lede {
-    max-width: 58ch;
-  }
-
-  .nofee {
-    list-style: none;
-    padding: 0;
-    display: grid;
-    gap: var(--sp-3);
-  }
-  .nofee li {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: var(--sp-3);
-    align-items: center;
-    padding: var(--sp-4) 0;
-    border-bottom: 1px solid var(--ink-line);
-    font-weight: 650;
-    font-size: 0.98rem;
-  }
-  .nofee :global(svg) {
-    color: var(--accent);
-  }
-  @media (min-width: 700px) {
-    .nofee {
-      grid-template-columns: 1fr 1fr;
-      gap: 0 var(--sp-7);
-    }
-  }
-</style>

@@ -1,35 +1,39 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   DOMINION HAUL — DESIGN SYSTEM
-   ───────────────────────────────────────────────────────────────────────────
-   Colors come straight from the logo: Dominion green #074B39 + Haul gold #B58645.
-   Fonts: Barlow Condensed (headings, matches the logo lettering) + Barlow (body).
+   DOMINION HAUL
+   The printed logo keeps its green and gold. The site does not.
+   Green is the call button and the footer (so the logo still sits on it).
+   Gold stays inside the logo file. Headings and body are ink on paper.
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /* ── Tokens ──────────────────────────────────────────────────────────────── */
 :root {
-  --accent: #074b39;
-  --accent-hot: #0b5f49;
-  --accent-deep: #05382b;
+  --green: #074b39;
+  --green-deep: #04291f;
   --gold: #b58645;
-  --gold-hot: #c79a5c;
-  --ink: #0b241c;
-  --ink-soft: #113128;
-  --ink-line: #1f4338;
-  --surface: #f8f6f1;
-  --surface-sunk: #efeae0;
+  --gold-deep: #8a6430;
+
+  --accent: var(--green);
+  --accent-hot: var(--green-deep);
+  --accent-deep: var(--green-deep);
+
+  --ink: #1c1917;
+  --ink-soft: #2a2622;
+  --ink-line: #d9d3c8;
+  --surface: #f4f7f5;
+  --surface-sunk: #e7efeb;
   --surface-raised: #ffffff;
-  --muted: #56645e;
-  --muted-light: #93a59d;
-  --line: #e0dacd;
+  --muted: #5c564e;
+  --muted-light: #8a8378;
+  --line: #e7e5e4;
 
   --bg: var(--surface);
   --fg: var(--ink);
-  --fg-muted: var(--muted);
+  --fg-muted: #5c564e;
   --rule: var(--line);
   --card: var(--surface-raised);
 
   --success: #2b6148;
-  --focus: #2b6cb0;
+  --focus: var(--green-deep);
 
   --step--1: clamp(0.83rem, 0.79rem + 0.2vw, 0.94rem);
   --step-0: clamp(1rem, 0.96rem + 0.22vw, 1.13rem);
@@ -40,8 +44,8 @@
   --step-5: clamp(2.49rem, 1.87rem + 3.09vw, 4.73rem);
   --step-6: clamp(2.99rem, 2.02rem + 4.83vw, 6.31rem);
 
-  --font-display: 'Barlow Condensed', 'Arial Narrow', 'Helvetica Neue', Arial, sans-serif;
-  --font-sans: 'Barlow', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --font-display: 'Archivo', 'Arial Narrow', 'Helvetica Neue', Arial, sans-serif;
+  --font-sans: 'Inter', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   --font-mono: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, monospace;
 
   --sp-1: 0.25rem;
@@ -60,13 +64,13 @@
   --container-wide: 1400px;
   --container-tight: 760px;
 
-  --r-sm: 4px;
-  --r-md: 6px;
-  --r-lg: 12px;
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 16px;
 
-  --shadow-sm: 0 1px 2px rgb(20 32 25 / 0.05);
-  --shadow-md: 0 8px 24px rgb(20 32 25 / 0.08), 0 2px 6px rgb(20 32 25 / 0.04);
-  --shadow-lg: 0 20px 48px rgb(20 32 25 / 0.12), 0 6px 14px rgb(20 32 25 / 0.05);
+  --shadow-sm: 0 1px 2px rgb(28 25 23 / 0.05);
+  --shadow-md: 0 10px 30px rgb(28 25 23 / 0.08);
+  --shadow-lg: 0 18px 40px rgb(28 25 23 / 0.12);
 
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
   --dur: 200ms;
@@ -75,19 +79,20 @@
   --callbar-h: 60px;
 }
 
+/* Dark bands used to be full green slabs. They now sit on the same paper
+   as the rest of the page. The footer sets its own green. */
 [data-band='dark'] {
-  --bg: var(--ink);
-  --fg: var(--surface);
-  --fg-muted: #9aada2;
-  --rule: var(--ink-line);
-  --card: var(--ink-soft);
-  color-scheme: dark;
+  --bg: var(--surface);
+  --fg: var(--ink);
+  --fg-muted: #5c564e;
+  --rule: var(--line);
+  --card: var(--surface-raised);
 }
 
 [data-band='muted'] {
   --bg: var(--surface-sunk);
   --fg: var(--ink);
-  --fg-muted: var(--muted);
+  --fg-muted: #5c564e;
   --rule: var(--line);
   --card: var(--surface-raised);
 }
@@ -95,7 +100,7 @@
 [data-band='raised'] {
   --bg: var(--surface-raised);
   --fg: var(--ink);
-  --fg-muted: var(--muted);
+  --fg-muted: #5c564e;
   --rule: var(--line);
   --card: var(--surface);
 }
@@ -168,7 +173,7 @@ select {
   border-radius: 2px;
 }
 [data-band='dark'] :focus-visible {
-  outline-color: #7aa2ff;
+  outline-color: var(--ink);
 }
 
 /* ── Typography ──────────────────────────────────────────────────────────── */
@@ -177,30 +182,27 @@ h2,
 h3,
 h4 {
   font-family: var(--font-display);
-  font-weight: 700;
-  line-height: 1.02;
-  letter-spacing: 0;
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
   text-wrap: balance;
-  color: var(--fg);
-}
-h1,
-h2 {
-  text-transform: uppercase;
+  color: var(--ink);
+  text-transform: none;
 }
 h1 {
   font-size: var(--step-5);
-  font-weight: 800;
+  letter-spacing: -0.03em;
 }
 h2 {
   font-size: var(--step-4);
 }
 h3 {
   font-size: var(--step-2);
-  line-height: 1.1;
+  line-height: 1.15;
 }
 h4 {
   font-size: var(--step-1);
-  line-height: 1.2;
+  line-height: 1.25;
 }
 p {
   text-wrap: pretty;
@@ -210,20 +212,23 @@ p {
   font-family: var(--font-display);
   font-size: var(--step-6);
   font-weight: 800;
-  text-transform: uppercase;
   line-height: 0.95;
+  letter-spacing: -0.03em;
+  color: var(--ink);
 }
 
-/* Small gold section label */
+/* A plain line of context. Not a kicker, not small-caps, not underlined. */
 .eyebrow {
   display: block;
   font-family: var(--font-sans);
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: var(--sp-3);
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: #5c564e;
+  margin-bottom: var(--sp-2);
+  padding: 0;
+  border: 0;
 }
 .eyebrow::before {
   content: none;
@@ -259,25 +264,25 @@ p {
   gap: var(--sp-3);
 }
 .prose li::marker {
-  color: var(--accent);
-  font-weight: 700;
+  color: var(--green);
+  font-weight: 600;
 }
 .prose a {
   color: var(--fg);
   text-decoration: underline;
-  text-decoration-color: var(--accent);
+  text-decoration-color: var(--green);
   text-decoration-thickness: 2px;
   text-underline-offset: 3px;
   transition: background var(--dur) var(--ease);
 }
 .prose a:hover {
-  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  background: color-mix(in srgb, var(--green) 14%, transparent);
 }
 .prose strong {
-  font-weight: 700;
+  font-weight: 600;
 }
 .prose blockquote {
-  border-left: 2px solid var(--accent);
+  border-left: 2px solid var(--green);
   padding-left: var(--sp-5);
   font-family: var(--font-display);
   font-size: var(--step-1);
@@ -374,8 +379,8 @@ section {
 
 /* ── Buttons ─────────────────────────────────────────────────────────────── */
   .btn {
-  --btn-bg: var(--accent);
-  --btn-fg: #f4f7f4;
+  --btn-bg: var(--green);
+  --btn-fg: #ffffff;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -390,16 +395,14 @@ section {
   letter-spacing: -0.01em;
   text-decoration: none;
   border: 1.5px solid transparent;
-  border-radius: var(--r-md);
+  border-radius: 0.5rem;
   cursor: pointer;
   white-space: nowrap;
-  transition: background var(--dur) var(--ease), box-shadow var(--dur) var(--ease),
-    border-color var(--dur) var(--ease), transform 280ms var(--ease);
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease),
+    border-color var(--dur) var(--ease);
 }
 .btn:hover {
-  background: var(--accent-hot);
-  box-shadow: var(--shadow-md);
-  transform: translateY(-1px);
+  background: var(--green-deep);
 }
 .btn:active {
   box-shadow: none;
@@ -423,15 +426,18 @@ button,
   font-size: var(--step-1);
 }
 
-.btn-ghost {
+/* Secondary is a plain outline. Not a second brand color. */
+.btn-ghost,
+.btn-outline {
   --btn-bg: transparent;
-  --btn-fg: var(--fg);
-  border-color: var(--rule);
+  --btn-fg: var(--ink);
+  border-color: var(--ink);
 }
-.btn-ghost:hover {
-  background: color-mix(in srgb, var(--fg) 5%, transparent);
-  border-color: var(--fg);
-  box-shadow: none;
+.btn-ghost:hover,
+.btn-outline:hover {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--ink);
 }
 
 .btn-solid-ink {
@@ -446,18 +452,14 @@ button,
   --btn-fg: var(--ink);
 }
 
-/* Gold call-to-action — dark text for readable contrast */
+/* Old gold buttons are the same green call button. Gold stays in the logo. */
 .btn-gold {
-  --btn-bg: var(--gold);
-  --btn-fg: var(--ink);
-  font-weight: 700;
+  --btn-bg: var(--green);
+  --btn-fg: #fff;
 }
 .btn-gold:hover {
-  background: var(--gold-hot);
-}
-[data-band='dark'] .btn-ghost {
-  --btn-fg: #fff;
-  border-color: rgb(255 255 255 / 0.35);
+  background: var(--green-deep);
+  color: #fff;
 }
 
 .btn-block {
@@ -483,11 +485,11 @@ button,
   display: inline-flex;
   align-items: center;
   gap: var(--sp-2);
-  font-weight: 700;
+  font-weight: 600;
   color: var(--fg);
   text-decoration: none;
   padding-bottom: 2px;
-  background-image: linear-gradient(var(--accent), var(--accent));
+  background-image: linear-gradient(var(--ink), var(--ink));
   background-size: 0% 2px;
   background-position: 0 100%;
   background-repeat: no-repeat;
@@ -541,23 +543,38 @@ button,
 }
 .card-link:hover {
   box-shadow: var(--shadow-md);
-  border-color: color-mix(in srgb, var(--accent) 45%, var(--rule));
+  border-color: color-mix(in srgb, var(--green) 45%, var(--rule));
 }
 [data-band='dark'] .card-link:hover {
-  border-color: var(--accent);
+  border-color: var(--green);
 }
 
 .card-index {
   font-family: var(--font-mono);
   font-size: var(--step--1);
-  font-weight: 700;
-  color: var(--accent);
+  font-weight: 600;
+  color: var(--green);
   letter-spacing: 0.08em;
 }
 
 /* ── Utility ─────────────────────────────────────────────────────────────── */
 .text-accent {
-  color: var(--accent);
+  color: var(--green);
+}
+.text-gold {
+  color: var(--gold-deep);
+}
+.display-gold {
+  color: var(--gold);
+}
+.stars {
+  display: inline-flex;
+  gap: 0.12em;
+  color: var(--gold);
+}
+.stars svg {
+  fill: var(--gold);
+  stroke: var(--gold);
 }
 .muted {
   color: var(--fg-muted);
@@ -598,9 +615,9 @@ button,
   top: 0;
   left: 0;
   padding: var(--sp-3) var(--sp-5);
-  background: var(--accent);
-  color: #f4f7f4;
-  font-weight: 700;
+  background: var(--green);
+  color: #fff;
+  font-weight: 600;
   z-index: 200;
   transform: translateY(-120%);
   transition: transform var(--dur) var(--ease);
@@ -623,7 +640,7 @@ button,
   width: 48px;
   height: 2px;
   margin-top: -0.5px;
-  background: var(--accent);
+  background: var(--ink);
 }
 
 .chip {
@@ -643,17 +660,17 @@ button,
   transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease);
 }
 a.chip:hover {
-  border-color: var(--accent);
+  border-color: var(--green);
   color: var(--fg);
 }
 .chip-accent {
   background: transparent;
-  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
-  color: var(--accent-deep);
+  border-color: color-mix(in srgb, var(--green) 55%, transparent);
+  color: var(--green);
   font-weight: 600;
 }
 [data-band='dark'] .chip-accent {
-  color: var(--accent-hot);
+  color: var(--ink);
 }
 
 .chip-row {
@@ -698,10 +715,10 @@ a.chip:hover {
     #e2e2de 12px,
     #e2e2de 24px
   );
-  border: 2px dashed color-mix(in srgb, var(--accent) 55%, transparent);
+  border: 2px dashed color-mix(in srgb, var(--green) 55%, transparent);
   border-radius: var(--r-lg);
   overflow: hidden;
-  color: var(--muted);
+  color: #5c564e;
   text-align: center;
   padding: var(--sp-5);
 }
@@ -713,15 +730,15 @@ a.chip:hover {
     #242421 12px,
     #242421 24px
   );
-  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  border-color: color-mix(in srgb, var(--green) 45%, transparent);
   color: var(--muted-light);
 }
 .ph-tag {
   position: absolute;
   top: var(--sp-3);
   left: var(--sp-3);
-  background: var(--accent);
-  color: #f4f7f4;
+  background: var(--green);
+  color: #fff;
   font-family: var(--font-mono);
   font-size: 0.68rem;
   font-weight: 700;
@@ -765,7 +782,7 @@ a.chip:hover {
   position: absolute;
   inset: 0;
   translate: 12px 12px;
-  border: 1.5px solid var(--accent);
+  border: 1.5px solid var(--green);
   border-radius: var(--r-lg);
   pointer-events: none;
 }
@@ -777,7 +794,7 @@ a.chip:hover {
 }
 .field label {
   font-size: var(--step--1);
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.01em;
 }
 .field .hint {
@@ -805,8 +822,8 @@ a.chip:hover {
 .field textarea:focus,
 .field select:focus {
   outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent);
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--green) 20%, transparent);
 }
 .field input:user-invalid,
 .field textarea:user-invalid {
@@ -831,7 +848,7 @@ a.chip:hover {
   padding: var(--sp-5) 0;
   cursor: pointer;
   font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: 800;
   font-size: var(--step-1);
   letter-spacing: -0.025em;
   line-height: 1.3;
@@ -841,10 +858,10 @@ a.chip:hover {
   display: none;
 }
 .faq-item summary:hover {
-  color: var(--accent-deep);
+  color: var(--green-deep);
 }
 [data-band='dark'] .faq-item summary:hover {
-  color: var(--accent-hot);
+  color: var(--ink);
 }
 .faq-item .sign {
   flex: none;
@@ -859,7 +876,7 @@ a.chip:hover {
   position: absolute;
   inset: 50% 0 auto 0;
   height: 2px;
-  background: var(--accent);
+  background: var(--ink);
   transition: transform var(--dur) var(--ease);
 }
 .faq-item .sign::after {

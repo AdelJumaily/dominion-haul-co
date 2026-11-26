@@ -5,7 +5,8 @@ import FAQ from '../../components/FAQ.astro';
 import CTABand from '../../components/CTABand.astro';
 import QuoteForm from '../../components/QuoteForm.astro';
 import Figure from '../../components/Figure.astro';
-import Icon from '../../components/Icon.astro';
+import { buttonVariants } from '../../components/ui/button';
+import { cn } from 'cn';
 import { site, phoneHref, smsHref } from '../../config/site';
 import { services } from '../../config/services';
 import { tiers, heavyMaterial, priceRule } from '../../config/pricing';
@@ -22,13 +23,23 @@ const crumbs = [
   { name: s.title, url: `/services/${s.id}` },
 ];
 
+const shortName: Record<string, string> = {
+  'junk-removal': 'Household junk',
+  'furniture-removal': 'Furniture',
+  'appliance-removal': 'Appliances',
+  'garage-basement-attic-cleanouts': 'Garage and attic',
+  'estate-cleanouts': 'Estate cleanouts',
+  'yard-waste-removal': 'Yard waste',
+  'construction-debris-removal': 'Remodel debris',
+};
+
 const others = services.filter((o) => o.id !== s.id).sort((a, b) => a.order - b.order);
 ---
 
 <Base
   title={s.metaTitle}
   description={s.metaDescription}
-  ogImage="/images/logo.png"
+  ogImage="/images/logo.webp"
   schema={{
     type: 'WebPage',
     faq: s.faq,
@@ -38,77 +49,73 @@ const others = services.filter((o) => o.id !== s.id).sort((a, b) => a.order - b.
 >
   <Breadcrumbs crumbs={crumbs} />
 
-  <!-- ── Hero ─────────────────────────────────────────────────────────── -->
-  <section class="svc-hero">
-    <div class="container svc-hero-inner">
+  <section class="bg-[#f4f7f5]">
+    <div class="mx-auto grid max-w-6xl items-center gap-10 px-4 py-14 lg:grid-cols-2">
       <div>
-        <p class="eyebrow">Chantilly, VA · Fully insured</p>
-        <h1>{s.h1}</h1>
-        <p class="lede mt-4">{s.short}</p>
-
-        <div class="btn-row mt-6">
-          <a href={phoneHref} class="btn btn-lg" data-track="call-service">
-            <Icon name="phone" size={19} /> {site.phone.display}
-          </a>
-          <a href="#quote" class="btn btn-lg btn-ghost">
-            Get a price <Icon name="arrow" size={18} class="arrow" />
-          </a>
+        <p class="text-sm font-semibold text-brand">Chantilly, VA · Fully insured</p>
+        <h1 class="mt-2 font-heading text-4xl font-extrabold tracking-tight text-stone-900 md:text-5xl">{s.h1}</h1>
+        <p class="mt-4 max-w-xl text-lg leading-relaxed text-stone-600">{s.short}</p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href={phoneHref} class={cn(buttonVariants(), 'h-11 px-5')} data-track="call-service">{site.phone.display}</a>
+          <a href="#quote" class={cn(buttonVariants({ variant: 'outline' }), 'h-11 border-stone-300 bg-white px-5')}>Get a price</a>
         </div>
-        <p class="hero-note">Or text a photo to {site.phone.display}.</p>
+        <p class="mt-4 text-sm text-stone-500">Or text a photo to {site.phone.display}.</p>
       </div>
-      <Figure imageKey={s.image} priority ratio="4/3" sizes="(max-width: 900px) 100vw, 45vw" />
+      <Figure imageKey={s.image} priority ratio="4/3" sizes="(max-width: 1024px) 100vw, 45vw" class="shadow-lg" />
     </div>
   </section>
 
-  <!-- ── Price ────────────────────────────────────────────────────────── -->
-  <section class="section-sm price-sec">
-    <div class="container">
-      <div class="section-head">
-        <p class="eyebrow">Price</p>
-        <h2>What it costs</h2>
-      </div>
-      <ul class="price-row">
+  <section class="bg-white">
+    <div class="mx-auto max-w-6xl px-4 py-14">
+      <p class="text-sm font-semibold text-brand">Price</p>
+      <h2 class="mt-2 font-heading text-3xl font-extrabold tracking-tight text-stone-900 md:text-4xl">What it costs</h2>
+      <ul class="mt-8 grid list-none gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {
           tiers.map((t) => (
-            <li>
-              <span class="pr-name">{t.name}</span>
-              <strong class="pr-price">{t.price}</strong>
-              <span class="pr-covers">{t.covers}</span>
+            <li class="rounded-2xl bg-[#f4f7f5] p-5">
+              <p class="text-sm font-semibold text-stone-500">{t.name}</p>
+              <p class="mt-2 font-heading text-2xl font-extrabold tracking-tight text-stone-900">{t.price}</p>
+              <p class="mt-2 text-sm leading-relaxed text-stone-600">{t.covers}</p>
             </li>
           ))
         }
       </ul>
-      <p class="price-note">
-        <Icon name="truck" size={16} />
-        <span>{heavyMaterial.note} <strong>{priceRule}</strong></span>
+      <p class="mt-6 max-w-3xl text-sm leading-relaxed text-stone-600">
+        {heavyMaterial.note} <span class="font-semibold text-stone-900">{priceRule}</span>
       </p>
-      <a href="/pricing" class="link-arrow mt-5">
-        Full pricing <Icon name="arrow" size={15} class="arrow" />
-      </a>
+      <a href="/pricing" class="mt-4 inline-block text-sm font-semibold text-brand hover:underline">Full pricing</a>
     </div>
   </section>
 
-  <!-- ── What we take / what's included ───────────────────────────────── -->
-  <section class="section">
-    <div class="container two-col">
-      <div>
-        <h2>What we take</h2>
-        <ul class="tick-list mt-5">
-          {s.items.map((i) => <li><Icon name="check" size={18} /> {i}</li>)}
+  <section class="bg-[#f4f7f5]">
+    <div class="mx-auto grid max-w-6xl gap-4 px-4 py-14 lg:grid-cols-2">
+      <div class="rounded-2xl bg-white p-6 ring-1 ring-stone-200">
+        <h2 class="font-heading text-2xl font-extrabold tracking-tight text-stone-900">What we take</h2>
+        <ul class="mt-5 grid gap-3">
+          {s.items.map((item) => (
+            <li class="flex items-start gap-2.5 text-sm text-stone-700">
+              <span class="mt-0.5 text-brand" aria-hidden="true">✓</span>
+              {item}
+            </li>
+          ))}
         </ul>
       </div>
-      <div>
-        <h2>What's included</h2>
-        <ul class="tick-list mt-5">
-          {s.includes.map((i) => <li><Icon name="check" size={18} /> {i}</li>)}
+      <div class="rounded-2xl bg-white p-6 ring-1 ring-stone-200">
+        <h2 class="font-heading text-2xl font-extrabold tracking-tight text-stone-900">What's included</h2>
+        <ul class="mt-5 grid gap-3">
+          {s.includes.map((item) => (
+            <li class="flex items-start gap-2.5 text-sm text-stone-700">
+              <span class="mt-0.5 text-brand" aria-hidden="true">✓</span>
+              {item}
+            </li>
+          ))}
         </ul>
-
         {
           s.notes && (
-            <div class="notes">
-              <h3>Worth knowing</h3>
-              <ul>
-                {s.notes.map((n) => <li>{n}</li>)}
+            <div class="mt-6 border-t border-stone-200 pt-5">
+              <h3 class="font-heading text-base font-extrabold text-stone-900">Worth knowing</h3>
+              <ul class="mt-3 grid gap-2">
+                {s.notes.map((note) => <li class="text-sm leading-relaxed text-stone-600">{note}</li>)}
               </ul>
             </div>
           )
@@ -117,65 +124,49 @@ const others = services.filter((o) => o.id !== s.id).sort((a, b) => a.order - b.
     </div>
   </section>
 
-  <!-- ── Areas ────────────────────────────────────────────────────────── -->
-  <section class="section-sm" data-band="muted">
-    <div class="container container-tight center-block">
-      <h2>Where we do it</h2>
-      <p class="lede mt-4">
-        Fairfax, Loudoun, Prince William and Arlington counties. Same price everywhere.
+  <section class="bg-white">
+    <div class="mx-auto max-w-6xl px-4 py-14 text-center">
+      <h2 class="font-heading text-3xl font-extrabold tracking-tight text-stone-900">Where we do it</h2>
+      <p class="mx-auto mt-4 max-w-xl text-lg text-stone-600">
+        Fairfax, Loudoun, Prince William, and Arlington. Same price everywhere.
       </p>
-      <a href="/locations" class="link-arrow mt-4">
-        See the towns we cover <Icon name="arrow" size={15} class="arrow" />
-      </a>
+      <a href="/locations" class="mt-4 inline-block text-sm font-semibold text-brand hover:underline">See the towns we cover</a>
     </div>
   </section>
 
-  <!-- ── FAQ ──────────────────────────────────────────────────────────── -->
-  <section class="section">
-    <div class="container">
-      <FAQ items={s.faq} title={`${s.title} — questions`} eyebrow="FAQ" openFirst />
+  <section class="bg-[#f4f7f5]">
+    <div class="mx-auto max-w-6xl px-4 py-14">
+      <FAQ items={s.faq} title={`${s.title} questions`} eyebrow="FAQ" openFirst />
     </div>
   </section>
 
-  <!-- ── Quote ────────────────────────────────────────────────────────── -->
-  <section class="section quote-sec" id="quote" data-band="muted">
-    <div class="container quote-inner">
+  <section class="bg-white" id="quote">
+    <div class="mx-auto grid max-w-6xl items-start gap-10 px-4 py-14 lg:grid-cols-2">
       <div>
-        <p class="eyebrow">Free quote</p>
-        <h2>Get a price</h2>
-        <p class="lede mt-4">
+        <p class="text-sm font-semibold text-brand">Free quote</p>
+        <h2 class="mt-2 font-heading text-3xl font-extrabold tracking-tight text-stone-900 md:text-4xl">Get a price</h2>
+        <p class="mt-4 max-w-md text-lg leading-relaxed text-stone-600">
           Send a photo and a rough idea of what's going. We'll come back with a number.
         </p>
-        <div class="quote-direct">
-          <a href={phoneHref} class="quote-phone">
-            <Icon name="phone" size={22} /> {site.phone.display}
-          </a>
-          <a href={smsHref} class="link-arrow">
-            Text a photo <Icon name="arrow" size={16} class="arrow" />
-          </a>
-        </div>
+        <a href={phoneHref} class="mt-6 inline-block font-heading text-3xl font-extrabold text-brand hover:underline">{site.phone.display}</a>
+        <a href={smsHref} class="mt-3 block text-sm font-semibold text-brand hover:underline">Text a photo</a>
       </div>
-      <div class="card quote-card">
+      <div class="rounded-2xl bg-[#f4f7f5] p-5 ring-1 ring-stone-200 sm:p-6">
         <QuoteForm preselect={s.id} id={`quote-${s.id}`} />
       </div>
     </div>
   </section>
 
-  <!-- ── Other services ──────────────────────────────────────────────── -->
-  <section class="section-sm">
-    <div class="container">
-      <h2 class="other-head">We also do</h2>
-      <ul class="other-grid">
+  <section class="bg-[#f4f7f5]">
+    <div class="mx-auto max-w-6xl px-4 py-14">
+      <h2 class="text-center font-heading text-3xl font-extrabold tracking-tight text-stone-900">We also do</h2>
+      <ul class="mt-8 grid list-none gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {
           others.map((o) => (
             <li>
-              <a href={`/services/${o.id}`}>
-                <span class="o-icon"><Icon name={o.icon} size={20} /></span>
-                <span>
-                  <strong>{o.title}</strong>
-                  <em>{o.short}</em>
-                </span>
-                <Icon name="arrow" size={15} class="arrow" />
+              <a href={`/services/${o.id}`} class="flex h-full flex-col rounded-2xl bg-white p-5 ring-1 ring-stone-200 transition hover:-translate-y-0.5 hover:shadow-md">
+                <span class="font-heading text-lg font-extrabold text-stone-900">{shortName[o.id] ?? o.title}</span>
+                <span class="mt-2 text-sm leading-relaxed text-stone-600">{o.short}</span>
               </a>
             </li>
           ))
@@ -186,234 +177,3 @@ const others = services.filter((o) => o.id !== s.id).sort((a, b) => a.order - b.
 
   <CTABand />
 </Base>
-
-<style>
-  .svc-hero {
-    padding-block: var(--sp-8) var(--sp-7);
-    background: linear-gradient(180deg, var(--surface-sunk), var(--surface));
-  }
-  .svc-hero-inner {
-    display: grid;
-    gap: var(--sp-7);
-    align-items: center;
-  }
-  .svc-hero h1 {
-    max-width: 20ch;
-  }
-  .svc-hero .lede {
-    max-width: 48ch;
-  }
-  .hero-note {
-    margin-top: var(--sp-4);
-    font-size: 0.9rem;
-    color: var(--muted);
-  }
-  @media (min-width: 900px) {
-    .svc-hero-inner {
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: var(--sp-8);
-    }
-  }
-
-  .price-sec {
-    background: var(--surface-sunk);
-  }
-  .price-row {
-    list-style: none;
-    padding: 0;
-    display: grid;
-    gap: var(--sp-4);
-  }
-  .price-row li {
-    display: grid;
-    gap: var(--sp-1);
-    padding: var(--sp-5);
-    background: #fff;
-    border: 1px solid var(--line);
-    border-radius: var(--r-lg);
-  }
-  .pr-name {
-    font-size: 0.7rem;
-    font-weight: 800;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-  .pr-price {
-    font-size: var(--step-2);
-    font-weight: 850;
-    letter-spacing: -0.03em;
-    color: var(--accent-deep, var(--accent));
-  }
-  .pr-covers {
-    font-size: 0.88rem;
-    line-height: 1.45;
-    color: var(--muted);
-  }
-  .price-note {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: var(--sp-3);
-    align-items: start;
-    margin-top: var(--sp-5);
-    font-size: 0.93rem;
-    line-height: 1.55;
-  }
-  .price-note :global(svg) {
-    color: var(--accent-deep, var(--accent));
-    margin-top: 3px;
-  }
-  @media (min-width: 700px) {
-    .price-row {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-  @media (min-width: 1000px) {
-    .price-row {
-      grid-template-columns: repeat(4, 1fr);
-    }
-  }
-
-  .two-col {
-    display: grid;
-    gap: var(--sp-7);
-    align-items: start;
-  }
-  @media (min-width: 800px) {
-    .two-col {
-      grid-template-columns: 1fr 1fr;
-      gap: var(--sp-8);
-    }
-  }
-  .tick-list {
-    list-style: none;
-    padding: 0;
-    display: grid;
-    gap: var(--sp-3);
-  }
-  .tick-list li {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: var(--sp-3);
-    align-items: start;
-    line-height: 1.5;
-  }
-  .tick-list :global(svg) {
-    color: var(--gold);
-    margin-top: 0.25em;
-  }
-
-  .notes {
-    margin-top: var(--sp-6);
-    padding-top: var(--sp-5);
-    border-top: 1px solid var(--line);
-  }
-  .notes h3 {
-    font-size: 0.7rem;
-    font-weight: 800;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-  .notes ul {
-    margin-top: var(--sp-3);
-    padding-left: 1.1rem;
-    display: grid;
-    gap: var(--sp-2);
-  }
-  .notes li {
-    font-size: 0.92rem;
-    line-height: 1.55;
-    color: var(--muted);
-  }
-
-  .center-block {
-    text-align: center;
-  }
-  .center-block .lede {
-    margin-inline: auto;
-    max-width: 48ch;
-  }
-
-  .quote-inner {
-    display: grid;
-    gap: var(--sp-7);
-    align-items: start;
-  }
-  .quote-direct {
-    margin-top: var(--sp-6);
-    display: grid;
-    gap: var(--sp-3);
-    justify-items: start;
-  }
-  .quote-phone {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--sp-2);
-    font-family: var(--font-display);
-    font-size: 1.9rem;
-    font-weight: 800;
-    color: var(--accent-deep, var(--accent));
-    text-decoration: none;
-  }
-  .quote-card {
-    padding: var(--sp-5);
-  }
-  @media (min-width: 960px) {
-    .quote-inner {
-      grid-template-columns: 0.85fr 1.15fr;
-      gap: var(--sp-8);
-    }
-  }
-
-  .other-head {
-    font-size: var(--step-2);
-    margin-bottom: var(--sp-5);
-  }
-  .other-grid {
-    list-style: none;
-    padding: 0;
-    display: grid;
-    gap: var(--sp-3);
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
-  }
-  .other-grid a {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    gap: var(--sp-3);
-    align-items: center;
-    height: 100%;
-    padding: var(--sp-4);
-    background: var(--surface-raised);
-    border: 1px solid var(--line);
-    border-radius: var(--r-lg);
-    text-decoration: none;
-    color: var(--ink);
-    transition: border-color var(--dur) var(--ease), transform var(--dur) var(--ease);
-  }
-  .other-grid a:hover {
-    border-color: var(--accent);
-    transform: translateY(-2px);
-  }
-  .o-icon {
-    display: grid;
-    place-items: center;
-    width: 40px;
-    height: 40px;
-    border-radius: var(--r-md);
-    background: var(--accent);
-    color: #fff;
-  }
-  .other-grid strong {
-    display: block;
-    font-size: 0.96rem;
-  }
-  .other-grid em {
-    display: block;
-    margin-top: 2px;
-    font-style: normal;
-    font-size: 0.83rem;
-    color: var(--muted);
-    line-height: 1.4;
-  }
-</style>

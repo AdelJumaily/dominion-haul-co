@@ -2,26 +2,80 @@
 import Base from '../../layouts/Base.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import CTABand from '../../components/CTABand.astro';
-import Icon from '../../components/Icon.astro';
+import { Card } from '../../components/ui/card';
+import { buttonVariants } from '../../components/ui/button';
+import { cn } from 'cn';
 import { site, phoneHref } from '../../config/site';
-import { navServices } from '../../config/services';
-import { tiers, heavyMaterial } from '../../config/pricing';
 
 const crumbs = [
   { name: 'Home', url: '/' },
   { name: 'Services', url: '/services' },
 ];
 
-const cantTake = [
-  'Paint, solvents, gas and oil',
-  'Pool chemicals',
-  'Propane and pressurized tanks',
-  'Asbestos',
-  'Medical waste',
-  'Firearms and ammunition',
+const cards = [
+  {
+    href: '/services/junk-removal',
+    title: 'Household junk',
+    line: 'Bags, boxes, mattresses, and the spare-room pile.',
+    src: '/images/services/household.webp',
+    alt: 'Trash bags, cardboard boxes, a mattress, and a bookshelf set out on a driveway',
+  },
+  {
+    href: '/services/furniture-removal',
+    title: 'Furniture',
+    line: 'Couches, dressers, mattresses, and desks.',
+    src: '/images/services/furniture.webp',
+    alt: 'A sofa, a wooden dresser, and a mattress on a concrete driveway',
+  },
+  {
+    href: '/services/appliance-removal',
+    title: 'Appliances',
+    line: 'Fridges, washers, dryers, and stoves.',
+    src: '/images/services/appliances.webp',
+    alt: 'A refrigerator, a washing machine, and a stove on a driveway',
+  },
+  {
+    href: '/services/garage-basement-attic-cleanouts',
+    title: 'Garage and attic',
+    line: 'The whole space, cleared in one visit.',
+    src: '/images/services/garage.webp',
+    alt: 'An open garage packed with boxes, bins, tools, and a bicycle',
+  },
+  {
+    href: '/services/estate-cleanouts',
+    title: 'Estate cleanouts',
+    line: 'A family home, cleared at your pace.',
+    src: '/images/services/estate.webp',
+    alt: 'A living room with stacked boxes, folded blankets, and a lamp',
+  },
+  {
+    href: '/services/yard-waste-removal',
+    title: 'Yard waste',
+    line: 'Branches, brush, and bagged leaves.',
+    src: '/images/services/yard.webp',
+    alt: 'Cut branches, brush, and paper yard bags on a lawn',
+  },
+  {
+    href: '/services/construction-debris-removal',
+    title: 'Remodel debris',
+    line: 'Drywall, cabinets, and flooring. No dumpster.',
+    src: '/images/services/remodel.webp',
+    alt: 'Broken drywall, wood trim, and a cabinet door piled on a driveway',
+  },
 ];
 
-const wontDo = ['Moving', 'Pianos', 'Safes', 'Hot tubs'];
+const skip = [
+  'Paint and solvents',
+  'Pool chemicals',
+  'Propane tanks',
+  'Asbestos',
+  'Medical waste',
+  'Firearms',
+  'Moving jobs',
+  'Pianos',
+  'Safes',
+  'Hot tubs',
+];
 ---
 
 <Base
@@ -31,235 +85,73 @@ const wontDo = ['Moving', 'Pianos', 'Safes', 'Hot tubs'];
 >
   <Breadcrumbs crumbs={crumbs} />
 
-  <section class="page-hero" data-band="dark">
-    <div class="container">
-      <p class="eyebrow">What we haul</p>
-      <h1>Our Services</h1>
-      <p class="lede mt-4">
-        One heavy item or a whole house. You point at what's going, we carry it out and
-        haul it off. Price is set before anything goes on the truck.
-      </p>
-      <div class="btn-row mt-6">
-        <a href={phoneHref} class="btn btn-gold btn-lg">
-          <Icon name="phone" size={19} /> {site.phone.display}
+  <section class="bg-[#f4f7f5]">
+    <div class="mx-auto max-w-6xl px-4 py-14">
+      <div class="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+        <div class="max-w-xl">
+          <p class="text-sm font-semibold text-brand">Services</p>
+          <h1 class="mt-2 font-heading text-4xl font-extrabold tracking-tight text-stone-900 md:text-5xl">
+            What we haul
+          </h1>
+          <p class="mt-3 text-lg leading-relaxed text-stone-600">
+            One item or a whole house. The price is set before we load.
+          </p>
+        </div>
+        <a href={phoneHref} class={cn(buttonVariants(), 'h-11 shrink-0 px-5')}>
+          Call {site.phone.display}
         </a>
-        <a href="/pricing" class="btn btn-ghost btn-lg">See prices</a>
       </div>
-    </div>
-  </section>
 
-  <section class="section">
-    <div class="container">
-      <ul class="svc-cards">
+      <ul class="mt-10 grid list-none gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {
-          navServices.map((s) => (
+          cards.map((card) => (
             <li>
-              <a href={`/services/${s.id}`} class="svc-card">
-                <span class="sc-icon"><Icon name={s.icon} size={24} /></span>
-                <h2>{s.title}</h2>
-                <p>{s.short}</p>
-                <span class="sc-more">
-                  See details &amp; price <Icon name="arrow" size={15} class="arrow" />
-                </span>
+              <a href={card.href} class="group block h-full">
+                <Card className="h-full gap-0 overflow-hidden p-0 py-0 ring-stone-200 transition duration-200 group-hover:-translate-y-0.5 group-hover:shadow-lg">
+                  <img
+                    src={card.src}
+                    alt={card.alt}
+                    width="1152"
+                    height="864"
+                    loading="lazy"
+                    decoding="async"
+                    class="aspect-[4/3] w-full object-cover"
+                  />
+                  <div class="flex flex-1 flex-col gap-1 p-5">
+                    <h2 class="font-heading text-lg font-extrabold text-stone-900 group-hover:text-brand">
+                      {card.title}
+                    </h2>
+                    <p class="text-sm leading-relaxed text-stone-600">{card.line}</p>
+                  </div>
+                </Card>
               </a>
             </li>
           ))
         }
       </ul>
-    </div>
-  </section>
 
-  <section class="section-sm" data-band="muted">
-    <div class="container">
-      <div class="section-head">
-        <p class="eyebrow">Pricing, short version</p>
-        <h2>What things cost</h2>
-      </div>
-      <ul class="mini-prices">
-        {
-          tiers.map((t) => (
-            <li>
-              <span>{t.name}</span>
-              <strong>{t.price}</strong>
-            </li>
-          ))
-        }
-      </ul>
-      <p class="mini-note">{heavyMaterial.note}</p>
-      <a href="/pricing" class="link-arrow mt-4">
-        Full pricing <Icon name="arrow" size={15} class="arrow" />
-      </a>
-    </div>
-  </section>
-
-  <section class="section-sm">
-    <div class="container cant">
-      <div>
-        <p class="eyebrow">Straight answers</p>
-        <h2>What we can't take</h2>
-        <p class="mt-4 muted">
-          Hazardous material needs a household hazardous waste drop-off. Every county around
-          here runs one. Ask us and we'll point you at it.
+      <div class="mt-8 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-white px-5 py-4 ring-1 ring-stone-200">
+        <p class="text-sm text-stone-600">
+          One heavy item from <span class="font-semibold text-stone-900">$165</span>. Heavy material is quoted by weight.
         </p>
-        <h3 class="wont-head">And a few things we don't do</h3>
-        <ul class="wont-list">
-          {wontDo.map((w) => <li><Icon name="x" size={16} /> {w}</li>)}
-        </ul>
+        <a href="/pricing" class="text-sm font-semibold text-brand hover:underline">See prices</a>
       </div>
-      <ul class="cant-list">
-        {cantTake.map((c) => <li><Icon name="x" size={18} /> {c}</li>)}
-      </ul>
+
+      <div class="mt-5 rounded-2xl bg-white p-6 ring-1 ring-stone-200">
+        <h2 class="font-heading text-lg font-extrabold text-stone-900">What we don't take</h2>
+        <ul class="mt-4 flex list-none flex-wrap gap-2">
+          {
+            skip.map((item) => (
+              <li class="rounded-full bg-stone-100 px-3 py-1 text-sm font-medium text-stone-700">{item}</li>
+            ))
+          }
+        </ul>
+        <p class="mt-4 text-sm text-stone-500">
+          Hazardous waste goes to the county drop-off. Ask and we'll point you to it.
+        </p>
+      </div>
     </div>
   </section>
 
-  <CTABand />
+  <CTABand heading="Tell us what's going" sub="Text a photo. We'll send a price." />
 </Base>
-
-<style>
-  .page-hero {
-    background: var(--accent);
-    padding-block: var(--sp-8);
-  }
-  .page-hero h1 {
-    color: #fff;
-  }
-  .page-hero .lede {
-    color: #dbe7e1;
-    max-width: 54ch;
-  }
-
-  .svc-cards {
-    list-style: none;
-    padding: 0;
-    display: grid;
-    gap: var(--sp-4);
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
-  }
-  .svc-card {
-    display: flex;
-    flex-direction: column;
-    gap: var(--sp-2);
-    height: 100%;
-    padding: var(--sp-5);
-    background: #fff;
-    border: 1px solid var(--line);
-    border-top: 4px solid var(--accent);
-    border-radius: var(--r-lg);
-    text-decoration: none;
-    color: var(--ink);
-    transition: box-shadow var(--dur) var(--ease), transform var(--dur) var(--ease),
-      border-color var(--dur) var(--ease);
-  }
-  .svc-card:hover {
-    box-shadow: var(--shadow-md);
-    transform: translateY(-2px);
-    border-top-color: var(--gold);
-  }
-  .sc-icon {
-    display: grid;
-    place-items: center;
-    width: 48px;
-    height: 48px;
-    margin-bottom: var(--sp-2);
-    border-radius: var(--r-md);
-    background: var(--accent);
-    color: #fff;
-  }
-  .svc-card h2 {
-    font-size: var(--step-1);
-  }
-  .svc-card p {
-    color: var(--muted);
-    line-height: 1.5;
-  }
-  .sc-more {
-    margin-top: auto;
-    padding-top: var(--sp-4);
-    display: inline-flex;
-    align-items: center;
-    gap: var(--sp-2);
-    font-size: 0.86rem;
-    font-weight: 700;
-    color: var(--accent-deep, var(--accent));
-  }
-
-  .mini-prices {
-    list-style: none;
-    padding: 0;
-    display: grid;
-    gap: var(--sp-3);
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
-  }
-  .mini-prices li {
-    display: grid;
-    gap: 2px;
-    padding: var(--sp-4);
-    background: #fff;
-    border: 1px solid var(--line);
-    border-radius: var(--r-md);
-  }
-  .mini-prices span {
-    font-size: 0.82rem;
-    color: var(--muted);
-    font-weight: 600;
-  }
-  .mini-prices strong {
-    font-size: var(--step-1);
-    font-weight: 850;
-    letter-spacing: -0.03em;
-  }
-  .mini-note {
-    margin-top: var(--sp-4);
-    font-size: 0.92rem;
-    color: var(--muted);
-  }
-
-  .cant {
-    display: grid;
-    gap: var(--sp-6);
-  }
-  .cant-list,
-  .wont-list {
-    list-style: none;
-    padding: 0;
-    display: grid;
-    gap: var(--sp-3);
-  }
-  .cant-list li,
-  .wont-list li {
-    display: flex;
-    gap: var(--sp-2);
-    align-items: center;
-    font-weight: 600;
-  }
-  .cant-list :global(svg),
-  .wont-list :global(svg) {
-    color: #b3412e;
-    flex: none;
-  }
-  .wont-head {
-    margin-top: var(--sp-6);
-    font-size: 0.7rem;
-    font-weight: 800;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: var(--sp-3);
-  }
-  .wont-list {
-    /* Wraps rather than forcing a single row — a column grid of max-content
-       items overflows the viewport on a narrow phone. */
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--sp-3) var(--sp-4);
-  }
-  @media (min-width: 800px) {
-    .cant {
-      grid-template-columns: 1fr 1fr;
-      align-items: start;
-    }
-    .cant-list {
-      grid-template-columns: 1fr 1fr;
-    }
-  }
-</style>

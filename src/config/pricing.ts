@@ -34,7 +34,7 @@ export const tiers: Tier[] = [
   },
   {
     id: 'living-room-set',
-    name: 'Sofa, loveseat and chair',
+    name: 'A few big pieces',
     price: 'About $275',
     priceFrom: 275,
     priceTo: 275,

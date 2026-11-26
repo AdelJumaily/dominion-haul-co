@@ -34,8 +34,8 @@ import Icon from './Icon.astro';
     z-index: 90;
     display: grid;
     grid-template-columns: 1.4fr 1fr 1fr;
-    background: var(--ink);
-    border-top: 1px solid var(--ink-line);
+    background: #074b39;
+    border-top: 1px solid #04291f;
     padding-bottom: env(safe-area-inset-bottom);
     box-shadow: 0 -4px 20px rgb(20 32 25 / 0.16);
   }
@@ -46,26 +46,28 @@ import Icon from './Icon.astro';
     justify-content: center;
     gap: 3px;
     height: var(--callbar-h);
-    color: var(--surface);
+    color: #fff;
     text-decoration: none;
     font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.01em;
-    border-left: 1px solid var(--ink-line);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: none;
+    border-left: 1px solid rgb(255 255 255 / 0.18);
     transition: background var(--dur) var(--ease);
   }
   .cb-item:first-child {
     border-left: 0;
   }
   .cb-item:active {
-    background: var(--ink-soft);
+    background: var(--green-deep);
   }
   .cb-primary {
-    background: var(--accent);
-    color: #f4f7f4;
+    background: #04291f;
+    color: #fff;
   }
   .cb-primary:active {
-    background: var(--accent-hot);
+    background: var(--green-deep);
+    color: #fff;
   }
 
   @media (min-width: 768px) {

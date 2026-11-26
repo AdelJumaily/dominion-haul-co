@@ -1,100 +1,137 @@
 ---
 import Base from '../layouts/Base.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
-import Icon from '../components/Icon.astro';
-import { site, phoneHref } from '../config/site';
+import { Card, CardHeader, CardContent } from '../components/ui/card';
+import { buttonVariants } from '../components/ui/button';
+import { cn } from 'cn';
+import { site, phoneHref, images } from '../config/site';
 
 const crumbs = [
   { name: 'Home', url: '/' },
-  { name: 'Commercial Partners', url: '/commercial' },
+  { name: 'Commercial', url: '/commercial' },
+];
+
+const work = [
+  { t: 'Commercial junk', d: 'Offices, retail, warehouses, and tenant turnovers. Furniture, fixtures, and the pile left after a move-out.' },
+  { t: 'C&D debris', d: 'Drywall, lumber, flooring, roofing, concrete, and the rest of a tear-out. Heavy material is quoted by weight.' },
+  { t: 'Job sites', d: 'Remodels and construction sites that need the debris gone so the crew can keep working.' },
+  { t: 'Contract accounts', d: 'Recurring pulls, multi-site work, and the jobs that take more than one load.' },
+];
+
+const scale = [
+  { t: 'Equipment for the job', d: 'Large loads get the trucks and equipment a job site needs, not a curbside pickup.' },
+  { t: 'Built for volume', d: 'We take the big contracts: multi-load cleanouts, phased projects, and accounts with more than one address.' },
+  { t: 'On your schedule', d: 'We come back as debris builds, or we clear a defined pile in one visit. You pick the cadence.' },
+  { t: 'Paperwork ready', d: 'Certificate of insurance and a W-9 for your vendor file. One invoice per job, by email.' },
+  { t: 'Price before we load', d: 'You get the number in writing from photos, then we confirm it on site before anything goes on the truck.' },
+  { t: 'A person on the phone', d: 'One point of contact. Calls and texts come to us, not a call center.' },
 ];
 
 const partners = [
-  {
-    icon: 'building',
-    t: 'Property Managers',
-    d: 'Tenant move-out cleanouts, abandoned furniture and unit turnovers on your deadline.',
-  },
-  {
-    icon: 'tag',
-    t: 'Realtors & Brokerages',
-    d: 'Pre-listing cleanouts, vacant homes after closing and estate properties, photo-ready on your timeline.',
-  },
-  {
-    icon: 'hammer',
-    t: 'Remodelers & Contractors',
-    d: 'Drywall, cabinets, flooring and packaging hauled off without a dumpster sitting in the driveway.',
-  },
-  {
-    icon: 'home',
-    t: 'HOAs & Community Associations',
-    d: 'Common-area cleanups, storm debris and bulk pickups for your community.',
-  },
-  {
-    icon: 'truck',
-    t: 'Businesses & Offices',
-    d: 'Old office furniture, equipment, storage rooms and small warehouse cleanouts.',
-  },
-  {
-    icon: 'shield',
-    t: 'Estate Attorneys & Move Managers',
-    d: 'Careful estate and downsizing cleanouts with papers and valuables set aside.',
-  },
-];
-
-const perks = [
-  { t: 'One point of contact', d: 'Your calls and texts come straight to the owner.' },
-  { t: 'Quote from photos', d: 'Send pictures of the unit and we come back with a price in writing. No site visit needed to get started.' },
-  { t: 'Fully insured', d: 'Ask and we will send a certificate of insurance for your company or building.' },
-  { t: 'W-9 for your vendor file', d: 'We send the paperwork you need to set us up as an approved vendor.' },
-  { t: 'Photos when the job is done', d: 'We send pictures of the empty space for your records or your owner.' },
-  { t: 'Clear invoices', d: 'One simple invoice per job, sent by email.' },
+  { t: 'General contractors', d: 'C&D haul-off for active job sites, phased so the work area stays clear.' },
+  { t: 'Property managers', d: 'Unit turns, abandoned furniture, and common-area cleanouts on your deadline.' },
+  { t: 'Remodelers', d: 'Cabinets, flooring, drywall, and packaging. No dumpster sitting in the driveway unless you want one.' },
+  { t: 'Developers', d: 'Multi-unit and multi-site debris, scheduled around your trades.' },
+  { t: 'Offices and retail', d: 'Furniture, fixtures, and storage rooms cleared after a close or a refresh.' },
+  { t: 'HOAs', d: 'Bulk pickups, storm debris, and community cleanups.' },
 ];
 
 const steps = [
-  { t: 'Reach out', d: 'Use the form below or call. Tell us about your company and the kind of work you need.' },
-  { t: 'Get set up', d: 'We send our certificate of insurance and W-9 so you can add us to your vendor list.' },
-  { t: 'Book your first job', d: 'Call or text whenever you need us. Save the number and we take it from there.' },
+  { t: 'Send the scope', d: 'Photos, addresses, and how often you need us. A big site gets a written number, not a guess.' },
+  { t: 'Get set up', d: 'We send the certificate of insurance and W-9 so you can add us as a vendor.' },
+  { t: 'We run the work', d: 'One contact for the account. Call when the next load is ready.' },
 ];
+
+const photo = images.constructionDebris;
 ---
 
 <Base
-  title="Commercial Junk Removal | Property Managers & Realtors"
-  description="Junk removal for property managers, realtors, remodelers, HOAs and businesses in Northern Virginia. Quote from photos, fully insured, W-9 on request."
+  title="Commercial Junk Removal and C&D | Dominion Haul"
+  description="Commercial junk removal and construction debris haul-off in Northern Virginia. Job sites, C&D, and contract accounts. Insured, W-9 on request. Chantilly, VA."
   schema={{ type: 'WebPage', breadcrumbs: crumbs }}
 >
   <Breadcrumbs crumbs={crumbs} />
 
-  <section class="page-hero" data-band="dark">
-    <div class="container hero-grid">
+  <section class="bg-[#f4f7f5]">
+    <div class="mx-auto grid max-w-6xl items-center gap-10 px-4 py-14 lg:grid-cols-2">
       <div>
-        <p class="eyebrow">For businesses</p>
-        <h1>Add Us to Your Vendor List</h1>
-        <p class="lede mt-4">
-          Property managers, realtors, remodelers, HOAs and businesses across Northern
-          Virginia. One number to call when something needs to go.
+        <p class="text-sm font-semibold text-brand">Commercial and C&D</p>
+        <h1 class="mt-2 font-heading text-4xl font-extrabold tracking-tight text-stone-900 md:text-5xl">
+          Junk removal built for job sites and big contracts.
+        </h1>
+        <p class="mt-4 text-lg leading-relaxed text-stone-600">
+          Commercial cleanouts and construction debris, including the loads that fill more than one truck. We take large projects and ongoing accounts across Northern Virginia.
         </p>
-        <div class="btn-row mt-6">
-          <a href="#partner-form" class="btn btn-gold btn-lg">Become a Partner</a>
-          <a href={phoneHref} class="btn btn-ghost btn-lg"><Icon name="phone" size={20} /> {site.phone.display}</a>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="#partner-form" class={cn(buttonVariants(), 'h-11 px-5')}>Talk about a contract</a>
+          <a href={phoneHref} class={cn(buttonVariants({ variant: 'outline' }), 'h-11 border-stone-300 bg-white px-5')}>
+            {site.phone.display}
+          </a>
         </div>
       </div>
+      <img
+        src={photo.src}
+        alt={photo.alt}
+        width={photo.width}
+        height={photo.height}
+        class="aspect-[4/3] w-full rounded-2xl object-cover shadow-xl ring-1 ring-stone-200"
+      />
     </div>
   </section>
 
-  <section class="section">
-    <div class="container">
-      <div class="section-head center-head">
-        <p class="eyebrow">Who we work with</p>
-        <h2>Built for Businesses That Need Things Gone</h2>
-      </div>
-      <ul class="cards">
+  <section class="bg-white">
+    <div class="mx-auto max-w-6xl px-4 py-14">
+      <p class="text-sm font-semibold text-brand">What we haul</p>
+      <h2 class="mt-2 font-heading text-3xl font-extrabold tracking-tight text-stone-900 md:text-4xl">Commercial junk and C&D</h2>
+      <ul class="mt-8 grid list-none gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          work.map((item) => (
+            <li class="rounded-2xl bg-[#f4f7f5] p-5">
+              <h3 class="font-heading text-lg font-extrabold text-stone-900">{item.t}</h3>
+              <p class="mt-2 text-sm leading-relaxed text-stone-600">{item.d}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="bg-[#f4f7f5]">
+    <div class="mx-auto max-w-6xl px-4 py-14">
+      <p class="text-sm font-semibold text-brand">Scale</p>
+      <h2 class="mt-2 max-w-2xl font-heading text-3xl font-extrabold tracking-tight text-stone-900 md:text-4xl">
+        Large projects, with the equipment the load needs.
+      </h2>
+      <ul class="mt-8 grid list-none gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          scale.map((item) => (
+            <li class="rounded-2xl bg-white p-5 ring-1 ring-stone-200">
+              <h3 class="font-heading text-lg font-extrabold text-stone-900">{item.t}</h3>
+              <p class="mt-2 text-sm leading-relaxed text-stone-600">{item.d}</p>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="mt-6 max-w-3xl text-sm leading-relaxed text-stone-500">
+        We haul construction and demolition debris. We do not demolish structures, and we cannot take asbestos. If a months-long site is better served by a container, we will say so.
+      </p>
+    </div>
+  </section>
+
+  <section class="bg-white">
+    <div class="mx-auto max-w-6xl px-4 py-14">
+      <p class="text-sm font-semibold text-brand">Who it's for</p>
+      <h2 class="mt-2 font-heading text-3xl font-extrabold tracking-tight text-stone-900 md:text-4xl">Accounts we run</h2>
+      <ul class="mt-8 grid list-none gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {
           partners.map((p) => (
             <li>
-              <span class="c-icon"><Icon name={p.icon} size={24} /></span>
-              <h3>{p.t}</h3>
-              <p>{p.d}</p>
+              <Card className="h-full shadow-none">
+                <CardHeader>
+                  <h3 class="font-heading text-lg font-extrabold text-stone-900">{p.t}</h3>
+                  <p class="text-sm leading-relaxed text-stone-600">{p.d}</p>
+                </CardHeader>
+              </Card>
             </li>
           ))
         }
@@ -102,41 +139,21 @@ const steps = [
     </div>
   </section>
 
-  <section class="section" data-band="muted">
-    <div class="container">
-      <div class="section-head center-head">
-        <p class="eyebrow">What you get</p>
-        <h2>How We Work With You</h2>
-      </div>
-      <ul class="perks">
-        {
-          perks.map((p) => (
-            <li>
-              <Icon name="check" size={22} />
-              <div>
-                <h3>{p.t}</h3>
-                <p>{p.d}</p>
-              </div>
-            </li>
-          ))
-        }
-      </ul>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="container">
-      <div class="section-head center-head">
-        <p class="eyebrow">Getting started</p>
-        <h2>How to Become a Partner</h2>
-      </div>
-      <ol class="steps">
+  <section class="bg-[#f4f7f5]">
+    <div class="mx-auto max-w-6xl px-4 py-14">
+      <p class="text-sm font-semibold text-brand">Getting started</p>
+      <h2 class="mt-2 font-heading text-3xl font-extrabold tracking-tight text-stone-900 md:text-4xl">How a contract starts</h2>
+      <ol class="mt-8 grid list-none gap-4 md:grid-cols-3">
         {
           steps.map((s, i) => (
             <li>
-              <span class="step-n">{i + 1}</span>
-              <h3>{s.t}</h3>
-              <p>{s.d}</p>
+              <Card className="h-full shadow-none">
+                <CardHeader>
+                  <p class="font-heading text-sm font-extrabold text-brand">{i + 1}</p>
+                  <h3 class="font-heading text-lg font-extrabold text-stone-900">{s.t}</h3>
+                  <p class="text-sm leading-relaxed text-stone-600">{s.d}</p>
+                </CardHeader>
+              </Card>
             </li>
           ))
         }
@@ -144,233 +161,61 @@ const steps = [
     </div>
   </section>
 
-  <section class="section" id="partner-form" data-band="muted">
-    <div class="container form-wrap">
+  <section class="bg-white" id="partner-form">
+    <div class="mx-auto grid max-w-6xl items-start gap-10 px-4 py-14 lg:grid-cols-2">
       <div>
-        <p class="eyebrow">Vendor inquiry</p>
-        <h2>Let's Work Together</h2>
-        <p class="lede mt-4">
-          Tell us about your company. We'll send our paperwork and answer any questions.
+        <p class="text-sm font-semibold text-brand">Vendor inquiry</p>
+        <h2 class="mt-2 font-heading text-3xl font-extrabold tracking-tight text-stone-900 md:text-4xl">Tell us about the project</h2>
+        <p class="mt-4 max-w-md text-lg leading-relaxed text-stone-600">
+          One site or an ongoing account. Send the scope and we'll come back with a number and the paperwork.
         </p>
-        <p class="mt-5">
-          Prefer to talk? Call <a href={phoneHref} class="strong-link">{site.phone.display}</a>
-          or email <a href={`mailto:${site.email}`} class="strong-link">{site.email}</a>.
+        <p class="mt-6 text-sm text-stone-600">
+          Prefer to talk? Call <a href={phoneHref} class="font-semibold text-brand">{site.phone.display}</a>
+          or email <a href={`mailto:${site.email}`} class="font-semibold text-brand">{site.email}</a>.
         </p>
       </div>
 
-      <form
-        class="pf"
-        name="partner"
-        method="POST"
-        data-netlify="true"
-        data-netlify-honeypot="website-url"
-      >
-        <input type="hidden" name="form-name" value="partner" />
-        <p class="hp">
-          <label>Do not fill this in <input name="website-url" tabindex="-1" autocomplete="off" /></label>
-        </p>
-
-        <div class="pf-grid">
-          <label class="field">
-            <span>Company name</span>
-            <input name="company" type="text" autocomplete="organization" required />
-          </label>
-          <label class="field">
-            <span>Your name</span>
-            <input name="name" type="text" autocomplete="name" required />
-          </label>
-          <label class="field">
-            <span>Email</span>
-            <input name="email" type="email" autocomplete="email" required />
-          </label>
-          <label class="field">
-            <span>Phone</span>
-            <input name="phone" type="tel" autocomplete="tel" required />
-          </label>
-          <label class="field pf-span">
-            <span>Type of business</span>
-            <select name="business-type" required>
-              <option value="">Choose one</option>
-              {partners.map((p) => <option>{p.t}</option>)}
-              <option>Other</option>
-            </select>
-          </label>
-          <label class="field pf-span">
-            <span>What kind of work do you need?</span>
-            <textarea name="message" rows="4" placeholder="Number of properties, typical jobs, how often you need hauling..."></textarea>
-          </label>
-        </div>
-        <button type="submit" class="btn btn-gold btn-block btn-lg mt-5">Send Partner Inquiry</button>
-      </form>
+      <Card className="shadow-none">
+        <CardContent>
+          <form class="grid gap-4" name="partner" method="POST" data-netlify="true" data-netlify-honeypot="website-url">
+            <input type="hidden" name="form-name" value="partner" />
+            <p class="absolute -left-[9999px]">
+              <label>Do not fill this in <input name="website-url" tabindex="-1" autocomplete="off" /></label>
+            </p>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <label class="grid gap-1 text-sm font-semibold text-stone-800">
+                Company name
+                <input name="company" type="text" autocomplete="organization" required class="h-11 rounded-lg border border-stone-200 bg-white px-3 font-normal" />
+              </label>
+              <label class="grid gap-1 text-sm font-semibold text-stone-800">
+                Your name
+                <input name="name" type="text" autocomplete="name" required class="h-11 rounded-lg border border-stone-200 bg-white px-3 font-normal" />
+              </label>
+              <label class="grid gap-1 text-sm font-semibold text-stone-800">
+                Email
+                <input name="email" type="email" autocomplete="email" required class="h-11 rounded-lg border border-stone-200 bg-white px-3 font-normal" />
+              </label>
+              <label class="grid gap-1 text-sm font-semibold text-stone-800">
+                Phone
+                <input name="phone" type="tel" autocomplete="tel" required class="h-11 rounded-lg border border-stone-200 bg-white px-3 font-normal" />
+              </label>
+            </div>
+            <label class="grid gap-1 text-sm font-semibold text-stone-800">
+              Type of business
+              <select name="business-type" required class="h-11 rounded-lg border border-stone-200 bg-white px-3 font-normal">
+                <option value="">Choose one</option>
+                {partners.map((p) => <option>{p.t}</option>)}
+                <option>Other</option>
+              </select>
+            </label>
+            <label class="grid gap-1 text-sm font-semibold text-stone-800">
+              What kind of work do you need?
+              <textarea name="message" rows="4" placeholder="Job sites, C&D volume, how often you need hauling, how many addresses..." class="rounded-lg border border-stone-200 bg-white px-3 py-2 font-normal"></textarea>
+            </label>
+            <button type="submit" class={cn(buttonVariants(), 'h-11 w-full')}>Send project inquiry</button>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   </section>
 </Base>
-
-<style>
-  .page-hero {
-    background: var(--accent);
-    padding-block: var(--sp-8);
-  }
-  .page-hero h1 {
-    color: #fff;
-    max-width: 18ch;
-  }
-  .page-hero .lede {
-    color: #dbe7e1;
-    max-width: 56ch;
-  }
-  .center-head {
-    text-align: center;
-    margin-inline: auto;
-    max-width: 52ch;
-  }
-
-  .cards {
-    list-style: none;
-    padding: 0;
-    display: grid;
-    gap: var(--sp-4);
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
-  }
-  .cards li {
-    padding: var(--sp-5);
-    background: #fff;
-    border: 1px solid var(--line);
-    border-top: 4px solid var(--gold);
-    border-radius: var(--r-lg);
-  }
-  .c-icon {
-    display: grid;
-    place-items: center;
-    width: 48px;
-    height: 48px;
-    margin-bottom: var(--sp-3);
-    border-radius: var(--r-md);
-    background: var(--accent);
-    color: #fff;
-  }
-  .cards p {
-    margin-top: var(--sp-2);
-    color: var(--muted);
-  }
-
-  .perks {
-    list-style: none;
-    padding: 0;
-    display: grid;
-    gap: var(--sp-5);
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
-  }
-  .perks li {
-    display: flex;
-    align-items: flex-start;
-    gap: var(--sp-3);
-  }
-  .perks li > :global(svg) {
-    flex: none;
-    color: var(--gold);
-    margin-top: 0.15em;
-  }
-  .perks p {
-    margin-top: var(--sp-1);
-    color: var(--muted);
-  }
-
-  .steps {
-    list-style: none;
-    padding: 0;
-    display: grid;
-    gap: var(--sp-5);
-  }
-  .steps li {
-    text-align: center;
-    padding: var(--sp-5);
-  }
-  .step-n {
-    display: grid;
-    place-items: center;
-    width: 56px;
-    height: 56px;
-    margin: 0 auto var(--sp-4);
-    border-radius: 50%;
-    background: var(--accent);
-    color: var(--gold);
-    font-family: var(--font-display);
-    font-size: 1.8rem;
-    font-weight: 800;
-  }
-  .steps p {
-    margin-top: var(--sp-2);
-    color: var(--muted);
-  }
-  @media (min-width: 800px) {
-    .steps {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-
-  .form-wrap {
-    display: grid;
-    gap: var(--sp-7);
-    align-items: start;
-  }
-  .strong-link {
-    color: var(--accent);
-    font-weight: 700;
-  }
-  .pf {
-    background: #fff;
-    border: 1px solid var(--line);
-    border-radius: var(--r-lg);
-    padding: var(--sp-5);
-    box-shadow: var(--shadow-md);
-  }
-  .pf-grid {
-    display: grid;
-    gap: var(--sp-4);
-  }
-  .field {
-    display: grid;
-    gap: var(--sp-1);
-    font-weight: 600;
-    font-size: 0.95rem;
-  }
-  .field input,
-  .field select,
-  .field textarea {
-    width: 100%;
-    padding: 0.75rem 0.85rem;
-    border: 1px solid var(--line);
-    border-radius: var(--r-md);
-    background: var(--surface);
-    font-weight: 400;
-  }
-  .field input:focus,
-  .field select:focus,
-  .field textarea:focus {
-    outline: 2px solid var(--accent);
-    outline-offset: 1px;
-    background: #fff;
-  }
-  .hp {
-    position: absolute;
-    left: -9999px;
-  }
-  @media (min-width: 640px) {
-    .pf-grid {
-      grid-template-columns: 1fr 1fr;
-    }
-    .pf-span {
-      grid-column: 1 / -1;
-    }
-  }
-  @media (min-width: 960px) {
-    .form-wrap {
-      grid-template-columns: 0.8fr 1.2fr;
-      gap: var(--sp-8);
-    }
-    .pf {
-      padding: var(--sp-6);
-    }
-  }
-</style>

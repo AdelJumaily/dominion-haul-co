@@ -1,7 +1,8 @@
 ---
 /**
- * Dominion Haul logo. `inverted` uses the white-lettered version for dark
- * backgrounds (footer). Source art: public/images/logo.png (3.33:1).
+ * Dominion Haul logo. The header uses the green/gold file on light backgrounds.
+ * `inverted` uses the footer file: green parts knocked out to white, gold unchanged.
+ * Source art: public/images/logo.webp (1200×361).
  */
 interface Props {
   inverted?: boolean;
@@ -18,7 +19,7 @@ const Tag = href === false ? 'span' : 'a';
   aria-label={href === false ? undefined : 'Dominion Haul home'}
 >
   <img
-    src={inverted ? '/images/logo-light.png' : '/images/logo.png'}
+    src={inverted ? '/images/logo-on-dark.webp' : '/images/logo.webp'}
     alt="Dominion Haul"
     class="wm-logo"
     width="1200"

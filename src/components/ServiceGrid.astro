@@ -1,107 +1,42 @@
 ---
-/**
- * Simple services grid: icon, title, one line. Each card links to its
- * section on the single /services page.
- */
-import Icon from './Icon.astro';
 import { services } from '../config/services';
+import { images } from '../config/site';
+import { Card, CardHeader } from './ui/card';
 
 interface Props {
-  /** Optional "in Reston" suffix for town pages. */
   locationTitle?: string;
 }
 const { locationTitle } = Astro.props;
 ---
 
-<ul class="sg">
+<ul class="grid list-none gap-4 p-0 sm:grid-cols-2 lg:grid-cols-3">
   {
-    services.map((s) => (
-      <li>
-        <a href={`/services/${s.id}`} class="sg-card">
-          <span class="sg-icon">
-            <Icon name={s.icon} size={24} />
-          </span>
-          <h3>{s.title}</h3>
-          <p>{s.short}</p>
-          <span class="sg-more">
-            Learn more <Icon name="arrow" size={15} class="arrow" />
-          </span>
-        </a>
-      </li>
-    ))
+    services.map((s) => {
+      const photo = images[s.image];
+      return (
+        <li>
+          <a href={`/services/${s.id}`} class="group block h-full">
+            <Card className="h-full gap-0 overflow-hidden p-0 py-0 ring-stone-200 transition duration-200 group-hover:-translate-y-0.5 group-hover:shadow-lg">
+              <img
+                src={photo.src}
+                alt={photo.alt}
+                width={photo.width}
+                height={photo.height}
+                loading="lazy"
+                decoding="async"
+                class="aspect-[4/3] w-full object-cover"
+              />
+              <CardHeader className="gap-1">
+                <h3 class="font-heading text-lg font-extrabold text-stone-900 group-hover:text-brand">
+                  {s.title}
+                </h3>
+                <p class="text-sm leading-relaxed text-stone-600">{s.short}</p>
+              </CardHeader>
+            </Card>
+          </a>
+        </li>
+      );
+    })
   }
 </ul>
 {locationTitle && <p class="sr-only">Services available in {locationTitle}</p>}
-
-<style>
-  .sg {
-    list-style: none;
-    padding: 0;
-    display: grid;
-    gap: var(--sp-4);
-    grid-template-columns: 1fr;
-  }
-  @media (min-width: 600px) {
-    .sg {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-  @media (min-width: 960px) {
-    .sg {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-  .sg-card {
-    display: flex;
-    flex-direction: column;
-    gap: var(--sp-2);
-    height: 100%;
-    padding: var(--sp-5);
-    background: var(--card);
-    border: 1px solid var(--rule);
-    border-radius: var(--r-lg);
-    color: var(--fg);
-    text-decoration: none;
-    transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease),
-      transform var(--dur) var(--ease);
-  }
-  .sg-card:hover {
-    border-color: var(--gold);
-    box-shadow: var(--shadow-md);
-    transform: translateY(-2px);
-  }
-  .sg-icon {
-    display: grid;
-    place-items: center;
-    width: 48px;
-    height: 48px;
-    border-radius: var(--r-md);
-    background: var(--accent);
-    color: #fff;
-    margin-bottom: var(--sp-2);
-  }
-  .sg-card h3 {
-    font-size: var(--step-1);
-  }
-  .sg-card p {
-    color: var(--fg-muted);
-    font-size: 0.97rem;
-    line-height: 1.5;
-    flex: 1;
-  }
-  .sg-more {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    margin-top: var(--sp-2);
-    font-weight: 700;
-    font-size: 0.92rem;
-    color: var(--accent);
-  }
-  .sg-card:hover .arrow {
-    transform: translateX(3px);
-  }
-  .sg-more :global(.arrow) {
-    transition: transform var(--dur) var(--ease);
-  }
-</style>

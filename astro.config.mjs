@@ -2,6 +2,8 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import react from '@astrojs/react';
+import tailwindcss from '@tailwindcss/vite';
+import path from 'node:path';
 
 // Change SITE to the real domain before launch — it drives sitemap.xml,
 // canonical URLs and every absolute URL inside the Schema.org JSON-LD.
@@ -51,4 +53,12 @@ export default defineConfig({
     inlineStylesheets: 'auto',
   },
   compressHTML: true,
+  vite: {
+    plugins: [tailwindcss()],
+    resolve: {
+      alias: {
+        '@': path.resolve('./src'),
+      },
+    },
+  },
 });

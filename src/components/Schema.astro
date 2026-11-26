@@ -53,7 +53,7 @@ const origin = Astro.site?.origin ?? 'https://dominionhaul.com';
 const abs = (p: string) => new URL(p, origin).href;
 const BIZ = `${origin}/#business`;
 const SITE_ID = `${origin}/#website`;
-const logoUrl = abs('/images/logo.png');
+const logoUrl = abs('/images/logo.webp');
 const primaryImage = image ? abs(image) : logoUrl;
 
 const isHome = url === '/' || url === '';

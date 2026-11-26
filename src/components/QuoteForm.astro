@@ -196,12 +196,12 @@ const { preselect, city, compact = false, id = 'quote-form' } = Astro.props;
   }
   .qf-file input:focus-visible + .qf-file-face,
   .qf-file:hover .qf-file-face {
-    border-color: var(--accent);
+    border-color: var(--green);
     color: var(--fg);
   }
   .qf-file.has-files .qf-file-face {
     border-style: solid;
-    border-color: var(--accent);
+    border-color: var(--green);
     color: var(--fg);
   }
   [data-band='dark'] .qf-file-face {
@@ -224,16 +224,16 @@ const { preselect, city, compact = false, id = 'quote-form' } = Astro.props;
   }
   .qf-fine a {
     color: var(--fg);
-    font-weight: 700;
+    font-weight: 600;
     text-decoration: underline;
-    text-decoration-color: var(--accent);
+    text-decoration-color: var(--green);
     text-underline-offset: 2px;
   }
 
   .qf-status {
     padding: var(--sp-4);
     border-radius: var(--r-md);
-    font-weight: 650;
+    font-weight: 600;
     font-size: 0.92rem;
     text-align: center;
   }

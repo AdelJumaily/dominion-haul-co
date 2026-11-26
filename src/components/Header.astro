@@ -1,227 +1,162 @@
 ---
-import { site, phoneHref, nav } from '../config/site';
-import Icon from './Icon.astro';
+import { site, phoneHref } from '../config/site';
+import { getCollection } from 'astro:content';
 import BrandMark from './BrandMark.astro';
+import { buttonVariants } from './ui/button';
+import { cn } from 'cn';
 
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 const isActive = (href: string) => path === href || path.startsWith(href + '/');
+
+const counties = (await getCollection('locations'))
+  .filter((l) => l.data.kind === 'county')
+  .sort((a, b) => a.data.title.localeCompare(b.data.title));
 ---
 
 <a class="skip-link" href="#main">Skip to content</a>
 
-<header class="site-header">
-  <div class="container header-inner">
+<header class="sticky top-3 z-50 px-3 md:px-4">
+  <nav class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/70 bg-white/65 px-3 py-2.5 shadow-[0_8px_32px_rgba(7,75,57,0.12)] backdrop-blur-xl md:px-5" aria-label="Primary">
     <BrandMark />
 
-    <nav class="primary-nav" aria-label="Primary">
-      <ul>
-        {
-          nav.map((item) => (
+    <button
+      type="button"
+      class="inline-flex h-10 w-10 items-center justify-center rounded-lg text-stone-700 hover:bg-stone-100 md:hidden"
+      data-collapse-toggle="mobile-nav"
+      aria-controls="mobile-nav"
+      aria-expanded="false"
+      aria-label="Open menu"
+    >
+      <svg class="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M5 7h14M5 12h14M5 17h14"></path>
+      </svg>
+    </button>
+
+    <div class="hidden items-center gap-1 md:flex">
+      <a
+        href="/services"
+        class:list={[
+          'rounded-lg px-3 py-2 text-sm font-medium hover:bg-stone-100',
+          isActive('/services') ? 'text-brand' : 'text-stone-800',
+        ]}
+        aria-current={isActive('/services') ? 'page' : undefined}
+      >
+        Services
+      </a>
+
+      <a
+        href="/pricing"
+        class:list={[
+          'rounded-lg px-3 py-2 text-sm font-medium hover:bg-stone-100',
+          isActive('/pricing') ? 'text-brand' : 'text-stone-800',
+        ]}
+        aria-current={isActive('/pricing') ? 'page' : undefined}
+      >
+        Pricing
+      </a>
+
+      <button
+        id="areas-trigger"
+        type="button"
+        data-dropdown-toggle="areas-menu"
+        data-dropdown-trigger="hover"
+        data-dropdown-delay="80"
+        class:list={[
+          'inline-flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium hover:bg-stone-100',
+          isActive('/locations') ? 'text-brand' : 'text-stone-800',
+        ]}
+      >
+        Areas
+        <svg class="h-3.5 w-3.5" aria-hidden="true" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.17l3.71-3.94a.75.75 0 1 1 1.08 1.04l-4.25 4.5a.75.75 0 0 1-1.08 0l-4.25-4.5a.75.75 0 0 1 .02-1.06Z" clip-rule="evenodd"></path>
+        </svg>
+      </button>
+      <div
+        id="areas-menu"
+        class="z-50 hidden w-56 rounded-xl border border-stone-200 bg-white py-2 shadow-xl"
+      >
+        <ul class="text-sm">
+          {
+            counties.map((c) => (
+              <li>
+                <a href={`/locations/${c.id}`} class="block px-4 py-2 text-stone-800 hover:bg-stone-50 hover:text-brand">
+                  {c.data.title}
+                </a>
+              </li>
+            ))
+          }
+          <li class="mt-1 border-t border-stone-100 pt-1">
+            <a href="/locations" class="block px-4 py-2 font-semibold text-brand hover:bg-stone-50">
+              All areas
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <a
+        href="/commercial"
+        class:list={[
+          'rounded-lg px-3 py-2 text-sm font-medium hover:bg-stone-100',
+          isActive('/commercial') ? 'text-brand' : 'text-stone-800',
+        ]}
+        aria-current={isActive('/commercial') ? 'page' : undefined}
+      >
+        Commercial
+      </a>
+      <a
+        href="/about"
+        class:list={[
+          'rounded-lg px-3 py-2 text-sm font-medium hover:bg-stone-100',
+          isActive('/about') ? 'text-brand' : 'text-stone-800',
+        ]}
+        aria-current={isActive('/about') ? 'page' : undefined}
+      >
+        About
+      </a>
+    </div>
+
+    <div class="hidden items-center gap-3 md:flex">
+      <a href={phoneHref} class="text-sm font-semibold text-stone-900 hover:text-brand" data-track="call-header">
+        {site.phone.display}
+      </a>
+      <a href="/contact" class={cn(buttonVariants(), "h-10 px-4 text-sm")}>Get a Free Quote</a>
+    </div>
+
+    <div id="mobile-nav" class="hidden w-full md:hidden">
+      <div class="mt-2 space-y-1 border-t border-stone-100 pt-3">
+        <a href="/services" class="block rounded-lg px-3 py-2.5 text-sm font-medium text-stone-800 hover:bg-stone-50">Services</a>
+        <a href="/pricing" class="block rounded-lg px-3 py-2.5 text-sm font-medium text-stone-800 hover:bg-stone-50">Pricing</a>
+        <details class="group">
+          <summary class="flex cursor-pointer list-none items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium text-stone-800 hover:bg-stone-50">
+            Areas
+            <svg class="h-4 w-4 text-stone-400 group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.17l3.71-3.94a.75.75 0 1 1 1.08 1.04l-4.25 4.5a.75.75 0 0 1-1.08 0l-4.25-4.5a.75.75 0 0 1 .02-1.06Z" clip-rule="evenodd"></path>
+            </svg>
+          </summary>
+          <ul class="pb-2 pl-3">
+            {
+              counties.map((c) => (
+                <li>
+                  <a href={`/locations/${c.id}`} class="block rounded-lg px-3 py-2 text-sm text-stone-700 hover:bg-stone-50">
+                    {c.data.title}
+                  </a>
+                </li>
+              ))
+            }
             <li>
-              <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
-                {item.label}
+              <a href="/locations" class="block rounded-lg px-3 py-2 text-sm font-semibold text-brand hover:bg-stone-50">
+                All areas
               </a>
             </li>
-          ))
-        }
-      </ul>
-    </nav>
-
-    <div class="header-actions">
-      <a href={phoneHref} class="header-phone" data-track="call-header">
-        <Icon name="phone" size={18} />
-        <span>{site.phone.display}</span>
-      </a>
-      <a href="/contact" class="btn btn-gold header-quote">Free Quote</a>
-      <button
-        class="menu-btn"
-        type="button"
-        aria-label="Open menu"
-        aria-expanded="false"
-        aria-controls="mobile-menu"
-        data-menu-toggle
-      >
-        <Icon name="menu" size={22} />
-      </button>
-    </div>
-  </div>
-
-  <div class="mobile-menu" id="mobile-menu" hidden>
-    <nav class="container" aria-label="Mobile">
-      <ul class="mm-list">
-        <li><a href="/">Home</a></li>
-        {
-          nav.map((item) => (
-            <li>
-              <a href={item.href}>{item.label}</a>
-            </li>
-          ))
-        }
-      </ul>
-      <div class="mm-cta">
-        <a href={phoneHref} class="btn btn-block"><Icon name="phone" size={18} /> Call {site.phone.display}</a>
-        <a href="/contact" class="btn btn-gold btn-block">Get a Free Quote</a>
+          </ul>
+        </details>
+        <a href="/commercial" class="block rounded-lg px-3 py-2.5 text-sm font-medium text-stone-800 hover:bg-stone-50">Commercial</a>
+        <a href="/about" class="block rounded-lg px-3 py-2.5 text-sm font-medium text-stone-800 hover:bg-stone-50">About</a>
+        <div class="grid gap-2 px-1 pt-2">
+          <a href={phoneHref} class={cn(buttonVariants(), "h-11")}>Call {site.phone.display}</a>
+          <a href="/contact" class={cn(buttonVariants({ variant: "outline" }), "h-11")}>Get a Free Quote</a>
+        </div>
       </div>
-    </nav>
-  </div>
+    </div>
+  </nav>
 </header>
-
-<style>
-  .site-header {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: #fff;
-    border-bottom: 1px solid var(--line);
-    box-shadow: var(--shadow-sm);
-  }
-  .header-inner {
-    height: var(--header-h);
-    display: flex;
-    align-items: center;
-    gap: var(--sp-5);
-  }
-  .header-inner :global(.wm) {
-    margin-right: auto;
-  }
-
-  .primary-nav {
-    display: none;
-  }
-  .primary-nav ul {
-    display: flex;
-    gap: var(--sp-1);
-    list-style: none;
-    padding: 0;
-  }
-  .primary-nav a {
-    display: block;
-    padding: 0.5rem 0.75rem;
-    font-family: var(--font-display);
-    font-size: 1.12rem;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
-    color: var(--ink);
-    text-decoration: none;
-    border-radius: var(--r-sm);
-    transition: color var(--dur) var(--ease);
-  }
-  .primary-nav a:hover,
-  .primary-nav a[aria-current='page'] {
-    color: var(--gold);
-  }
-
-  .header-actions {
-    display: flex;
-    align-items: center;
-    gap: var(--sp-3);
-    flex: none;
-  }
-  .header-phone {
-    display: none;
-    align-items: center;
-    gap: var(--sp-2);
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 1.25rem;
-    color: var(--accent);
-    text-decoration: none;
-    white-space: nowrap;
-  }
-  .header-phone:hover {
-    color: var(--gold);
-  }
-  .header-quote {
-    display: none;
-    min-height: 44px;
-    padding: 0.55rem 1.2rem;
-    font-size: 0.95rem;
-  }
-
-  .menu-btn {
-    display: grid;
-    place-items: center;
-    width: 44px;
-    height: 44px;
-    background: transparent;
-    border: 1px solid var(--line);
-    border-radius: var(--r-md);
-    color: var(--accent);
-    cursor: pointer;
-  }
-  .menu-btn[aria-expanded='true'] {
-    background: var(--accent);
-    color: #fff;
-    border-color: var(--accent);
-  }
-
-  .mobile-menu {
-    border-top: 1px solid var(--line);
-    background: #fff;
-    max-height: calc(100dvh - var(--header-h));
-    overflow-y: auto;
-    padding-block: var(--sp-4) var(--sp-6);
-  }
-  .mm-list {
-    list-style: none;
-    padding: 0;
-  }
-  .mm-list a {
-    display: block;
-    padding: 0.85rem 0;
-    font-family: var(--font-display);
-    font-size: 1.4rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    color: var(--ink);
-    text-decoration: none;
-    border-bottom: 1px solid var(--line);
-  }
-  .mm-cta {
-    display: grid;
-    gap: var(--sp-3);
-    margin-top: var(--sp-5);
-  }
-
-  @media (min-width: 640px) {
-    .header-phone {
-      display: inline-flex;
-    }
-  }
-  @media (min-width: 1080px) {
-    :root {
-      --header-h: 80px;
-    }
-    .primary-nav {
-      display: block;
-    }
-    .header-quote {
-      display: inline-flex;
-    }
-    .menu-btn,
-    .mobile-menu {
-      display: none !important;
-    }
-  }
-</style>
-
-<script>
-  const btn = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
-  const menu = document.getElementById('mobile-menu');
-
-  if (btn && menu) {
-    const set = (open: boolean) => {
-      btn.setAttribute('aria-expanded', String(open));
-      btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-      menu.hidden = !open;
-    };
-    btn.addEventListener('click', () => set(btn.getAttribute('aria-expanded') !== 'true'));
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && btn.getAttribute('aria-expanded') === 'true') {
-        set(false);
-        btn.focus();
-      }
-    });
-  }
-</script>
